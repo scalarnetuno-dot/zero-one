@@ -44,13 +44,13 @@
 
 // ─── rótulos do sistema (idioma do livro) ───────────────────────────────────
 #let L = (
-{% for key in ["chapter","part","figure","table","listing","exercise","example","summary","answers","glossary","toc","colophon","tip","warning","note","key","practice","continues","of"] %}
-  {{ key }}: "{{ theme.s(key) }}",
+{% for key, value in theme.strings().items() %}
+  {{ key }}: "{{ value }}",
 {% endfor %}
 )
 
 // ─── estado interno ─────────────────────────────────────────────────────────
-#let _chinfo = state("chinfo", (number: none, kicker: none))
+#let _chinfo = state("chinfo", (number: none, kicker: none, epigraph: none, epigraph-by: none, goal: none))
 #let _book   = state("book", (title: "", author: ""))
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -78,8 +78,10 @@
 // ════════════════════════════════════════════════════════════════════════════
 
 // 1. CAPÍTULO — abertura de página inteira.
-#let chapter(number: none, kicker: none, numbered: true, title) = {
-  _chinfo.update((number: number, kicker: kicker))
+#let chapter(number: none, kicker: none, epigraph: none, epigraph-by: none,
+             goal: none, numbered: true, title) = {
+  _chinfo.update((number: number, kicker: kicker, epigraph: epigraph,
+                  epigraph-by: epigraph-by, goal: goal))
   if numbered and number != none { counter(heading).update((number - 1,)) }
   if numbered {
     heading(level: 1, title)
@@ -91,13 +93,13 @@
 #let _chapter-opener(it) = page(header: none, footer: none)[
   #pagebreak(to: "{{ tk.page.first_page_parity }}", weak: true)
   #set par(first-line-indent: 0pt, justify: false, leading: 0.62em)
-  #set text(hyphenate: false)
+  #set text(hyphenate: false, weight: 400)
   #context {
     let info = _chinfo.get()
     v({{ tk.space.chapter_title_gap }})
     if info.number != none {
       block(below: -1mm)[#caps(L.chapter, color: ink-faint, size: s-small)]
-      block(below: 3mm)[
+      block(below: 4.5mm)[
         #text(font: sans, size: s-chapnum, weight: w-light, fill: accent,
               tracking: {{ tk.type.tracking.display }})[#info.number]
       ]
@@ -117,6 +119,34 @@
     }
     v(5mm)
     hrule(color: accent, thickness: medium, width: 22mm)
+
+    if info.epigraph != none and info.epigraph != "" {
+      v(14mm)
+      block(width: 72%)[
+        #text(font: serif, size: 10.5pt, style: "italic", fill: ink-soft)[
+          “#info.epigraph”
+        ]
+        #if info.epigraph-by != none and info.epigraph-by != "" [
+          #v(2mm)
+          #caps(info.epigraph-by, color: ink-faint, size: 7pt)
+        ]
+      ]
+    }
+
+    if info.goal != none and info.goal != "" {
+      v(1fr)
+      block(
+        width: 100%, inset: (left: 6pt, rest: 7pt),
+        stroke: (left: {{ tk.rules.accent_bar }} + accent),
+        fill: surface,
+      )[
+        #block(below: 3pt)[#caps("Ao fim deste capítulo", color: accent, size: 7pt)]
+        #set text(size: s-small)
+        #set par(first-line-indent: 0pt, justify: false, leading: 0.55em)
+        #info.goal
+      ]
+      v(6mm)
+    }
   }
 ]
 
@@ -150,13 +180,13 @@
 #let callout(kind: "note", title: none, nobreak: false, body) = {
   let conf = (
 {% for name, c in tk.callouts.items() %}
-    {{ name }}: (color: rgb("{{ theme.resolve_color(c.color) }}"), glyph: "{{ c.glyph }}", label: L.{{ c.label_key }}),
+    {{ name }}: (color: rgb("{{ theme.resolve_color(c.color) }}"), glyph: "{{ c.glyph }}", label: L.{{ c.label_key }}, surface: rgb("{{ c.surface | default(tk.color.surface, true) }}")),
 {% endfor %}
   )
   let c = conf.at(kind, default: conf.note)
   block(
     width: 100%, above: sp-block, below: sp-block, breakable: not nobreak,
-    fill: surface,
+    fill: c.surface,
     stroke: (left: {{ tk.rules.accent_bar }} + c.color),
     inset: (left: {{ tk.space.callout_padding }}, rest: {{ tk.space.callout_padding }}),
   )[
@@ -166,7 +196,8 @@
       #caps(if title != none and title != "" { title } else { c.label }, color: c.color)
     ]
     #set text(size: s-small)
-    #set par(first-line-indent: 0pt, spacing: 0.55em)
+    // caixa é coluna estreita: justificar abre buracos entre as palavras
+    #set par(first-line-indent: 0pt, spacing: 0.55em, justify: false)
     #body
   ]
 }
@@ -218,6 +249,11 @@
 )
 
 // 6. DIAGRAMA — desenhado pela pipeline, nunca à mão.
+// A pipeline (render_typst.py) já entrega width/height no tamanho FINAL
+// (reduzido, se precisou reduzir) e as primitivas dg-* já recebem
+// coordenadas nesse mesmo tamanho final — nenhum #scale() acontece aqui.
+// Por isso um simples block(width:, height:) resolvido pelo figure()
+// sempre bate exatamente com o conteúdo: nada vaza, nada é cortado.
 #let diagram(width: 100mm, height: 50mm, caption: none, body) = figure(
   block(width: width, height: height, breakable: false)[
     #set text(font: sans, fill: ink)
@@ -284,6 +320,16 @@
     ))
   }
 }
+
+#let dg-text(x, y, w, h, body, align-to: left, size: 8.2pt, fill: ink,
+             bold: false) = place(
+  top + left, dx: x, dy: y,
+  block(width: w, height: h)[
+    #set align(align-to + horizon)
+    #set par(leading: 0.45em, justify: false)
+    #text(size: size, fill: fill, weight: if bold { w-strong } else { 400 })[#body]
+  ],
+)
 
 #let dg-label(x, y, body, size: 7.4pt, fill: ink-soft) = place(
   top + left, dx: x, dy: y,
@@ -374,24 +420,242 @@
   #text(size: s-small, fill: ink-soft)[#body]
 ]
 
-// 13. PARTE.
-#let part-page(number: none, title, blurb: none) = page(header: none, footer: none)[
+// 13. PARTE — abertura com o que vem nela.
+#let part-page(number: none, title, blurb: none, chapters: ()) = page(
+  header: none, footer: none,
+)[
   #pagebreak(to: "odd", weak: true)
-  #v(1fr)
-  #align(center)[
-    #caps(L.part + " " + str(number), color: accent)
-    #v(5mm)
-    #text(font: sans, size: s-parttitle, weight: w-light, fill: ink,
+  #set par(first-line-indent: 0pt, justify: false, leading: 0.6em)
+  #set text(hyphenate: false)
+  #v(26mm)
+  #block(below: 5mm)[
+    #caps(L.part, color: ink-faint, size: s-small)
+    #h(3mm)
+    #text(font: sans, size: 30pt, weight: w-light, fill: accent,
+          tracking: {{ tk.type.tracking.display }})[#number]
+  ]
+  #block(width: 88%, below: 6mm)[
+    #text(font: sans, size: s-parttitle, weight: w-display, fill: ink,
           tracking: {{ tk.type.tracking.display }})[#title]
-    #if blurb != none [
-      #v(6mm)
-      #block(width: 70%)[
-        #text(font: serif, size: 11pt, style: "italic", fill: ink-soft)[#blurb]
-      ]
+  ]
+  #if blurb != none and blurb != "" [
+    #block(width: 74%)[
+      #text(font: serif, size: 11.5pt, style: "italic", fill: ink-soft)[#blurb]
     ]
   ]
-  #v(1.6fr)
+  #v(1fr)
+  #if chapters.len() > 0 [
+    #block(width: 100%)[
+      #block(below: 4mm)[#caps(L.in_this_part, color: accent, size: 7.4pt)]
+      #hrule(color: rule-color, thickness: hairline)
+      #v(3mm)
+      #stack(spacing: 3.2mm, ..chapters.map(c => block(width: 100%)[
+        #text(font: sans, size: 8.6pt, weight: w-light, fill: accent)[
+          #box(width: 7mm)[#c.at(0)]
+        ]
+        #text(font: sans, size: 9.4pt, fill: ink)[#c.at(1)]
+      ]))
+    ]
+  ]
+  #v(12mm)
 ]
+
+
+// 14. ANATOMIA — código com crachá na linha e legenda embaixo.
+#let badge(n, color: accent, size: {{ tk.anatomy.badge_size }}) = box(
+  baseline: 1.5pt,
+  circle(radius: size * 0.72, fill: color, stroke: none)[
+    #set align(center + horizon)
+    #text(size: size, fill: white, weight: 600, font: sans)[#n]
+  ],
+)
+
+#let anatomy(title: none, marks: (), notes: (), code) = block(
+  width: 100%, above: sp-block, below: sp-block, breakable: false,
+)[
+  #block(
+    width: 100%, above: 0pt, below: 0pt,
+    fill: rgb("{{ tk.code.background }}"),
+    stroke: (top: hairline + rgb("{{ tk.code.border }}"),
+             left: hairline + rgb("{{ tk.code.border }}"),
+             right: hairline + rgb("{{ tk.code.border }}")),
+    inset: (x: {{ tk.space.code_padding }}, y: 4pt),
+  )[
+    #caps(if title != none and title != "" { title } else { L.anatomy },
+          color: accent, size: 7.4pt)
+  ]
+  #block(
+    width: 100%, above: 0pt,
+    fill: rgb("{{ tk.code.background }}"),
+    stroke: hairline + rgb("{{ tk.code.border }}"),
+    inset: (x: {{ tk.space.code_padding }}, y: {{ tk.space.code_padding }}),
+  )[
+    #set text(font: mono, size: s-code)
+    #set par(justify: false, leading: 0.55em, first-line-indent: 0pt)
+    #show raw.line: it => {
+      it.body
+      // uma linha pode carregar vários crachás
+      let hits = marks.enumerate().filter(((i, m)) => m == it.number)
+      if hits.len() > 0 {
+        h(1fr)
+        for (i, _) in hits { badge(i + 1); h(1mm) }
+      }
+    }
+    #code
+  ]
+  #block(width: 100%, above: 5pt, inset: (left: 1mm))[
+    #set text(size: {{ tk.anatomy.note_size }})
+    #set par(justify: false, first-line-indent: 0pt, leading: 0.52em)
+    #grid(
+      columns: (5mm, 1fr), row-gutter: 3pt, column-gutter: 0pt,
+      ..notes.enumerate().map(((i, n)) => (badge(i + 1), n)).flatten()
+    )
+  ]
+]
+
+// 15. HTTP — requisição e resposta como par visual.
+#let http-block(verb: "GET", path: "", req-headers: (), req-body: none,
+                status: "", res-headers: (), res-body: none, title: none) = {
+  let verbs = (
+{% for v, c in tk.http.verb_colors.items() %}
+    {{ v }}: rgb("{{ c }}"),
+{% endfor %}
+  )
+  let stat-colors = (
+{% for k, c in tk.http.status_colors.items() %}
+    "{{ k }}": rgb("{{ c }}"),
+{% endfor %}
+  )
+  let vcolor = verbs.at(verb, default: ink-soft)
+  let scolor = if status.len() > 0 { stat-colors.at(status.first(), default: ink-soft) } else { ink-soft }
+  let pill(body, fill) = box(
+    fill: fill, inset: (x: 3pt, y: 1.6pt), outset: (y: 0pt), radius: 1pt,
+  )[#text(font: sans, size: {{ tk.http.label_size }}, weight: 600, fill: white,
+          tracking: 0.06em)[#body]]
+  let panel(label, head, headers, body, color) = block(
+    width: 100%, above: 0pt, below: 0pt,
+    fill: white, stroke: hairline + rule-strong,
+    inset: (x: 7pt, y: 6pt),
+  )[
+    #block(below: if headers.len() > 0 or body != none { 4pt } else { 0pt })[
+      #caps(label, color: ink-faint, size: 6.6pt)
+      #h(2.5mm)
+      #head
+    ]
+    #if headers.len() > 0 {
+      set text(font: mono, size: 7.4pt, fill: ink-soft)
+      set par(leading: 0.42em, first-line-indent: 0pt, justify: false)
+      stack(spacing: 2pt, ..headers.map(h => [#h]))
+    }
+    #if body != none {
+      set text(font: mono, size: {{ tk.http.body_size }})
+      set par(leading: 0.5em, first-line-indent: 0pt, justify: false)
+      v(3pt)
+      block(width: 100%, fill: rgb("{{ tk.code.background }}"), inset: 5pt)[#body]
+    }
+  ]
+  block(width: 100%, above: sp-block, below: sp-block, breakable: true)[
+    #if title != none and title != "" {
+      block(below: 3pt)[#caps(title, color: ink-soft, size: 7.2pt)]
+    }
+    #panel(L.request, [#pill(verb, vcolor) #h(2mm) #text(font: mono, size: 8.4pt)[#path]],
+           req-headers, req-body, vcolor)
+    #block(width: 100%, above: 0pt, below: 0pt, inset: (left: 11pt))[
+      #box(height: 3.2mm, width: 0pt, stroke: (left: 1pt + rule-strong))
+    ]
+    #panel(L.response, pill(status, scolor), res-headers, res-body, scolor)
+  ]
+}
+
+// 16. ÁRVORE DE ARQUIVOS — o autor indenta, a pipeline desenha os fios.
+#let tree-block(title: none, lines: ()) = block(
+  width: 100%, above: sp-block, below: sp-block, breakable: false,
+  fill: rgb("{{ tk.code.background }}"), stroke: hairline + rgb("{{ tk.code.border }}"),
+  inset: {{ tk.space.code_padding }},
+)[
+  #if title != none and title != "" {
+    block(below: 4pt)[#caps(title, color: ink-soft, size: 7.2pt)]
+  }
+  #set text(font: mono, size: {{ tk.tree.size }})
+  #set par(leading: 0.5em, first-line-indent: 0pt, justify: false)
+  #stack(spacing: 2.2pt, ..lines.map(l => [
+    #text(fill: ink-faint)[#l.at(0)]#text(fill: ink)[#l.at(1)]
+    #if l.at(2) != "" [ #h(2mm) #text(size: 7.2pt, fill: ink-faint)[#l.at(2)] ]
+  ]))
+]
+
+// 17. ANTES E DEPOIS — duas colunas, mesma altura.
+#let compare-block(left-label: none, right-label: none, left: none, right: none) = block(
+  width: 100%, above: sp-block, below: sp-block, breakable: false,
+)[
+  #grid(columns: (1fr, 1fr), column-gutter: {{ tk.compare.gap }},
+    ..( (left-label, left), (right-label, right) ).map(((lbl, body)) => block(
+      width: 100%, fill: rgb("{{ tk.code.background }}"),
+      stroke: hairline + rgb("{{ tk.code.border }}"), inset: 6pt,
+    )[
+      #block(below: 3pt)[
+        #caps(if lbl != none and lbl != "" { lbl } else { "" },
+              color: ink-faint, size: 6.6pt)
+      ]
+      #set text(font: mono, size: {{ tk.compare.size }})
+      #set par(leading: 0.5em, first-line-indent: 0pt, justify: false)
+      #body
+    ])
+  )
+]
+
+
+// 18. CENA CORPORATIVA — a camada satélite. Fio em cima, fio embaixo,
+//     nenhuma caixa: precisa parecer respiro, não interrupção.
+#let story(title: none, body) = block(
+  width: 100%, above: {{ tk.story.gap }}, below: {{ tk.story.gap }},
+  breakable: true,
+)[
+  #hrule(color: rule-color, thickness: hairline)
+  #v(4pt)
+  #block(below: 4pt)[
+    #caps(L.story, color: accent, size: 7pt)
+    #if title != none and title != "" [
+      #h(2mm)
+      #text(font: sans, size: s-small, weight: w-strong, fill: ink-soft)[#title]
+    ]
+  ]
+  #set text(size: {{ tk.story.size }}, fill: ink)
+  #set par(first-line-indent: 0pt, leading: {{ tk.story.leading }},
+           spacing: 0.95em, justify: true)
+  #body
+  #v(6pt)
+  // fecha a cena com um fio curto no accent: o leitor sabe que voltou ao livro
+  #hrule(color: accent, thickness: hairline, width: 14mm)
+]
+
+// 19. ILUSTRAÇÃO — com arte, é figura; sem arte, é o lugar dela, visível.
+#let art(caption: none, prompt: "", src: none, width: 100%) = figure(
+  if src != none and src != "" {
+    align(center, image(src, width: width))
+  } else {
+    // sem altura fixa: a moldura acompanha a descrição e não sobra papel
+    block(
+      width: 100%,
+      fill: rgb("{{ tk.art.surface }}"),
+      stroke: (paint: rule-strong, thickness: hairline, dash: {{ tk.art.dash }}),
+      inset: 8pt,
+    )[
+      #set align(left + top)
+      #block(below: 4pt)[
+        #caps(L.art, color: accent, size: 6.8pt)
+        #h(2mm)
+        #text(font: sans, size: 6.8pt, fill: ink-faint,
+              tracking: {{ tk.type.tracking.label }})[#upper(L.art_todo)]
+      ]
+      #set par(justify: false, first-line-indent: 0pt, leading: 0.5em)
+      #text(size: {{ tk.art.prompt_size }}, fill: ink-soft, style: "italic")[#prompt]
+    ]
+  },
+  caption: caption,
+  kind: image,
+  supplement: L.figure,
+)
 
 // ════════════════════════════════════════════════════════════════════════════
 // PÁGINAS DE APOIO

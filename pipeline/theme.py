@@ -61,12 +61,17 @@ class Theme:
         found = self.t(value if "." in value else f"color.{value}")
         return found if isinstance(found, str) else value
 
+    def strings(self) -> dict[str, str]:
+        """Tabela de rótulos do idioma do livro — nenhuma chave faltando."""
+        strings = self.collection.get("strings", {})
+        table = (strings.get(self.language)
+                 or strings.get(self.language.split("-")[0])
+                 or strings.get("pt-BR", {}))
+        return {str(k): str(v) for k, v in table.items()}
+
     def s(self, key: str) -> str:
         """Rótulo do sistema no idioma do livro."""
-        strings = self.collection.get("strings", {})
-        table = strings.get(self.language) or strings.get(self.language.split("-")[0]) \
-            or strings.get("pt-BR", {})
-        return str(table.get(key, key))
+        return self.strings().get(key, key)
 
     # ─── saídas ──────────────────────────────────────────────────────────
     def render(self, template: str, **ctx: Any) -> str:

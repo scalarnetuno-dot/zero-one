@@ -3,7 +3,7 @@
 # Só existem quatro decisões por livro: metadados, cor, conteúdo e assets.
 title: "{{TITLE}}"
 subtitle: "{{SUBTITLE}}"
-author: "Thiago Pablicio"
+author: "Thiago Nogueira"
 volume: {{VOLUME}}
 accent: {{ACCENT}}        # red · blue · green · orange · purple · teal · amber · slate
 language: pt-BR

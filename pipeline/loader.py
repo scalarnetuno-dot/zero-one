@@ -11,7 +11,7 @@ from typing import Any
 
 import yaml
 
-from .model import Book, BookMeta, Chapter, Figure, Part
+from .model import Art, Book, BookMeta, Chapter, Figure, Part
 from .parser import parse_chapter
 from .theme import COLLECTION, ROOT
 
@@ -64,9 +64,12 @@ def load_book(slug: str) -> Book:
         files = [content / f for f in listed]
     else:
         files = sorted(content.glob("*.md"))
-    missing = [f for f in files if not f.exists()]
-    if missing:
-        raise BookError("capítulos ausentes: " + ", ".join(m.name for m in missing))
+    # Um livro de 40 capítulos nasce aos poucos: arquivo listado e ainda não
+    # escrito vira aviso do validador, não erro de carga.
+    missing = [f.name for f in files if not f.exists()]
+    files = [f for f in files if f.exists()]
+    if not files:
+        raise BookError(f"nenhum capítulo encontrado em {content}")
 
     chapters: list[Chapter] = []
     n = 0
@@ -83,10 +86,21 @@ def load_book(slug: str) -> Book:
     for ch in chapters:
         _resolve_assets(ch, d)
 
-    parts = [Part(number=i + 1, title=str(p.get("title", "")), blurb=str(p.get("blurb", "")))
-             for i, p in enumerate(cfg.get("parts", []) or [])]
+    parts = [
+        Part(number=int(p.get("number", i + 1)), title=str(p.get("title", "")),
+             blurb=str(p.get("blurb", "")), id=str(p.get("id", f"p{i + 1}")))
+        for i, p in enumerate(cfg.get("parts", []) or [])
+    ]
+    known = {p.id for p in parts}
+    for ch in chapters:
+        if ch.part and ch.part not in known:
+            raise BookError(
+                f"{ch.source.name if ch.source else ch.slug}: parte "
+                f"'{ch.part}' não existe em book.yaml (partes: {', '.join(sorted(known)) or '—'})")
 
-    return Book(meta=meta, chapters=chapters, parts=parts, root=d)
+    book = Book(meta=meta, chapters=chapters, parts=parts, root=d)
+    book.missing = missing
+    return book
 
 
 _KNOWN = {
@@ -102,8 +116,13 @@ def theme_overrides(slug: str) -> dict[str, Any]:
 
 
 def _resolve_assets(ch: Chapter, d: Path) -> None:
-    """Normaliza caminhos de imagem para `assets/<arquivo>`."""
+    """Normaliza caminhos de imagem para `assets/<arquivo>`.
+
+    Vale para figura e para ilustração: quem troca o marcador pela arte
+    escreve só o nome do arquivo, e a pipeline resolve onde ele mora.
+    """
     for b in ch.walk():
         if isinstance(b, Figure):
-            name = Path(b.src).name
-            b.src = f"assets/{name}"
+            b.src = f"assets/{Path(b.src).name}"
+        elif isinstance(b, Art) and b.src:
+            b.src = f"assets/{Path(b.src).name}"

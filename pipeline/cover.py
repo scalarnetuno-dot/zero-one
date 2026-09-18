@@ -56,6 +56,17 @@ def _sources(slug: str, mode: str, pages: int, out: Path,
     src_dir = out / "typst"
     src_dir.mkdir(parents=True, exist_ok=True)
 
+    # Paleta do embrulho: o livro declara as cores da arte; sem isso,
+    # a contracapa usa o neutro da coleção.
+    padrao = {
+        "bg": theme.t("color.paper"),
+        "panel": theme.accent_hex,
+        "accent": theme.accent_hex,
+        "ink": theme.t("color.ink"),
+        "ink_soft": theme.t("color.ink_soft"),
+    }
+    palette = {**padrao, **(m.extra.get("cover_palette") or {})}
+
     art = find_cover_art(slug, book)
     if art:
         dest = src_dir / "assets" / art.name
@@ -72,6 +83,8 @@ def _sources(slug: str, mode: str, pages: int, out: Path,
         bleed=BLEED_MM,
         spine_text=pages >= SPINE_TEXT_MIN_PAGES,
         cover_image=f"assets/{art.name}" if art else "",
+        cover_full=bool(m.extra.get("cover_full", False)),
+        palette=palette,
         title=m.title,
         subtitle=m.subtitle,
         author=m.author,

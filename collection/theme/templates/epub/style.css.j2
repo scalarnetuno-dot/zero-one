@@ -100,6 +100,114 @@ code { font-size: .88em; background: var(--surface); padding: .08em .25em; borde
 {% endfor %}
 .tok-comment { font-style: italic; }
 
+/* ── anatomia, http, árvore, comparação ─────────────────────────────── */
+.anatomy, .tree, .http, .compare { margin: 1.2em 0; }
+.anatomy pre, .tree pre, .compare pre {
+  margin: 0; padding: .7em; background: {{ tk.code.background }};
+  border: 1px solid {{ tk.code.border }}; overflow-x: auto; text-align: left;
+  font-size: .82rem; line-height: 1.45;
+}
+.aline { display: block; }
+.badge {
+  display: inline-block; min-width: 1.15em; height: 1.15em; line-height: 1.15em;
+  border-radius: 50%; background: var(--accent); color: #fff; text-align: center;
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif; font-size: .62rem;
+  font-weight: 600; margin-left: .5em; vertical-align: middle;
+}
+.anotes { list-style: none; padding: 0; margin: .6em 0 0; font-size: .85rem; }
+.anotes li { display: flex; gap: .6em; margin-bottom: .35em; text-align: left; }
+.anotes .badge { margin-left: 0; flex: none; }
+
+.http-panel { border: 1px solid var(--rule); padding: .6em .7em; background: #fff; }
+.http-head { display: flex; align-items: center; gap: .5em; margin-bottom: .4em; }
+.http-head .label {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif; font-size: .6rem;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint);
+}
+.verb {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif; font-size: .62rem;
+  font-weight: 600; letter-spacing: .06em; color: #fff; padding: .15em .45em;
+  border-radius: 2px; background: var(--ink-soft);
+}
+{% for v, color in tk.http.verb_colors.items() %}
+.verb-{{ v | lower }} { background: {{ color }}; }
+{% endfor %}
+{% for k, color in tk.http.status_colors.items() %}
+.s{{ k }} { background: {{ color }}; }
+{% endfor %}
+.http .path { background: none; font-size: .8rem; }
+.http-headers { font-family: "{{ tk.type.mono }}", monospace; font-size: .7rem;
+  color: var(--ink-soft); text-align: left; }
+.http-arrow { color: var(--ink-faint); font-size: .8rem; padding: .15em .7em; }
+.http-title {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif; font-size: .65rem;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft);
+  margin-bottom: .35em;
+}
+.tree .twig { color: var(--ink-faint); }
+.tree .tnote { color: var(--ink-faint); font-size: .72rem; margin-left: .8em; }
+.compare { display: flex; gap: .7em; }
+.compare .side { flex: 1; min-width: 0; }
+.compare pre { font-size: .72rem; }
+
+.epigraph { margin: 1.4em 0 0; font-size: .95em; }
+.goal {
+  background: var(--surface); border-left: 3px solid var(--accent);
+  padding: .7em .9em; margin: 1.4em 0 0; font-size: .92em; text-align: left;
+}
+.goal .label {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif; font-size: .65rem;
+  font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--accent); display: block; margin-bottom: .3em;
+}
+.goal p { text-indent: 0; margin: 0; }
+
+.part-open { page-break-before: always; margin: 3em 0; }
+.part-open .num {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif; font-size: 2.2rem;
+  font-weight: 300; color: var(--accent); margin-left: .35em;
+}
+.part-open h1 { font-size: 2rem; }
+.part-open .label {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif; font-size: .65rem;
+  font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--accent); display: block; margin: 2em 0 .5em;
+  border-top: 1px solid var(--rule); padding-top: .8em;
+}
+.part-toc { list-style: none; padding: 0; }
+.part-toc li { display: flex; gap: .8em; margin-bottom: .45em; }
+.part-toc .n { color: var(--accent); font-weight: 300; min-width: 1.4em; }
+
+/* ── cena corporativa e marcador de arte ────────────────────────────── */
+.story {
+  border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  padding: .8em 0; margin: 1.8em 0; font-size: .95em;
+}
+.story .label {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif; font-size: .65rem;
+  font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--accent); margin-right: .6em;
+}
+.story .scene {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif; font-size: .8rem;
+  font-weight: 600; color: var(--ink-soft);
+}
+.story p { text-indent: 0; margin: .5em 0; }
+
+.art-todo {
+  border: 1px dashed var(--rule); background: {{ tk.art.surface }};
+  padding: 1em; text-align: left;
+}
+.art-todo .label {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif; font-size: .62rem;
+  font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--accent); display: block; margin-bottom: .4em;
+}
+.art-todo p {
+  font-style: italic; font-size: .8rem; color: var(--ink-soft);
+  text-indent: 0; margin: 0;
+}
+
 /* ── caixas ─────────────────────────────────────────────────────────── */
 .callout {
   background: var(--surface); border-left: 3px solid var(--accent);
@@ -113,7 +221,10 @@ code { font-size: .88em; background: var(--surface); padding: .08em .25em; borde
   text-transform: uppercase; display: block; margin-bottom: .35em;
 }
 {% for name, c in tk.callouts.items() %}
-.callout-{{ name }} { border-left-color: {{ theme.resolve_color(c.color) }}; }
+.callout-{{ name }} {
+  border-left-color: {{ theme.resolve_color(c.color) }};
+  background: {{ c.surface | default(tk.color.surface, true) }};
+}
 .callout-{{ name }} .label { color: {{ theme.resolve_color(c.color) }}; }
 {% endfor %}
 

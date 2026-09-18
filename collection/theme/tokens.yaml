@@ -42,7 +42,7 @@ type:
     body: 10pt
     small: 8.5pt
     caption: 8.5pt
-    code: 8.6pt
+    code: 7.7pt
     code_inline: 0.92em
     running_head: 8pt
     folio: 9pt
@@ -79,7 +79,7 @@ space:
   chapter_title_gap: 20mm # do topo da mancha até o número do capítulo
   chapter_body_gap: 16mm  # do título até o primeiro parágrafo
   callout_padding: 8pt
-  code_padding: 8pt
+  code_padding: 6pt
   figure_gap: 8pt
 
 blocks:
@@ -95,8 +95,8 @@ rules:
 
 code:
   numbered_from_lines: 6  # numera as linhas só quando o bloco tem ≥ N linhas
-  max_line_chars: 62      # acima disso o validador reclama (estoura a mancha)
-  keep_together_lines: 26 # blocos até N linhas não podem quebrar de página
+  max_line_chars: 70      # acima disso o validador reclama (estoura a mancha)
+  keep_together_lines: 18 # blocos até N linhas não podem quebrar de página
   background: "#F7F8F9"
   border: "#E4E7EA"
   # Paleta do realce — vale para PDF (tmTheme) e EPUB (CSS)
@@ -113,12 +113,66 @@ code:
     meta:     "#7A828C"
 
 callouts:
-  # Um componente, cinco variantes. Nada de caixa nova por capricho.
-  tip:      { label_key: tip,      color: "#1F7A4D", glyph: "◆" }
-  warning:  { label_key: warning,  color: "#B3541E", glyph: "▲" }
-  note:     { label_key: note,     color: "#3C4A57", glyph: "■" }
-  key:      { label_key: key,      color: "accent",  glyph: "●" }
-  practice: { label_key: practice, color: "accent",  glyph: "▶" }
+  # Um componente, nove variantes. Cada uma resolve uma função editorial
+  # diferente — não existe caixa "porque ficou bonito".
+  tip:        { label_key: tip,        color: "#1F7A4D", glyph: "◆" }
+  warning:    { label_key: warning,    color: "#B3541E", glyph: "▲" }
+  note:       { label_key: note,       color: "#3C4A57", glyph: "■" }
+  key:        { label_key: key,        color: "accent",  glyph: "●" }
+  practice:   { label_key: practice,   color: "accent",  glyph: "▶" }
+  # premium — o que separa manual de livro
+  trivia:     { label_key: trivia,     color: "#5C3D8F", glyph: "★", surface: "#F7F5FB" }
+  pitfall:    { label_key: pitfall,    color: "#A32A2A", glyph: "↯", surface: "#FBF4F4" }
+  history:    { label_key: history,    color: "#7A6A4F", glyph: "◷", surface: "#FAF7F2" }
+  checkpoint: { label_key: checkpoint, color: "#1F5FA8", glyph: "✔", surface: "#F3F6FA" }
+  milestone:  { label_key: milestone,  color: "accent",  glyph: "◧", surface: "#F5F6F7" }
+
+anatomy:
+  # Código anotado: crachá no código, legenda embaixo.
+  badge_size: 6pt
+  note_size: 8pt
+  gutter: 7mm
+
+http:
+  # Requisição e resposta como par visual — o livro é sobre API.
+  verb_colors:
+    GET:    "#1F5FA8"
+    POST:   "#1F7A4D"
+    PUT:    "#9A6B00"
+    PATCH:  "#7A6A4F"
+    DELETE: "#A32A2A"
+  status_colors:
+    "2": "#1F7A4D"
+    "3": "#7A6A4F"
+    "4": "#B3541E"
+    "5": "#A32A2A"
+  label_size: 7pt
+  body_size: 8.2pt
+
+tree:
+  # Estrutura de pastas: o autor indenta, a pipeline desenha os fios.
+  size: 8.2pt
+  indent: 4mm
+
+story:
+  # A cena corporativa: camada satélite do conteúdo técnico.
+  # Fio em cima e embaixo, sem caixa — tem de parecer respiro, não interrupção.
+  size: 9.4pt
+  leading: 0.74em
+  rule_width: 100%
+  gap: 16pt
+
+art:
+  # Marcador de ilustração: enquanto a arte não existe, o lugar dela é visível.
+  placeholder_height: 42mm
+  dash: (3pt, 3pt)
+  prompt_size: 7.2pt
+  surface: "#FAF7F2"
+
+compare:
+  size: 7.4pt
+  gap: 4mm
+  max_line_chars: 40
 
 diagram:
   # Geometria dos diagramas gerados. O autor nunca posiciona nada.

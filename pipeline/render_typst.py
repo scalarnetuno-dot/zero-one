@@ -13,9 +13,10 @@ from pathlib import Path
 from .diagrams import DiagramLayout, build as build_diagram
 from .parser import parse_inline
 from .model import (
-    Block, Book, Callout, Chapter, Code, CodeBlock, Diagram, Em, Example,
-    Exercise, Figure, Heading, Inline, Link, ListBlock, Paragraph, Quote, Ref,
-    Rule, Strong, Summary, Table, Term, Text, plain,
+    Anatomy, Block, Book, Callout, Chapter, Code, CodeBlock, Compare, Diagram,
+    Em, Example, Exercise, Figure, Heading, Http, Inline, Link, ListBlock,
+    Paragraph, Part, Quote, Ref, Rule, Story, Strong, Summary, Table, Term,
+    Text, Tree, Art, plain,
 )
 from .theme import Theme
 
@@ -45,6 +46,7 @@ class TypstRenderer:
         self.text_w = theme.text_width_mm(pages_estimate)
         self.numbered_chapter = True
         self.answers: list[tuple[Chapter, Exercise]] = []
+        self.art: list[Art] = []
         self.terms: list[Term] = []
 
     # ─── inline ──────────────────────────────────────────────────────────
@@ -121,6 +123,50 @@ class TypstRenderer:
         if isinstance(b, Term):
             self.terms.append(b)
             return f"#term({tstr(b.term)})[{self.inline(b.definition)}]\n"
+        if isinstance(b, Story):
+            title = f"title: {tstr(b.title)}, " if b.title else ""
+            return f"#story({title})[\n{self.blocks(b.blocks)}]\n"
+        if isinstance(b, Art):
+            self.art.append(b)
+            cap = (f"caption: [{self.inline(parse_inline(b.caption))}], "
+                   if b.caption else "")
+            src = f"src: {tstr(b.src)}, " if b.src else ""
+            w = f"width: {self.largura_que_cabe(b.src):.0f}%, " if b.src else ""
+            lbl = f" #label({tstr(label_of('fig:' + b.id))})" if b.id else ""
+            return f"#art({cap}{src}{w}prompt: {tstr(b.prompt)}){lbl}\n"
+        if isinstance(b, Anatomy):
+            marks = ", ".join(str(n) for n, _ in b.notes)
+            notes = ", ".join(f"[{self.inline(txt)}]" for _, txt in b.notes)
+            title = f"title: {tstr(b.title)}, " if b.title else ""
+            raw = f"raw(block: true, lang: {tstr(b.lang)}, {tstr(b.code)})"
+            return (f"#anatomy({title}marks: ({marks}{',' if b.notes else ''}), "
+                    f"notes: ({notes}{',' if b.notes else ''}), {raw})\n")
+        if isinstance(b, Http):
+            def arr(items: list[str]) -> str:
+                return "(" + ", ".join(tstr(i) for i in items) + ("," if items else "") + ")"
+
+            def body(txt: str, lang: str = "json") -> str:
+                return (f"raw(block: true, lang: {tstr(lang)}, {tstr(txt)})"
+                        if txt.strip() else "none")
+
+            title = f"title: {tstr(b.title)}, " if b.title else ""
+            return (f"#http-block(verb: {tstr(b.verb)}, path: {tstr(b.path)}, "
+                    f"req-headers: {arr(b.req_headers)}, req-body: {body(b.req_body)}, "
+                    f"status: {tstr(b.status)}, res-headers: {arr(b.res_headers)}, "
+                    f"res-body: {body(b.res_body)}, {title})\n")
+        if isinstance(b, Tree):
+            rows = ", ".join(
+                f"({tstr(prefix)}, {tstr(name)}, {tstr(note)})"
+                for prefix, name, note in _tree_rows(b.lines))
+            title = f"title: {tstr(b.title)}, " if b.title else ""
+            return f"#tree-block({title}lines: ({rows},))\n"
+        if isinstance(b, Compare):
+            left = f"raw(block: true, lang: {tstr(b.lang)}, {tstr(b.left)})"
+            right = f"raw(block: true, lang: {tstr(b.lang)}, {tstr(b.right)})"
+            ll = b.left_label or self.theme.s("before")
+            rl = b.right_label or self.theme.s("after")
+            return (f"#compare-block(left-label: {tstr(ll)}, right-label: {tstr(rl)}, "
+                    f"left: {left}, right: {right})\n")
         if isinstance(b, Rule):
             return "#v(4mm)\n#align(center)[#text(fill: ink-faint)[* * *]]\n#v(4mm)\n"
         return ""
@@ -136,28 +182,60 @@ class TypstRenderer:
                 f"numbered: {str(numbered).lower()}, nobreak: {str(nobreak).lower()}, "
                 f"{raw})\n")
 
+    def largura_que_cabe(self, src: str) -> float:
+        """Percentual de largura que mantém a imagem dentro da mancha.
+
+        Uma arte em pé ocuparia mais que a página inteira se fosse impressa
+        com 100% da largura. Aqui a proporção real do arquivo decide.
+        """
+        limite = (self.theme.text_height_mm(self.pages)
+                  * float(self.theme.t("figure.max_height", 0.62)))
+        try:
+            from PIL import Image
+
+            caminho = self.book.root / src
+            with Image.open(caminho) as im:
+                proporcao = im.height / im.width
+        except Exception:
+            return 100.0
+        altura_cheia = self.text_w * proporcao
+        if altura_cheia <= limite:
+            return 100.0
+        return max(35.0, 100.0 * limite / altura_cheia)
+
     def figure(self, b: Figure) -> str:
-        cap = f"caption: [{esc(b.caption)}], " if b.caption else ""
+        cap = (f"caption: [{self.inline(parse_inline(b.caption))}], "
+               if b.caption else "")
         alt = f"alt: {tstr(b.alt)}, " if b.alt else ""
         lbl = f" #label({tstr(label_of('fig:' + b.id))})" if b.id else ""
-        return f"#fig({tstr(b.src)}, {cap}{alt}width: {b.width * 100:.0f}%){lbl}\n"
+        largura = min(b.width * 100, self.largura_que_cabe(b.src))
+        return f"#fig({tstr(b.src)}, {cap}{alt}width: {largura:.0f}%){lbl}\n"
 
     def diagram(self, b: Diagram) -> str:
         layout = build_diagram(b.kind, b.spec, self.theme)
         k = min(1.0, (self.text_w - 1) / layout.width) if layout.width else 1.0
         body = self.draw(layout)
-        cap = f"caption: [{esc(b.caption)}], " if b.caption else ""
+        cap = (f"caption: [{self.inline(parse_inline(b.caption))}], "
+               if b.caption else "")
         lbl = f" #label({tstr(label_of('fig:' + b.id))})" if b.id else ""
+        # reflow: true é essencial aqui. Com reflow: false (padrão do Typst),
+        # o layout continua reservando — e centralizando — o espaço do
+        # tamanho ORIGINAL do conteúdo, não do escalado; o desenho encolhido
+        # fica ancorado no canto do espaço maior e vaza a caixa declarada
+        # abaixo (#diagram já usa width/height reduzidos por k). Sintoma:
+        # diagrama cortado à direita, com aparência de "descentralizado".
+        # Com reflow: true, o Typst recalcula a caixa ocupada pelo conteúdo
+        # já escalado, então a figura centraliza corretamente.
         inner = body if k >= 0.999 else (
             f"#scale(x: {k * 100:.1f}%, y: {k * 100:.1f}%, origin: top + left, "
-            f"reflow: false)[\n{body}]\n")
+            f"reflow: true)[\n{body}]\n")
         return (f"#diagram(width: {layout.width * k:.2f}mm, "
                 f"height: {layout.height * k:.2f}mm, {cap})[\n{inner}]{lbl}\n")
 
     def draw(self, d: DiagramLayout) -> str:
         out: list[str] = []
         for s in d.shapes:
-            fill = f'rgb("{s.fill}")' if s.fill else "white"
+            fill = f'rgb("{s.fill}")' if s.fill else "none"
             stroke = f'rgb("{s.stroke}")' if s.stroke else "rule-strong"
             label = esc(s.text).replace("\n", " \\\n")
             if s.kind == "rect" or s.kind == "cell":
@@ -190,8 +268,11 @@ class TypstRenderer:
                     f"({s.x + s.w:.2f}mm, {s.y + s.h:.2f}mm)), arrow: false, "
                     f"dashed: {str(s.dashed).lower()}, stroke-color: {stroke})")
             elif s.kind == "text":
-                out.append(f"#dg-label({s.x:.2f}mm, {s.y:.2f}mm, [{label}], "
-                           f"size: {d.label_size}pt)")
+                fill_c = f'rgb("{s.fill}")' if s.fill else "ink"
+                out.append(
+                    f"#dg-text({s.x:.2f}mm, {s.y:.2f}mm, {s.w:.2f}mm, {s.h:.2f}mm, "
+                    f"[{label}], align-to: {s.align}, size: {d.font_size}pt, "
+                    f"fill: {fill_c}, bold: {str(s.bold).lower()})")
         for e in d.edges:
             pts = ", ".join(f"({x:.2f}mm, {y:.2f}mm)" for x, y in e.points)
             out.append(f"#dg-path(({pts}), arrow: {str(e.arrow).lower()}, "
@@ -216,7 +297,8 @@ class TypstRenderer:
         rows = []
         for r in b.rows:
             rows.append("(" + ", ".join(f"[{self.inline(c)}]" for c in r) + ",)")
-        cap = f"caption: [{esc(b.caption)}], " if b.caption else ""
+        cap = (f"caption: [{self.inline(parse_inline(b.caption))}], "
+               if b.caption else "")
         lbl = f" #label({tstr(label_of('tbl:' + b.id))})" if b.id else ""
         return (f"#tbl(columns: ({cols}), header: ({header},), "
                 f"rows: ({', '.join(rows)},), {cap})" + lbl + "\n")
@@ -233,12 +315,26 @@ class TypstRenderer:
             args.append("numbered: false")
         if ch.kicker:
             args.append(f"kicker: [{esc(ch.kicker)}]")
+        if ch.epigraph:
+            args.append(f"epigraph: [{esc(ch.epigraph)}]")
+        if ch.epigraph_by:
+            args.append(f"epigraph-by: {tstr(ch.epigraph_by)}")
+        if ch.goal:
+            args.append(f"goal: [{self.inline(parse_inline(ch.goal))}]")
         head.append(f"#chapter({', '.join(args)})[{esc(ch.title)}]")
         head.append(self.blocks(ch.blocks))
         for b in ch.walk():
             if isinstance(b, Exercise) and b.answer:
                 self.answers.append((ch, b))
         return "\n".join(head)
+
+    def part_page(self, part: Part) -> str:
+        chapters = ", ".join(
+            f"({tstr(str(n))}, {tstr(t)})" for n, t in
+            [(c.number, c.title) for c in self.book.chapters if c.part == part.id])
+        blurb = f"blurb: [{esc(part.blurb)}], " if part.blurb else ""
+        return (f"\n#part-page(number: {part.number}, {blurb}"
+                f"chapters: ({chapters},))[{esc(part.title)}]\n")
 
     def document(self) -> str:
         m = self.book.meta
@@ -272,7 +368,12 @@ class TypstRenderer:
         parts.append("#toc-page()\n")
         parts.append("#counter(page).update(1)\n")
 
+        seen_parts: set[str] = set()
+        by_id = {p.id: p for p in self.book.parts}
         for ch in self.book.chapters:
+            if ch.part and ch.part not in seen_parts and ch.part in by_id:
+                seen_parts.add(ch.part)
+                parts.append(self.part_page(by_id[ch.part]))
             parts.append(self.chapter(ch))
 
         parts.append(self.back_matter())
@@ -301,3 +402,31 @@ class TypstRenderer:
 
 def render(book: Book, theme: Theme, pages_estimate: int = 0) -> str:
     return TypstRenderer(theme, book, pages_estimate).document()
+
+
+def _tree_rows(lines: list[tuple[int, str, str]]) -> list[tuple[str, str, str]]:
+    """Transforma níveis de indentação nos fios ├── │ └── da árvore."""
+    out: list[tuple[str, str, str]] = []
+    for i, (level, name, note) in enumerate(lines):
+        last = True
+        for level2, _, _ in lines[i + 1:]:
+            if level2 == level:
+                last = False
+                break
+            if level2 < level:
+                break
+        prefix = ""
+        for depth in range(level):
+            # a linha vertical continua se ainda houver irmão naquele nível
+            has_more = False
+            for level2, _, _ in lines[i + 1:]:
+                if level2 == depth:
+                    has_more = True
+                    break
+                if level2 < depth:
+                    break
+            prefix += "│  " if has_more else "   "
+        if level:
+            prefix += "└─ " if last else "├─ "
+        out.append((prefix, name, note))
+    return out

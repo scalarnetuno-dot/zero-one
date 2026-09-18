@@ -17,8 +17,9 @@ from pathlib import Path
 import typst
 
 from .cover import build_front, find_cover_art, merge_with_cover
+from .diagram_png import render_all as render_diagram_png
 from .loader import book_dir, load_book, theme_overrides
-from .model import Book
+from .model import Art, Book
 from .render_epub import write_epub
 from .render_typst import render as render_typst
 from .theme import FONTS, ROOT, Theme, load_theme
@@ -83,14 +84,77 @@ def build(slug: str, pdf: bool = True, epub: bool = True, cover: bool = True,
                 res.cover, res.pdf, out / f"{slug}-leitura.pdf")
             if verbose:
                 print(f"  pdf     {res.reading_pdf.name}  (capa + miolo)")
+    manifesto, pendentes, prontas = write_art_manifest(book, out)
+    if verbose and (pendentes or prontas):
+        print(f"  arte    {manifesto.name}  ({pendentes} a produzir, "
+              f"{prontas} prontas)")
+
     if epub:
-        res.epub = write_epub(book, theme, out, cover_png=cover_png)
+        # PNG de cada diagrama, no MESMO traço do PDF (Typst desenha os
+        # dois): o Kindle não escala SVG inline de forma confiável, então
+        # o EPUB usa imagem pronta em vez de <svg> embutido.
+        diagram_png = render_diagram_png(book, theme, out)
+        res.epub = write_epub(book, theme, out, cover_png=cover_png,
+                              diagram_png=diagram_png)
         if verbose:
             print(f"  epub    {res.epub.name}"
-                  + ("  (com capa)" if cover_png else ""))
+                  + ("  (com capa)" if cover_png else "")
+                  + (f"  ({len(diagram_png)} diagramas em PNG)" if diagram_png else ""))
 
     res.seconds = time.time() - t0
     return res
+
+
+def write_art_manifest(book: Book, out: Path) -> tuple[Path, int, int]:
+    """Lista toda ilustração do livro — a ponte com a etapa de geração de arte.
+
+    Arte com `src` já existe; arte só com `prompt` ainda é um buraco marcado
+    na página. O manifesto é o que o gerador de imagens consome.
+    """
+    pendentes: list[dict] = []
+    prontas: list[dict] = []
+    for ch in book.chapters:
+        for blk in ch.walk():
+            if not isinstance(blk, Art):
+                continue
+            item = {
+                "chapter": ch.number if ch.numbered else 0,
+                "chapter_title": ch.title,
+                "id": blk.id,
+                "caption": blk.caption,
+                "prompt": blk.prompt,
+                "src": blk.src,
+            }
+            (prontas if blk.src else pendentes).append(item)
+
+    dados = {"book": book.meta.slug, "pending": pendentes, "done": prontas}
+    (out / "art-prompts.json").write_text(
+        json.dumps(dados, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    linhas = [f"# Arte — {book.meta.title}", "",
+              f"{len(pendentes)} a produzir · {len(prontas)} prontas", "",
+              "Estilo da coleção: ilustração editorial minimalista, humor de",
+              "revista de tecnologia, composição limpa, poucos elementos,",
+              "personagens expressivos, sem estética infantil, texto mínimo.",
+              ""]
+    linhas += ["Não desenhe a legenda dentro da imagem: a pipeline numera e",
+               "imprime a legenda embaixo. Mínimo de 300 DPI no tamanho",
+               "impresso (≈1400 px de largura para a mancha de 6×9).", ""]
+    for item in pendentes:
+        linhas += [f"## cap. {item['chapter']} · {item['id']}", "",
+                   f"**Legenda:** {item['caption'] or '—'}", "",
+                   item["prompt"], "",
+                   f"Salve em `books/<livro>/assets/{item['id']}.png` e",
+                   "acrescente `src` ao bloco, **sem apagar a legenda nem a",
+                   "descrição** — o manifesto usa as duas:", "",
+                   "```",
+                   f':::art caption="{item["caption"]}" src="{item["id"]}.png"',
+                   "(a descrição continua aqui)",
+                   ":::",
+                   "```", ""]
+    path = out / "art-prompts.md"
+    path.write_text("\n".join(linhas), encoding="utf-8")
+    return path, len(pendentes), len(prontas)
 
 
 def _build_pdf(book: Book, theme: Theme, out: Path,

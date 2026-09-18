@@ -342,6 +342,112 @@ def _blocks(spec: dict[str, Any], theme: Theme) -> DiagramLayout:
                          edges=edges, font_size=fs, label_size=lbl)
 
 
+
+# ─── timeline (história) ─────────────────────────────────────────────────────
+
+def _timeline(spec: dict[str, Any], theme: Theme) -> DiagramLayout:
+    events = spec.get("events") or []
+    if not events:
+        raise DiagramError("timeline sem 'events'")
+    fs = float(str(theme.t("diagram.font_size")).rstrip("pt"))
+    lbl = float(str(theme.t("diagram.label_size")).rstrip("pt"))
+    accent = theme.resolve_color("accent")
+    soft = theme.t("color.ink_soft")
+
+    step = 11.0          # altura de cada evento
+    axis_x = 17.0        # onde corre a linha do tempo
+    width = float(spec.get("width", 110))
+    height = step * len(events) + 4
+
+    shapes: list[Shape] = []
+    edges: list[Edge] = [Edge(points=[(axis_x, 1.0), (axis_x, height - 3)],
+                              arrow=False)]
+    for i, ev in enumerate(events):
+        y = 4.0 + i * step
+        year = str(ev.get("year", ""))
+        text = str(ev.get("text", ""))
+        mark = bool(ev.get("mark", False))
+        shapes.append(Shape(kind="text", x=0, y=y - 2.0, w=axis_x - 4, h=4,
+                            text=year, align="right", bold=True,
+                            fill=accent if mark else soft))
+        shapes.append(Shape(kind="cell", x=axis_x - 1.2, y=y - 1.2, w=2.4, h=2.4,
+                            fill=accent if mark else "#FFFFFF", stroke=accent))
+        lines = _wrap(text, width - axis_x - 5, fs, 2)
+        shapes.append(Shape(kind="text", x=axis_x + 4, y=y - 2.2,
+                            w=width - axis_x - 4, h=5, text="\n".join(lines),
+                            align="left"))
+    return DiagramLayout(width=width, height=height, shapes=shapes, edges=edges,
+                         font_size=fs, label_size=lbl)
+
+
+# ─── entidade-relacionamento ─────────────────────────────────────────────────
+
+def _er(spec: dict[str, Any], theme: Theme) -> DiagramLayout:
+    entities = spec.get("entities") or []
+    if not entities:
+        raise DiagramError("er sem 'entities'")
+    fs = float(str(theme.t("diagram.font_size")).rstrip("pt"))
+    lbl = float(str(theme.t("diagram.label_size")).rstrip("pt"))
+    ew = _mm(theme.t("diagram.node.width")) * 0.92
+    gap_x = 12.0
+    gap_y = 11.0
+    head_h = 6.2
+    row_h = 4.4
+    per_row = int(spec.get("columns", 2))
+
+    geo: dict[str, tuple[float, float, float, float]] = {}
+    shapes: list[Shape] = []
+    x = y = 0.0
+    row_max = 0.0
+    for i, ent in enumerate(entities):
+        name = str(ent.get("name", "?"))
+        fields = [str(f) for f in (ent.get("fields") or [])]
+        h = head_h + row_h * len(fields) + 1.5
+        col = i % per_row
+        if col == 0 and i:
+            y += row_max + gap_y
+            row_max = 0.0
+        x = col * (ew + gap_x)
+        geo[name] = (x, y, ew, h)
+        row_max = max(row_max, h)
+        # ordem de desenho: moldura, faixa do título, textos
+        shapes.append(Shape(kind="rect", x=x, y=y, w=ew, h=h,
+                            fill=theme.t("diagram.fill"),
+                            stroke=theme.t("color.rule_strong")))
+        shapes.append(Shape(kind="rect", x=x, y=y, w=ew, h=head_h,
+                            fill=theme.resolve_color("accent"),
+                            stroke=theme.resolve_color("accent")))
+        shapes.append(Shape(kind="text", x=x, y=y, w=ew, h=head_h, text=name,
+                            align="center", bold=True, fill="#FFFFFF"))
+        for k, f in enumerate(fields):
+            shapes.append(Shape(kind="text", x=x + 2.2,
+                                y=y + head_h + k * row_h,
+                                w=ew - 4.4, h=row_h, text=f, align="left"))
+    height = y + row_max
+
+    edges: list[Edge] = []
+    for rel in spec.get("relations") or []:
+        a, b = str(rel["from"]), str(rel["to"])
+        if a not in geo or b not in geo:
+            raise DiagramError(f"relação {a}→{b} usa entidade inexistente")
+        ax, ay, aw, ah = geo[a]
+        bx, by, bw, bh = geo[b]
+        label = str(rel.get("label", rel.get("kind", "")))
+        if abs(ay - by) < 0.5:              # mesma linha: liga pelas laterais
+            start = (ax + aw, ay + ah / 2) if ax < bx else (ax, ay + ah / 2)
+            end = (bx, by + bh / 2) if ax < bx else (bx + bw, by + bh / 2)
+            mid = ((start[0] + end[0]) / 2, start[1] - 1.5)
+        else:                                # linhas diferentes: por baixo
+            start = (ax + aw / 2, ay + ah)
+            end = (bx + bw / 2, by)
+            mid = ((start[0] + end[0]) / 2, (start[1] + end[1]) / 2)
+        edges.append(Edge(points=[start, end], label=label, label_at=mid))
+
+    return DiagramLayout(width=per_row * ew + (per_row - 1) * gap_x,
+                         height=height, shapes=shapes, edges=edges,
+                         font_size=fs, label_size=lbl)
+
+
 BUILDERS = {
     "flowchart": _flowchart,
     "sequence": _sequence,
@@ -350,6 +456,10 @@ BUILDERS = {
     "stack": _cells,
     "blocks": _blocks,
     "architecture": _blocks,
+    "layers": _blocks,
+    "timeline": _timeline,
+    "er": _er,
+    "model": _er,
 }
 
 

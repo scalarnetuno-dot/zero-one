@@ -20,9 +20,10 @@ from typing import Any
 import yaml
 
 from .model import (
-    Block, Callout, Chapter, Code, CodeBlock, Diagram, Em, Example, Exercise,
-    Figure, Heading, Inline, Link, ListBlock, Paragraph, Quote, Ref, Rule,
-    Strong, Summary, Table, Term, Text,
+    Anatomy, Block, Callout, Chapter, Code, CodeBlock, Compare, Diagram, Em,
+    Example, Exercise, Figure, Heading, Http, Inline, Link, ListBlock,
+    Paragraph, Quote, Ref, Rule, Story, Strong, Summary, Table, Term, Text,
+    Tree, Art,
 )
 from .model import plain as plain_text
 
@@ -135,6 +136,9 @@ def parse_chapter(path: Path, default_number: int = 0) -> Chapter:
         title=str(meta.get("title", path.stem)),
         slug=str(meta.get("slug", slugify(str(meta.get("title", path.stem))))),
         kicker=str(meta.get("kicker", "")),
+        epigraph=str(meta.get("epigraph", "")),
+        epigraph_by=str(meta.get("epigraph_by", "")),
+        goal=str(meta.get("goal", "")),
         source=path,
         part=str(meta.get("part", "")),
         matter=str(meta.get("matter", "body")),  # type: ignore[arg-type]
@@ -250,7 +254,9 @@ def _blocks(lines: list[str], src: Path) -> list[Block]:
             first_in_section = True
             continue
 
-        if _UL.match(stripped) or _OL.match(stripped):
+        # "25. A documentação..." no meio de um parágrafo é uma frase que
+        # quebrou de linha, não um item de lista: só abre lista em bloco novo.
+        if not para and (_UL.match(stripped) or _OL.match(stripped)):
             flush()
             block, i = _list(lines, i, src)
             out.append(block)
@@ -358,13 +364,21 @@ def _table(lines: list[str], i: int) -> tuple[Table, int]:
     while j < len(lines) and not lines[j].strip():
         j += 1
     if j < len(lines) and lines[j].strip().lower().startswith(("table:", "tabela:")):
-        caption = lines[j].split(":", 1)[1].strip()
-        i = j + 1
+        parts = [lines[j].split(":", 1)[1].strip()]
+        j += 1
+        while j < len(lines) and lines[j].strip():   # legenda continua
+            parts.append(lines[j].strip())
+            j += 1
+        caption = " ".join(parts)
+        i = j
     return Table(header=header, rows=rows, align=align, caption=caption,
                  id=slugify(caption) if caption else ""), i
 
 
-CALLOUT_KINDS = {"tip", "warning", "note", "key", "practice"}
+CALLOUT_KINDS = {
+    "tip", "warning", "note", "key", "practice",
+    "trivia", "pitfall", "history", "checkpoint", "milestone",
+}
 
 
 def _directive(kind: str, title: str, kv: dict[str, str], body: list[str],
@@ -398,8 +412,108 @@ def _directive(kind: str, title: str, kv: dict[str, str], body: list[str],
         return Diagram(kind=kv.get("type", title or "flowchart"),
                        spec=spec, caption=kv.get("caption", spec.get("caption", "")),
                        id=kv.get("id", slugify(spec.get("caption", "") or title or "diagrama")))
+    if kind == "anatomy":
+        spec = yaml.safe_load("\n".join(body)) or {}
+        if not isinstance(spec, dict) or "code" not in spec:
+            raise ParseError(f"{src.name}: :::anatomy precisa de YAML com `code:`")
+        notes = []
+        for n in spec.get("notes") or []:
+            notes.append((int(n["line"]), parse_inline(str(n["text"]))))
+        return Anatomy(code=str(spec["code"]).rstrip("\n"),
+                       lang=str(spec.get("lang", kv.get("lang", "java"))),
+                       title=str(spec.get("title", kv.get("title", title))), notes=notes,
+                       id=kv.get("id", ""))
+    if kind == "story":
+        return Story(title=title, blocks=_blocks(body, src))
+    if kind == "art":
+        # O atributo pode vir na linha da diretiva OU no corpo do bloco:
+        # trocar o marcador pela arte pronta é um gesto de copiar e colar,
+        # e o parser não pode punir quem escreveu de um jeito razoável.
+        campos, prompt = _art_fields(body)
+        kv = {**campos, **kv}
+        return Art(prompt=prompt,
+                   caption=kv.get("caption", title),
+                   src=kv.get("src", ""),
+                   id=kv.get("id", slugify(kv.get("caption", title) or "arte")))
+    if kind == "http":
+        return _http(title, kv, body, src)
+    if kind == "tree":
+        return _tree(title, body)
+    if kind == "compare":
+        sep = [i for i, l in enumerate(body) if l.strip() == "---"]
+        if not sep:
+            raise ParseError(f"{src.name}: :::compare precisa de `---` entre os lados")
+        i0 = sep[0]
+        return Compare(
+            left="\n".join(body[:i0]).strip("\n"),
+            right="\n".join(body[i0 + 1:]).strip("\n"),
+            left_label=kv.get("left", ""), right_label=kv.get("right", ""),
+            lang=kv.get("lang", "java"))
     if kind == "term":
         return Term(term=title, definition=parse_inline(" ".join(l.strip() for l in body).strip()))
     if kind == "quote":
         return _quote([l.strip() for l in body if l.strip()])
     raise ParseError(f"{src.name}: bloco desconhecido ':::{kind}'")
+
+
+def _http(title: str, kv: dict[str, str], body: list[str], src: Path) -> Http:
+    """`VERBO /caminho` + cabeçalhos + corpo, `---`, status + corpo."""
+    sep = [i for i, l in enumerate(body) if l.strip() == "---"]
+    cut = sep[0] if sep else len(body)
+    req, res = body[:cut], body[cut + 1:]
+
+    def split(lines: list[str]) -> tuple[str, list[str], str]:
+        lines = [l for l in lines]
+        while lines and not lines[0].strip():
+            lines.pop(0)
+        if not lines:
+            return "", [], ""
+        first = lines[0].strip()
+        headers: list[str] = []
+        i = 1
+        while i < len(lines) and lines[i].strip():
+            headers.append(lines[i].strip())
+            i += 1
+        body_txt = "\n".join(lines[i:]).strip("\n")
+        return first, headers, body_txt
+
+    req_first, req_headers, req_body = split(req)
+    res_first, res_headers, res_body = split(res)
+    parts = req_first.split(None, 1)
+    if not parts:
+        raise ParseError(f"{src.name}: :::http sem linha `VERBO /caminho`")
+    return Http(
+        verb=parts[0].upper(), path=parts[1] if len(parts) > 1 else "",
+        req_headers=req_headers, req_body=req_body,
+        status=res_first, res_headers=res_headers, res_body=res_body,
+        title=title, id=kv.get("id", ""))
+
+
+def _tree(title: str, body: list[str]) -> Tree:
+    """Indentação de 2 espaços = um nível. A pipeline desenha os fios."""
+    lines: list[tuple[int, str, str]] = []
+    for raw in body:
+        if not raw.strip():
+            continue
+        stripped = raw.lstrip(" ")
+        level = (len(raw) - len(stripped)) // 2
+        name, _, note = stripped.partition("#")
+        lines.append((level, name.strip(), note.strip()))
+    return Tree(lines=lines, title=title)
+
+
+_ART_FIELD = re.compile(
+    r'^\s*(src|caption|id)\s*[:=]\s*["“]?(.+?)["”]?\s*$', re.I)
+
+
+def _art_fields(body: list[str]) -> tuple[dict[str, str], str]:
+    """Separa `src:`/`caption:`/`id:` do texto da descrição."""
+    campos: dict[str, str] = {}
+    resto: list[str] = []
+    for linha in body:
+        m = _ART_FIELD.match(linha)
+        if m:
+            campos[m.group(1).lower()] = m.group(2).strip()
+        elif linha.strip():
+            resto.append(linha.strip())
+    return campos, " ".join(resto).strip()

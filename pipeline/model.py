@@ -121,6 +121,64 @@ class Summary:
 
 
 @dataclass
+class Anatomy:
+    """Código anotado: crachá na linha, legenda embaixo."""
+    code: str
+    lang: str = "java"
+    title: str = ""
+    notes: list[tuple[int, list["Inline"]]] = field(default_factory=list)
+    id: str = ""
+
+
+@dataclass
+class Http:
+    """Par requisição/resposta — o livro é sobre API."""
+    verb: str = "GET"
+    path: str = ""
+    req_headers: list[str] = field(default_factory=list)
+    req_body: str = ""
+    status: str = ""
+    res_headers: list[str] = field(default_factory=list)
+    res_body: str = ""
+    title: str = ""
+    id: str = ""
+
+
+@dataclass
+class Tree:
+    """Estrutura de pastas: o autor indenta, a pipeline desenha os fios."""
+    lines: list[tuple[int, str, str]] = field(default_factory=list)  # nível, nome, nota
+    title: str = ""
+
+
+@dataclass
+class Story:
+    """Cena corporativa: a camada satélite que envolve o conteúdo técnico."""
+    title: str = ""
+    blocks: list["Block"] = field(default_factory=list)
+
+
+@dataclass
+class Art:
+    """Ilustração — existente (`src`) ou ainda por produzir (só o `prompt`)."""
+    prompt: str = ""
+    caption: str = ""
+    src: str = ""
+    id: str = ""
+    chapter: str = ""          # preenchido no carregamento, para o manifesto
+
+
+@dataclass
+class Compare:
+    """Antes e depois, lado a lado."""
+    left: str
+    right: str
+    left_label: str = ""
+    right_label: str = ""
+    lang: str = "java"
+
+
+@dataclass
 class ListBlock:
     items: list[list["Block"]]
     ordered: bool = False
@@ -155,6 +213,7 @@ class Rule:
 Block = (
     Heading | Paragraph | CodeBlock | Figure | Diagram | Callout | Example
     | Exercise | Summary | ListBlock | Table | Quote | Term | Rule
+    | Anatomy | Http | Tree | Compare | Story | Art
 )
 
 
@@ -167,6 +226,9 @@ class Chapter:
     title: str
     slug: str
     kicker: str = ""                # a frase sob o título na abertura
+    epigraph: str = ""              # citação na abertura
+    epigraph_by: str = ""
+    goal: str = ""                  # o que o leitor sai sabendo fazer
     blocks: list[Block] = field(default_factory=list)
     source: Path | None = None
     part: str = ""
@@ -182,6 +244,8 @@ class Part:
     number: int
     title: str
     blurb: str = ""
+    id: str = ""                    # casa com `part:` do front matter
+    chapters: list[str] = field(default_factory=list)  # títulos, para a abertura
 
 
 @dataclass
@@ -211,6 +275,7 @@ class Book:
     chapters: list[Chapter] = field(default_factory=list)
     parts: list[Part] = field(default_factory=list)
     root: Path = Path(".")
+    missing: list[str] = field(default_factory=list)  # listados, ainda não escritos
 
     @property
     def body(self) -> list[Chapter]:
@@ -226,7 +291,7 @@ def _walk(blocks: list[Block]) -> Iterator[Block]:
     """Percorre blocos e seus filhos, em ordem de leitura."""
     for b in blocks:
         yield b
-        if isinstance(b, (Callout, Example, Summary)):
+        if isinstance(b, (Callout, Example, Summary, Story)):
             yield from _walk(b.blocks)
         elif isinstance(b, Exercise):
             yield from _walk(b.blocks)

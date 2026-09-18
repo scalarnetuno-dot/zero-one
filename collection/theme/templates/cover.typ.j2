@@ -3,6 +3,9 @@
 //   mode = "front"  → só a capa, no tamanho do miolo (PDF digital e EPUB)
 //   mode = "wrap"   → contracapa + lombada + capa, com sangria (KDP impresso)
 // A largura da lombada vem do número real de páginas.
+//
+// Quando o livro declara `cover_palette`, a contracapa e a lombada assumem as
+// cores da arte da capa — o embrulho vira uma peça só.
 // ════════════════════════════════════════════════════════════════════════════
 
 #let accent   = rgb("{{ accent }}")
@@ -12,6 +15,13 @@
 #let paper    = rgb("{{ tk.color.paper }}")
 #let sans     = "{{ tk.type.sans }}"
 #let serif    = "{{ tk.type.serif }}"
+
+// paleta da capa (vinda do book.yaml) ou o neutro da coleção
+#let c-bg    = rgb("{{ palette.bg }}")
+#let c-panel = rgb("{{ palette.panel }}")
+#let c-mark  = rgb("{{ palette.accent }}")
+#let c-ink   = rgb("{{ palette.ink }}")
+#let c-soft  = rgb("{{ palette.ink_soft }}")
 
 #let trim-w = {{ trim_w }}mm
 #let trim-h = {{ trim_h }}mm
@@ -31,7 +41,7 @@
 {% endif %}
   height: trim-h + bleed * 2,
   margin: 0pt,
-  fill: paper,
+  fill: {% if mode == "wrap" %}c-bg{% else %}paper{% endif %},
 )
 #set text(font: sans, fill: ink, lang: "{{ lang }}")
 #set par(justify: false, first-line-indent: 0pt, leading: 0.62em)
@@ -41,6 +51,12 @@
 )[#upper(body)]
 
 // ── A CAPA (usada nos dois modos) ───────────────────────────────────────────
+{% if cover_full and cover_image %}
+// Arte fechada: a imagem É a capa. A pipeline não sobrepõe tipografia nenhuma.
+#let front = block(width: trim-w, height: trim-h, clip: true)[
+  #image("{{ cover_image }}", width: 100%, height: 100%, fit: "cover")
+]
+{% else %}
 #let front = block(width: trim-w, height: trim-h)[
   #pad(x: safe + 3mm, y: safe + 6mm)[
     #caps("{{ collection_name }}", color: accent, size: 9pt)
@@ -66,50 +82,99 @@
     #text(size: 12pt, weight: 600)[{{ author }}]
   ]
 ]
+{% endif %}
 
 {% if mode == "wrap" %}
 // ── CONTRACAPA ──────────────────────────────────────────────────────────────
+// Mesmo mundo visual da capa: fundo escuro, painel de cor, marca vermelha.
 #place(top + left, dx: bleed, dy: bleed, block(width: trim-w, height: trim-h)[
-  #pad(x: safe + 3mm, y: safe + 6mm)[
-    #caps("{{ collection_name }}", color: accent, size: 8.5pt)
-    #v(8mm)
-    #text(size: 12pt, weight: 600)[{{ title }}]
-    #v(5mm)
-    #text(font: serif, size: 9.5pt, fill: ink-soft)[{{ description }}]
+  #pad(x: safe + 3mm, y: safe + 5mm)[
+    // painel do topo, como o da arte
+    #block(
+      fill: c-panel, inset: (x: 5mm, y: 3.5mm), below: 9mm,
+    )[
+      #text(size: 9pt, weight: 700, fill: c-bg, tracking: 0.1em)[
+        #upper("{{ publisher }}")
+      ]
+    ]
+
+    #text(size: 21pt, weight: 700, fill: c-ink, tracking: -0.01em)[{{ title }}]
+    {% if subtitle %}
+    #v(2.5mm)
+    #block(width: 92%)[
+      #text(size: 10pt, fill: c-panel, weight: 500)[{{ subtitle }}]
+    ]
+    {% endif %}
+
+    #v(4mm)
+    #line(length: 24mm, stroke: 1.6pt + c-mark)
+    #v(6mm)
+
+    #block(width: 94%)[
+      #text(font: serif, size: 9.5pt, fill: c-soft)[{{ description }}]
+    ]
+
     #v(7mm)
-    #line(length: 18mm, stroke: 0.8pt + accent)
-    #v(5mm)
     {% for item in bullets %}
-    #block(below: 2.5mm)[
-      #text(size: 8.5pt, fill: accent)[▸]
-      #h(2mm)
-      #text(font: serif, size: 9pt)[{{ item }}]
+    #block(below: 3mm)[
+      #text(size: 9pt, fill: c-mark, weight: 700)[▸]
+      #h(2.5mm)
+      #text(size: 9pt, fill: c-ink)[{{ item }}]
     ]
     {% endfor %}
+
     #v(1fr)
-    #caps("{{ publisher }}", color: ink-soft, size: 7.5pt)
-    {% if isbn %}
-    #v(2mm)
-    #text(size: 7.5pt, fill: ink-soft)[ISBN {{ isbn }}]
-    {% endif %}
+
+    #grid(columns: (1fr, auto), align: bottom + left,
+      block[
+        #text(size: 9pt, weight: 700, fill: c-ink)[{{ author }}]
+        #v(2.5mm)
+        #text(size: 7.5pt, fill: c-panel, weight: 600, tracking: 0.08em)[
+          #upper("{{ collection_name }}{% if volume %} · {{ volume }}{% endif %}")
+        ]
+        #v(1.5mm)
+        #line(length: 14mm, stroke: 1.2pt + c-mark)
+      ],
+      // área reservada do código de barras — a KDP imprime aqui
+      block(width: 52mm, height: 32mm, fill: white, inset: 3mm, radius: 0pt)[
+        #set align(center + horizon)
+        #text(size: 6.5pt, fill: rgb("#9A9A9A"))[
+          {% if isbn %}ISBN {{ isbn }}{% else %}código de barras{% endif %}
+        ]
+      ]
+    )
   ]
 ])
 
 // ── LOMBADA ─────────────────────────────────────────────────────────────────
-#place(top + left, dx: bleed + trim-w, dy: bleed, block(
-  width: spine, height: trim-h, fill: accent,
+#place(top + left, dx: bleed + trim-w, dy: 0mm, block(
+  width: spine, height: trim-h + bleed * 2, fill: c-bg,
 )[
   {% if spine_text %}
-  #place(center + horizon, rotate(90deg, reflow: false, block(width: trim-h - 20mm)[
+  #place(top + center, dy: bleed + 12mm,
+    block(width: spine * 0.45, height: spine * 0.45, fill: c-mark))
+  #place(center + horizon, rotate(90deg, reflow: false, block(width: trim-h - 30mm)[
     #set align(center)
-    #text(size: 10pt, weight: 600, fill: white)[{{ title }}]
-    #h(6mm)
-    #text(size: 9pt, fill: white.transparentize(25%))[{{ author }}]
+    #text(size: 11pt, weight: 700, fill: c-ink)[{{ title }}]
+    #h(7mm)
+    #text(size: 9pt, fill: c-panel)[{{ author }}]
   ]))
+  #place(bottom + center, dy: -(bleed + 12mm),
+    text(size: 6.5pt, fill: c-panel, weight: 600, tracking: 0.08em)[
+      #upper("{{ publisher }}")
+    ])
   {% endif %}
 ])
 
+{% if cover_full and cover_image %}
+#place(top + left, dx: bleed + trim-w + spine, dy: 0mm, block(
+  width: trim-w + bleed, height: trim-h + bleed * 2, clip: true,
+)[
+  #image("{{ cover_image }}", width: 100%, height: 100%, fit: "cover")
+])
+{% else %}
 #place(top + left, dx: bleed + trim-w + spine, dy: bleed, front)
+{% endif %}
 {% else %}
 #front
 {% endif %}

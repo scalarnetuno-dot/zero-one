@@ -13,8 +13,9 @@ from typing import Literal
 
 from .diagrams import DiagramError, build as build_diagram
 from .model import (
-    Block, Book, Callout, Chapter, CodeBlock, Diagram, Exercise, Figure,
-    Heading, ListBlock, Paragraph, Ref, Summary, Table, Text, plain,
+    Anatomy, Art, Block, Book, Callout, Chapter, CodeBlock, Compare, Diagram,
+    Exercise, Figure, Heading, Http, ListBlock, Paragraph, Ref, Story, Summary,
+    Table, Text, Tree, plain,
 )
 from .theme import Theme, _mm
 
@@ -69,6 +70,9 @@ def validate_ast(book: Book, theme: Theme) -> list[Issue]:
 
         for b in ch.walk():
             out += _check_block(b, ch, where, theme, max_cols, min_dpi, labels, refs)
+
+    for name in book.missing:
+        out.append(Issue("info", "book.yaml", f"capítulo ainda não escrito: {name}"))
 
     for target, where in refs:
         if target.split(":", 1)[-1] and target not in labels:
@@ -154,6 +158,75 @@ def _check_block(b: Block, ch: Chapter, where: str, theme: Theme, max_cols: int,
     elif isinstance(b, Callout):
         if not b.blocks:
             out.append(Issue("warn", where, f"caixa :::{b.kind} vazia"))
+
+    elif isinstance(b, Anatomy):
+        total = len(b.code.split("\n"))
+        for line, _ in b.notes:
+            if line < 1 or line > total:
+                out.append(Issue("error", where,
+                                 f"anatomia aponta para a linha {line}, "
+                                 f"mas o código tem {total}"))
+        if not b.notes:
+            out.append(Issue("warn", where, "anatomia sem nenhuma nota"))
+        if len(b.notes) > 8:
+            out.append(Issue("warn", where,
+                             f"anatomia com {len(b.notes)} notas: "
+                             "quebre em duas"))
+        longest = max((len(l) for l in b.code.split("\n")), default=0)
+        if longest > max_cols - 6:
+            out.append(Issue("warn", where,
+                             f"anatomia com linha de {longest} colunas "
+                             f"(o crachá precisa de folga: máximo {max_cols - 6})"))
+
+    elif isinstance(b, Http):
+        if not b.status:
+            out.append(Issue("warn", where,
+                             f"{b.verb} {b.path}: bloco http sem resposta"))
+        if not b.path.startswith("/"):
+            out.append(Issue("warn", where,
+                             f"caminho '{b.path}' deveria começar com /"))
+
+    elif isinstance(b, Story):
+        if not b.blocks:
+            out.append(Issue("warn", where, "cena vazia"))
+        palavras = sum(len(plain(x.children).split()) for x in b.blocks
+                       if isinstance(x, Paragraph))
+        if palavras > 260:
+            out.append(Issue("warn", where,
+                             f"cena com {palavras} palavras: a camada narrativa "
+                             "não pode competir com o conteúdo (máximo ~260)"))
+
+    elif isinstance(b, Art):
+        if b.src:
+            path = (ch.source.parent.parent / "assets" / Path(b.src).name
+                    if ch.source else Path(b.src))
+            if not path.exists():
+                out.append(Issue("error", where, f"arte ausente: {b.src}"))
+            else:
+                out += _check_image(
+                    path, Figure(src=b.src, caption=b.caption), where,
+                    theme, min_dpi)
+        elif len(b.prompt) < 40:
+            out.append(Issue("warn", where,
+                             "marcador de arte com descrição curta demais "
+                             "para alimentar um gerador"))
+        if not b.caption:
+            out.append(Issue("info", where, "ilustração sem legenda"))
+        if b.id:
+            labels.add(f"fig:{b.id}")
+
+    elif isinstance(b, Tree):
+        if not b.lines:
+            out.append(Issue("warn", where, "árvore de arquivos vazia"))
+
+    elif isinstance(b, Compare):
+        limit = int(theme.t("compare.max_line_chars", 40))
+        for side, code in (("esquerda", b.left), ("direita", b.right)):
+            longest = max((len(l) for l in code.split("\n")), default=0)
+            if longest > limit:
+                out.append(Issue("warn", where,
+                                 f"comparação: lado da {side} com {longest} "
+                                 f"colunas (máximo {limit} em duas colunas)"))
 
     return out
 

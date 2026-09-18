@@ -1,38 +1,139 @@
 # ─── VOLUME 1 ────────────────────────────────────────────────────────────────
-# Tudo que este livro precisa decidir por conta própria está aqui.
-# Layout, tipografia, componentes e validação vêm da coleção.
 title: "Java One"
-subtitle: "O compilador como colega — um arquivo, um main, tipos que alguém confere por você"
-author: "Thiago Pablicio"
+subtitle: "Do primeiro println à API REST em produção"
+author: "Thiago Nogueira"
 volume: 1
-accent: orange            # collection.yaml → accents
+accent: orange
 language: pt-BR
 year: 2026
 edition: "1ª edição"
-isbn: ""                  # a KDP fornece um ASIN; ISBN só se você tiver o seu
+isbn: ""
 
 description: >-
-  Java do zero sem IDE de quatro gigabytes e sem Spring no primeiro dia:
-  javac, java, um arquivo, um main. O erro de compilação deixa de ser
-  castigo e vira revisão gratuita.
+  Java do zero até uma API REST completa: Spring Boot, PostgreSQL, JPA,
+  validação, JWT, testes e Docker. Um único projeto cresce capítulo a
+  capítulo — nada de exemplos soltos, nada de teoria antes da hora.
 
-keywords: [Java, programação, iniciantes, javac, tipos, JVM]
+keywords: [Java, Spring Boot, API REST, JPA, PostgreSQL, JWT, CRUD, backend]
 
-# Aparecem na contracapa. Máximo cinco — a capa é cartaz, não folheto.
+# A arte já traz título, subtítulo, autor e editora:
+# a pipeline não sobrepõe tipografia nenhuma na capa.
+cover_image: capa.png
+cover_full: true
+
+# Cores amostradas da própria arte: a contracapa e a lombada saem no
+# mesmo mundo visual da capa, em vez do neutro da coleção.
+cover_palette:
+  bg: "#0F0F0E"       # preto da arte
+  panel: "#FED332"    # amarelo da caixa da editora
+  accent: "#FA2820"   # vermelho do título
+  ink: "#F9DFB3"      # creme do rodapé
+  ink_soft: "#C9B693"
+
 cover_bullets:
-  - "Um arquivo, um main, nenhum framework"
-  - "Erros de compilação lidos linha a linha"
-  - "Diagramas que explicam o fluxo, não enfeitam"
-  - "Exercícios com resposta comentada"
+  - "Um projeto só, crescendo do capítulo 1 ao 42"
+  - "Cada conceito aparece quando o projeto precisa dele"
+  - "Erros de verdade, lidos linha por linha"
+  - "API com validação, segurança, testes e Docker"
+  - "Sem IDE obrigatória e sem XML mágico"
 
-
-# De onde este volume nasceu, na Knowpill.
 course_slug: java-one
 
-# Ordem dos capítulos. Some a linha e a pipeline usa a ordem alfabética.
+# ─── PARTES ──────────────────────────────────────────────────────────────────
+parts:
+  - id: p1
+    title: "Começando do zero"
+    blurb: >-
+      Você escreve Java antes de entender Java. A linguagem entra pela porta
+      da prática: compilar, errar, ler o erro, consertar.
+  - id: p2
+    title: "O Java que você realmente precisa"
+    blurb: >-
+      Não a linguagem toda — a parte dela que sustenta uma API. Métodos,
+      coleções, objetos, exceções e streams, na dose exata.
+  - id: p3
+    title: "Entrando no Spring Boot"
+    blurb: >-
+      O framework que escreve o encanamento por você. E o preço disso:
+      entender quem está chamando o seu código.
+  - id: p4
+    title: "Construindo o CRUD"
+    blurb: >-
+      A espinha dorsal do livro. Entidade, banco, repositório, serviço,
+      controlador e DTO — nesta ordem, uma camada por vez.
+  - id: p5
+    title: "API de verdade"
+    blurb: >-
+      O que separa um CRUD de exercício de uma API que outra pessoa usa:
+      validação, erro honesto, paginação e busca.
+  - id: p6
+    title: "Relacionamentos"
+    blurb: >-
+      Quando as tabelas se conhecem, o JPA fica poderoso e perigoso na
+      mesma medida. Aqui está o mapa dos buracos.
+  - id: p7
+    title: "Segurança"
+    blurb: >-
+      Autenticação, autorização e um token que diz quem você é sem que o
+      servidor precise lembrar.
+  - id: p8
+    title: "Testes"
+    blurb: >-
+      A rede que permite mexer no código sem medo. Unidade, integração e
+      um banco de verdade dentro do teste.
+  - id: p9
+    title: "Documentação e ferramentas"
+    blurb: >-
+      Uma API que ninguém sabe usar não existe. E um projeto sem histórico
+      não tem volta.
+  - id: p10
+    title: "Projeto final"
+    blurb: >-
+      Agora sem mastigar. Você recebe os requisitos e constrói a loja
+      inteira — e depois a coloca no ar.
+
+# ─── CAPÍTULOS ───────────────────────────────────────────────────────────────
 chapters:
   - 00-antes-de-comecar.md
-  - 01-a-porta.md
-  - 02-valores-com-nome.md
-  - 03-decidir.md
-  - 04-repetir.md
+  - 01-o-que-vamos-construir.md
+  - 02-primeiro-programa.md
+  - 03-variaveis-e-tipos.md
+  - 04-operadores.md
+  - 05-condicionais.md
+  - 06-repeticoes.md
+  - 07-metodos.md
+  - 08-colecoes.md
+  - 09-orientacao-a-objetos.md
+  - 10-encapsulamento.md
+  - 11-heranca-e-interfaces.md
+  - 12-enums-e-records.md
+  - 13-excecoes.md
+  - 14-lambdas-e-streams.md
+  - 15-o-que-e-spring.md
+  - 16-primeiro-projeto-spring.md
+  - 17-primeira-api.md
+  - 18-modelando.md
+  - 19-banco-de-dados.md
+  - 20-spring-data-jpa.md
+  - 21-repository.md
+  - 22-service.md
+  - 23-controller.md
+  - 24-dtos.md
+  - 25-validacao.md
+  - 26-tratamento-de-erros.md
+  - 27-paginacao.md
+  - 28-filtros-e-buscas.md
+  - 29-relacionamentos-jpa.md
+  - 30-problemas-reais-do-jpa.md
+  - 31-spring-security.md
+  - 32-jwt.md
+  - 33-usuarios-e-permissoes.md
+  - 34-testando-java.md
+  - 35-testando-services.md
+  - 36-testando-controllers.md
+  - 37-testando-o-banco.md
+  - 38-openapi.md
+  - 39-clientes-http.md
+  - 40-git.md
+  - 41-projeto-final.md
+  - 42-docker-e-deploy.md

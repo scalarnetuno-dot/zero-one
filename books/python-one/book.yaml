@@ -3,7 +3,7 @@
 # Só existem quatro decisões por livro: metadados, cor, conteúdo e assets.
 title: "Python One"
 subtitle: "Uma ideia por vez, rodando na sua mão"
-author: "Thiago Pablicio"
+author: "Thiago Nogueira"
 volume: 2
 accent: blue        # red · blue · green · orange · purple · teal · amber · slate
 language: pt-BR
