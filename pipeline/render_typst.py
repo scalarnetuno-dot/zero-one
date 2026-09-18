@@ -212,25 +212,21 @@ class TypstRenderer:
         return f"#fig({tstr(b.src)}, {cap}{alt}width: {largura:.0f}%){lbl}\n"
 
     def diagram(self, b: Diagram) -> str:
-        layout = build_diagram(b.kind, b.spec, self.theme)
-        k = min(1.0, (self.text_w - 1) / layout.width) if layout.width else 1.0
+        # max_width entra ANTES de qualquer Typst existir: diagrams.py devolve
+        # o layout já reduzido (geometria, fonte, tudo) quando não cabe na
+        # coluna. Nada aqui precisa mais escalar — width/height/font_size do
+        # layout já são os valores finais, e #diagram() em style.typ.j2
+        # sempre pressupôs exatamente isso. O antigo #scale(..., reflow: true)
+        # só encolhia o container; cada #place(dx:, dy:) dentro do desenho
+        # continuava com coordenadas do tamanho cheio e vazava para a
+        # direita — era esse o defeito visto no PDF.
+        layout = build_diagram(b.kind, b.spec, self.theme, max_width=self.text_w - 1)
         body = self.draw(layout)
         cap = (f"caption: [{self.inline(parse_inline(b.caption))}], "
                if b.caption else "")
         lbl = f" #label({tstr(label_of('fig:' + b.id))})" if b.id else ""
-        # reflow: true é essencial aqui. Com reflow: false (padrão do Typst),
-        # o layout continua reservando — e centralizando — o espaço do
-        # tamanho ORIGINAL do conteúdo, não do escalado; o desenho encolhido
-        # fica ancorado no canto do espaço maior e vaza a caixa declarada
-        # abaixo (#diagram já usa width/height reduzidos por k). Sintoma:
-        # diagrama cortado à direita, com aparência de "descentralizado".
-        # Com reflow: true, o Typst recalcula a caixa ocupada pelo conteúdo
-        # já escalado, então a figura centraliza corretamente.
-        inner = body if k >= 0.999 else (
-            f"#scale(x: {k * 100:.1f}%, y: {k * 100:.1f}%, origin: top + left, "
-            f"reflow: true)[\n{body}]\n")
-        return (f"#diagram(width: {layout.width * k:.2f}mm, "
-                f"height: {layout.height * k:.2f}mm, {cap})[\n{inner}]{lbl}\n")
+        return (f"#diagram(width: {layout.width:.2f}mm, "
+                f"height: {layout.height:.2f}mm, {cap})[\n{body}]{lbl}\n")
 
     def draw(self, d: DiagramLayout) -> str:
         out: list[str] = []

@@ -463,9 +463,48 @@ BUILDERS = {
 }
 
 
-def build(kind: str, spec: dict[str, Any], theme: Theme) -> DiagramLayout:
+# ─── redução para caber na coluna ────────────────────────────────────────────
+
+def _scale_layout(d: DiagramLayout, k: float) -> DiagramLayout:
+    """Encolhe um layout já pronto por um fator k, geometria e fonte juntas.
+
+    Isto substitui a antiga saída de render_typst.py, que envolvia o desenho
+    em #scale(..., reflow: true) no Typst: aquilo só reduzia visualmente o
+    CONTAINER, mas cada #place(dx:, dy:) dentro do desenho continuava usando
+    coordenadas do tamanho cheio — o Typst não recorta place() que sai da
+    caixa, então o traço vazava para a direita exatamente na largura que
+    sobrava sem reduzir. Aqui a conta é feita uma vez, em mm, antes de
+    qualquer Typst existir: coordenada reduzida entra, coordenada reduzida
+    sai. Nenhuma primitiva dg-* nem #diagram() precisa saber que isto
+    aconteceu — style.typ.j2 já assume que o que chega está no tamanho
+    final, e com esta função isso passa a ser verdade de fato, não só
+    de comentário.
+    """
+    if k >= 0.999:
+        return d
+
+    def px(p: Point) -> Point:
+        return (p[0] * k, p[1] * k)
+
+    shapes = [Shape(kind=s.kind, x=s.x * k, y=s.y * k, w=s.w * k, h=s.h * k,
+                    text=s.text, sub=s.sub, fill=s.fill, stroke=s.stroke,
+                    dashed=s.dashed, bold=s.bold, align=s.align)
+              for s in d.shapes]
+    edges = [Edge(points=[px(p) for p in e.points], label=e.label, arrow=e.arrow,
+                  dashed=e.dashed, label_at=px(e.label_at) if e.label_at else None)
+             for e in d.edges]
+    return DiagramLayout(width=d.width * k, height=d.height * k, shapes=shapes,
+                         edges=edges, font_size=d.font_size * k,
+                         label_size=d.label_size * k)
+
+
+def build(kind: str, spec: dict[str, Any], theme: Theme,
+          max_width: float | None = None) -> DiagramLayout:
     fn = BUILDERS.get(kind.lower())
     if fn is None:
         raise DiagramError(
             f"diagrama '{kind}' não existe. Disponíveis: {', '.join(sorted(BUILDERS))}")
-    return fn(spec, theme)
+    layout = fn(spec, theme)
+    if max_width and layout.width > max_width:
+        layout = _scale_layout(layout, max_width / layout.width)
+    return layout
