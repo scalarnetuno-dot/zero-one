@@ -1,0 +1,38 @@
+# ─── VOLUME 1 ────────────────────────────────────────────────────────────────
+# Tudo que este livro precisa decidir por conta própria está aqui.
+# Layout, tipografia, componentes e validação vêm da coleção.
+title: "Java One"
+subtitle: "O compilador como colega — um arquivo, um main, tipos que alguém confere por você"
+author: "Thiago Pablicio"
+volume: 1
+accent: orange            # collection.yaml → accents
+language: pt-BR
+year: 2026
+edition: "1ª edição"
+isbn: ""                  # a KDP fornece um ASIN; ISBN só se você tiver o seu
+
+description: >-
+  Java do zero sem IDE de quatro gigabytes e sem Spring no primeiro dia:
+  javac, java, um arquivo, um main. O erro de compilação deixa de ser
+  castigo e vira revisão gratuita.
+
+keywords: [Java, programação, iniciantes, javac, tipos, JVM]
+
+# Aparecem na contracapa. Máximo cinco — a capa é cartaz, não folheto.
+cover_bullets:
+  - "Um arquivo, um main, nenhum framework"
+  - "Erros de compilação lidos linha a linha"
+  - "Diagramas que explicam o fluxo, não enfeitam"
+  - "Exercícios com resposta comentada"
+
+
+# De onde este volume nasceu, na Knowpill.
+course_slug: java-one
+
+# Ordem dos capítulos. Some a linha e a pipeline usa a ordem alfabética.
+chapters:
+  - 00-antes-de-comecar.md
+  - 01-a-porta.md
+  - 02-valores-com-nome.md
+  - 03-decidir.md
+  - 04-repetir.md

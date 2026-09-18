@@ -1,0 +1,6 @@
+build/
+collection/theme/fonts/*.ttf
+collection/theme/fonts/licenses/
+__pycache__/
+*.pyc
+.venv/

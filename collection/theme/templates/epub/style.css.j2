@@ -1,0 +1,197 @@
+/* ZERO ONE — folha de estilo do EPUB. GERADA a partir de tokens.yaml. */
+
+:root {
+  --ink: {{ tk.color.ink }};
+  --ink-soft: {{ tk.color.ink_soft }};
+  --ink-faint: {{ tk.color.ink_faint }};
+  --rule: {{ tk.color.rule }};
+  --surface: {{ tk.color.surface }};
+  --accent: {{ accent }};
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #E9ECEF;
+    --ink-soft: #AEB6BF;
+    --ink-faint: #8A9099;
+    --rule: #333A41;
+    --surface: #1C2024;
+  }
+}
+
+html { font-size: 100%; }
+
+body {
+  font-family: "{{ tk.type.serif }}", Georgia, "Times New Roman", serif;
+  color: var(--ink);
+  line-height: 1.55;
+  margin: 0 auto;
+  padding: 1em 1.1em 3em;
+  max-width: {{ tk.epub.max_width }};
+  text-align: justify;
+  hyphens: auto;
+  -epub-hyphens: auto;
+}
+
+p {
+  margin: 0 0 {{ tk.epub.paragraph_spacing }};
+  text-indent: {{ tk.epub.paragraph_indent }};
+}
+p.lead { text-indent: 0; }
+
+/* ── abertura de capítulo ───────────────────────────────────────────── */
+.chapter-open { margin: 1.5em 0 2.4em; page-break-before: always; }
+.chapter-open .kicker-label {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif;
+  font-size: .72rem; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.chapter-open .num {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif;
+  font-size: 2.6rem; font-weight: 300; color: var(--accent);
+  line-height: 1; margin-left: .35em;
+}
+h1 {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif;
+  font-size: 1.85rem; font-weight: 700; line-height: 1.15;
+  margin: .35em 0 .3em; text-align: left; hyphens: none;
+}
+.kicker {
+  font-style: italic; color: var(--ink-soft); margin: 0 0 .6em;
+  text-indent: 0; text-align: left;
+}
+.chapter-open hr {
+  border: 0; border-top: 2px solid var(--accent); width: 3.2em; margin: 1em 0 0;
+}
+
+h2, h3, h4 {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif;
+  text-align: left; hyphens: none; page-break-after: avoid;
+}
+h2 { font-size: 1.25rem; font-weight: 700; margin: 2em 0 .5em; }
+h2 .n { color: var(--accent); margin-right: .45em; }
+h3 { font-size: 1.05rem; font-weight: 600; margin: 1.5em 0 .35em; }
+h4 {
+  font-size: .82rem; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; margin: 1.2em 0 .3em;
+}
+
+/* ── código ─────────────────────────────────────────────────────────── */
+pre, code, kbd { font-family: "{{ tk.type.mono }}", ui-monospace, Menlo, Consolas, monospace; }
+code { font-size: .88em; background: var(--surface); padding: .08em .25em; border-radius: 2px; }
+.code { margin: 1.1em 0; }
+.code .code-head {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif;
+  font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-soft); background: {{ tk.code.background }};
+  border: 1px solid {{ tk.code.border }}; border-bottom: 0; padding: .35em .6em;
+  display: flex; justify-content: space-between;
+}
+.code pre {
+  margin: 0; padding: .7em; overflow-x: auto; white-space: pre; line-height: 1.45;
+  font-size: .82rem; background: {{ tk.code.background }};
+  border: 1px solid {{ tk.code.border }}; text-align: left;
+}
+.code pre code { background: none; padding: 0; font-size: 1em; }
+.ln { color: var(--ink-faint); user-select: none; }
+
+{% for key, color in tk.code.palette.items() %}
+.tok-{{ key }} { color: {{ color }}; }
+{% endfor %}
+.tok-comment { font-style: italic; }
+
+/* ── caixas ─────────────────────────────────────────────────────────── */
+.callout {
+  background: var(--surface); border-left: 3px solid var(--accent);
+  padding: .75em .9em; margin: 1.2em 0; font-size: .94em; text-align: left;
+}
+.callout p { text-indent: 0; margin-bottom: .45em; }
+.callout p:last-child { margin-bottom: 0; }
+.callout .label {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif;
+  font-size: .7rem; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; display: block; margin-bottom: .35em;
+}
+{% for name, c in tk.callouts.items() %}
+.callout-{{ name }} { border-left-color: {{ theme.resolve_color(c.color) }}; }
+.callout-{{ name }} .label { color: {{ theme.resolve_color(c.color) }}; }
+{% endfor %}
+
+.example { border-left: 1px solid var(--rule); padding-left: 1em; margin: 1.2em 0; }
+.example .label, .summary .label, .exercise .num {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif;
+  font-size: .7rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.summary {
+  background: var(--surface); padding: .9em 1em; margin: 2em 0 1.2em; font-size: .94em;
+}
+.summary .label { color: var(--accent); display: block; margin-bottom: .4em; }
+.summary ul { margin: 0; }
+.exercise { display: flex; gap: .7em; margin: 1em 0; text-align: left; }
+.exercise .num {
+  color: var(--accent); font-size: .95rem; min-width: 1.4em;
+}
+.exercise p { text-indent: 0; }
+
+blockquote {
+  margin: 1.2em 1.5em; font-style: italic; color: var(--ink-soft); text-align: left;
+}
+blockquote .attribution {
+  display: block; font-style: normal; font-size: .72rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ink-faint); margin-top: .5em;
+}
+
+figure { margin: 1.5em 0; text-align: center; page-break-inside: avoid; }
+figure img, figure svg { max-width: 100%; height: auto; }
+figcaption {
+  font-size: .8rem; color: var(--ink-soft); text-align: left; margin-top: .5em;
+}
+figcaption .label {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif;
+  font-size: .7rem; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--accent); margin-right: .4em;
+}
+
+table { border-collapse: collapse; width: 100%; font-size: .88rem; margin: 1.3em 0; }
+th {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif;
+  font-size: .7rem; letter-spacing: .08em; text-transform: uppercase;
+  text-align: left; border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule); padding: .45em .3em;
+}
+td { padding: .45em .3em; border-bottom: 1px solid var(--rule); vertical-align: top; }
+tr:last-child td { border-bottom: 2px solid var(--ink); }
+
+ul, ol { padding-left: 1.3em; text-align: left; }
+li { margin-bottom: .3em; }
+
+.term { margin: .5em 0; text-align: left; }
+.term dt {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif;
+  font-weight: 600; font-size: .95em; display: inline;
+}
+.term dd { display: inline; margin-left: .5em; color: var(--ink-soft); }
+
+hr.ornament { border: 0; text-align: center; margin: 1.6em 0; color: var(--ink-faint); }
+hr.ornament::after { content: "* * *"; letter-spacing: .4em; }
+
+a { color: var(--accent); text-decoration: none; }
+
+.cover { margin: 0; padding: 0; text-align: center; page-break-after: always; }
+.cover img { max-width: 100%; max-height: 100vh; }
+
+/* ── folha de rosto ─────────────────────────────────────────────────── */
+.titlepage { text-align: left; padding-top: 2em; }
+.titlepage .collection {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif;
+  font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--accent);
+}
+.titlepage h1 { font-size: 2.2rem; margin: .8em 0 .2em; }
+.titlepage .subtitle { font-style: italic; color: var(--ink-soft); font-size: 1.05rem; }
+.titlepage .author {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif;
+  font-weight: 600; margin-top: 2.5em;
+}
+.copyright { font-size: .8rem; color: var(--ink-soft); }
+.copyright p { text-indent: 0; }

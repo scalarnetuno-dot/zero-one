@@ -1,0 +1,67 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# IDENTIDADE DA COLEÇÃO
+# Vale para TODOS os volumes. Um livro só sobrescreve metadata + cor.
+# ─────────────────────────────────────────────────────────────────────────────
+collection:
+  name: "Zero One"
+  tagline: "Programação, do zero ao primeiro programa que serve para algo."
+  publisher: "Knowpill"
+  author_default: "Thiago Pablicio"
+  language_default: "pt-BR"
+  site: "knowpill.com"
+
+# Rótulos de texto do sistema (por idioma).
+# Traduzir um volume = escolher o idioma aqui + traduzir o conteúdo.
+strings:
+  pt-BR:
+    chapter: "Capítulo"
+    part: "Parte"
+    figure: "Figura"
+    table: "Tabela"
+    listing: "Listagem"
+    exercise: "Exercício"
+    example: "Exemplo"
+    summary: "Resumo"
+    answers: "Respostas"
+    glossary: "Glossário"
+    toc: "Sumário"
+    colophon: "Colofão"
+    tip: "Dica"
+    warning: "Atenção"
+    note: "Nota"
+    key: "O essencial"
+    practice: "Na prática"
+    continues: "continua"
+    of: "de"
+  en:
+    chapter: "Chapter"
+    part: "Part"
+    figure: "Figure"
+    table: "Table"
+    listing: "Listing"
+    exercise: "Exercise"
+    example: "Example"
+    summary: "Summary"
+    answers: "Answers"
+    glossary: "Glossary"
+    toc: "Contents"
+    colophon: "Colophon"
+    tip: "Tip"
+    warning: "Caution"
+    note: "Note"
+    key: "The essential"
+    practice: "In practice"
+    continues: "continues"
+    of: "of"
+
+# Cores de identificação disponíveis. Um volume escolhe UMA pelo nome.
+# Sempre accent: nunca dominam a página.
+accents:
+  red:    "#B32B23"
+  blue:   "#1F5FA8"
+  green:  "#1F7A4D"
+  orange: "#C2611A"
+  purple: "#5C3D8F"
+  teal:   "#116B72"
+  amber:  "#9A6B00"
+  slate:  "#3C4A57"

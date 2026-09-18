@@ -1,0 +1,115 @@
+// ════════════════════════════════════════════════════════════════════════════
+// CAPA — GERADA pela pipeline. Dois modos, um só desenho:
+//   mode = "front"  → só a capa, no tamanho do miolo (PDF digital e EPUB)
+//   mode = "wrap"   → contracapa + lombada + capa, com sangria (KDP impresso)
+// A largura da lombada vem do número real de páginas.
+// ════════════════════════════════════════════════════════════════════════════
+
+#let accent   = rgb("{{ accent }}")
+#let ink      = rgb("{{ tk.color.ink }}")
+#let ink-soft = rgb("{{ tk.color.ink_soft }}")
+#let ink-faint = rgb("{{ tk.color.ink_faint }}")
+#let paper    = rgb("{{ tk.color.paper }}")
+#let sans     = "{{ tk.type.sans }}"
+#let serif    = "{{ tk.type.serif }}"
+
+#let trim-w = {{ trim_w }}mm
+#let trim-h = {{ trim_h }}mm
+#let spine  = {{ spine }}mm
+{% if mode == "wrap" %}
+#let bleed  = {{ bleed }}mm
+{% else %}
+#let bleed  = 0mm
+{% endif %}
+#let safe   = 9mm
+
+#set page(
+{% if mode == "wrap" %}
+  width: trim-w * 2 + spine + bleed * 2,
+{% else %}
+  width: trim-w,
+{% endif %}
+  height: trim-h + bleed * 2,
+  margin: 0pt,
+  fill: paper,
+)
+#set text(font: sans, fill: ink, lang: "{{ lang }}")
+#set par(justify: false, first-line-indent: 0pt, leading: 0.62em)
+
+#let caps(body, color: ink-soft, size: 8pt, weight: 600) = text(
+  size: size, weight: weight, fill: color, tracking: 0.08em,
+)[#upper(body)]
+
+// ── A CAPA (usada nos dois modos) ───────────────────────────────────────────
+#let front = block(width: trim-w, height: trim-h)[
+  #pad(x: safe + 3mm, y: safe + 6mm)[
+    #caps("{{ collection_name }}", color: accent, size: 9pt)
+    {% if volume %}
+    #h(3mm)
+    #text(size: 9pt, fill: ink-faint, weight: 300)[{{ volume }}]
+    {% endif %}
+    #v(10mm)
+    #text(size: 31pt, weight: 700, tracking: -0.02em)[{{ title }}]
+    {% if subtitle %}
+    #v(4mm)
+    #block(width: 88%)[
+      #text(font: serif, size: 11.5pt, style: "italic", fill: ink-soft)[{{ subtitle }}]
+    ]
+    {% endif %}
+    {% if cover_image %}
+    #v(1fr)
+    #align(center)[#image("{{ cover_image }}", width: 74%)]
+    {% endif %}
+    #v(1fr)
+    #line(length: 22mm, stroke: 1pt + accent)
+    #v(5mm)
+    #text(size: 12pt, weight: 600)[{{ author }}]
+  ]
+]
+
+{% if mode == "wrap" %}
+// ── CONTRACAPA ──────────────────────────────────────────────────────────────
+#place(top + left, dx: bleed, dy: bleed, block(width: trim-w, height: trim-h)[
+  #pad(x: safe + 3mm, y: safe + 6mm)[
+    #caps("{{ collection_name }}", color: accent, size: 8.5pt)
+    #v(8mm)
+    #text(size: 12pt, weight: 600)[{{ title }}]
+    #v(5mm)
+    #text(font: serif, size: 9.5pt, fill: ink-soft)[{{ description }}]
+    #v(7mm)
+    #line(length: 18mm, stroke: 0.8pt + accent)
+    #v(5mm)
+    {% for item in bullets %}
+    #block(below: 2.5mm)[
+      #text(size: 8.5pt, fill: accent)[▸]
+      #h(2mm)
+      #text(font: serif, size: 9pt)[{{ item }}]
+    ]
+    {% endfor %}
+    #v(1fr)
+    #caps("{{ publisher }}", color: ink-soft, size: 7.5pt)
+    {% if isbn %}
+    #v(2mm)
+    #text(size: 7.5pt, fill: ink-soft)[ISBN {{ isbn }}]
+    {% endif %}
+  ]
+])
+
+// ── LOMBADA ─────────────────────────────────────────────────────────────────
+#place(top + left, dx: bleed + trim-w, dy: bleed, block(
+  width: spine, height: trim-h, fill: accent,
+)[
+  {% if spine_text %}
+  #place(center + horizon, rotate(90deg, reflow: false, block(width: trim-h - 20mm)[
+    #set align(center)
+    #text(size: 10pt, weight: 600, fill: white)[{{ title }}]
+    #h(6mm)
+    #text(size: 9pt, fill: white.transparentize(25%))[{{ author }}]
+  ]))
+  {% endif %}
+])
+
+#place(top + left, dx: bleed + trim-w + spine, dy: bleed, front)
+{% else %}
+#front
+{% endif %}

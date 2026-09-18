@@ -1,0 +1,144 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# DESIGN SYSTEM — fonte única da verdade visual da coleção.
+# Mexeu aqui, mudou em TODOS os livros, em PDF e EPUB.
+# Nenhum valor visual pode ser escrito em código Python ou em .typ à mão.
+# ─────────────────────────────────────────────────────────────────────────────
+
+page:
+  # 6×9 pol — o formato padrão de livro técnico na Amazon KDP.
+  trim: { width: 152.4mm, height: 228.6mm }
+  # Margens espelhadas: "inside" é a lombada.
+  margin: { inside: 19mm, outside: 15mm, top: 17mm, bottom: 18mm }
+  # A KDP exige margem interna maior conforme o livro engorda.
+  # Regra aplicada automaticamente sobre o número real de páginas.
+  gutter_steps:
+    - { max_pages: 150, add: 0mm }
+    - { max_pages: 300, add: 2mm }
+    - { max_pages: 500, add: 4mm }
+    - { max_pages: 700, add: 6mm }
+    - { max_pages: 9999, add: 8mm }
+  binding: left          # livro ocidental: páginas ímpares à direita
+  first_page_parity: odd # capítulo sempre abre em página ímpar
+
+type:
+  serif: "IBM Plex Serif"
+  sans: "IBM Plex Sans"
+  mono: "IBM Plex Mono"
+  # Corpo do texto
+  size: 10pt
+  leading: 0.78em         # entrelinha do Typst (≈ 1.45 de corpo)
+  paragraph_indent: 5mm   # recuo de parágrafo; o 1º de cada seção não recua
+  paragraph_spacing: 0pt  # livro clássico: recuo, não espaço entre parágrafos
+  justify: true
+  hyphenate: true
+  # Escala tipográfica (razão 1.25, arredondada para inteiros legíveis)
+  scale:
+    chapter_number: 64pt
+    chapter_title: 26pt
+    part_title: 32pt
+    h2: 15pt
+    h3: 11.5pt
+    h4: 10pt
+    body: 10pt
+    small: 8.5pt
+    caption: 8.5pt
+    code: 8.6pt
+    code_inline: 0.92em
+    running_head: 8pt
+    folio: 9pt
+  weight:
+    display: 700          # títulos em sans
+    body: 400
+    strong: 600
+    light: 300
+  tracking:
+    label: 0.08em         # RÓTULOS EM CAIXA ALTA
+    display: -0.015em     # títulos grandes fecham um pouco
+    running_head: 0.06em
+
+color:
+  ink: "#16181A"          # preto do texto — nunca #000 no papel
+  ink_soft: "#5A6169"     # legendas, rodapés, números de linha
+  ink_faint: "#8A9099"
+  rule: "#DCDFE3"         # fios
+  rule_strong: "#B6BCC4"
+  paper: "#FFFFFF"
+  surface: "#F5F6F7"      # fundo das caixas
+  surface_warm: "#FAF7F2"
+  accent: "#B32B23"       # sobrescrito por livro (collection.yaml → accents)
+  accent_tint: 0.10       # opacidade do accent quando vira fundo
+
+space:
+  unit: 4pt
+  block: 12pt             # respiro padrão antes/depois de um bloco
+  block_tight: 6pt
+  section_before: 20pt
+  section_after: 7pt
+  subsection_before: 13pt
+  subsection_after: 4pt
+  chapter_title_gap: 20mm # do topo da mancha até o número do capítulo
+  chapter_body_gap: 16mm  # do título até o primeiro parágrafo
+  callout_padding: 8pt
+  code_padding: 8pt
+  figure_gap: 8pt
+
+blocks:
+  # Caixa com até N caracteres de texto não pode quebrar entre páginas:
+  # rótulo sozinho no pé da folha é defeito de diagramação.
+  callout_keep_together_chars: 600
+
+rules:
+  hairline: 0.4pt
+  medium: 0.8pt
+  accent_bar: 2.2pt       # barra lateral das caixas de destaque
+  radius: 0pt             # coleção sem cantos arredondados: papel não dobra
+
+code:
+  numbered_from_lines: 6  # numera as linhas só quando o bloco tem ≥ N linhas
+  max_line_chars: 62      # acima disso o validador reclama (estoura a mancha)
+  keep_together_lines: 26 # blocos até N linhas não podem quebrar de página
+  background: "#F7F8F9"
+  border: "#E4E7EA"
+  # Paleta do realce — vale para PDF (tmTheme) e EPUB (CSS)
+  palette:
+    text:     "#1B1F23"
+    comment:  "#7A828C"
+    keyword:  "#8B3E8F"
+    string:   "#1F6F43"
+    number:   "#9A5518"
+    function: "#1F5FA8"
+    type:     "#8B5A00"
+    builtin:  "#1F5FA8"
+    operator: "#4A5058"
+    meta:     "#7A828C"
+
+callouts:
+  # Um componente, cinco variantes. Nada de caixa nova por capricho.
+  tip:      { label_key: tip,      color: "#1F7A4D", glyph: "◆" }
+  warning:  { label_key: warning,  color: "#B3541E", glyph: "▲" }
+  note:     { label_key: note,     color: "#3C4A57", glyph: "■" }
+  key:      { label_key: key,      color: "accent",  glyph: "●" }
+  practice: { label_key: practice, color: "accent",  glyph: "▶" }
+
+diagram:
+  # Geometria dos diagramas gerados. O autor nunca posiciona nada.
+  node: { width: 42mm, height: 11mm, gap_x: 10mm, gap_y: 9mm }
+  small_node: { width: 26mm, height: 9mm }
+  stroke: 0.6pt
+  font_size: 8.2pt
+  label_size: 7.4pt
+  fill: "#FFFFFF"
+  fill_alt: "#F2F4F6"
+  arrow_head: 2.0mm
+
+figure:
+  caption_align: left
+  max_height: 0.62         # fração da altura da mancha
+  min_dpi: 300             # abaixo disso o validador reclama (impressão)
+
+epub:
+  # O EPUB não tem página: o sistema troca recuo por espaço entre parágrafos.
+  base_size: 1rem
+  paragraph_spacing: 0.75em
+  paragraph_indent: 0em
+  max_width: 38rem

@@ -1,0 +1,563 @@
+// ════════════════════════════════════════════════════════════════════════════
+// ZERO ONE — design system da coleção.
+// ARQUIVO GERADO a partir de collection/theme/tokens.yaml. Não editar à mão:
+// o build sobrescreve. Para mudar o visual, mude os tokens.
+// ════════════════════════════════════════════════════════════════════════════
+
+// ─── cores ──────────────────────────────────────────────────────────────────
+#let accent      = rgb("{{ accent }}")
+#let ink         = rgb("{{ tk.color.ink }}")
+#let ink-soft    = rgb("{{ tk.color.ink_soft }}")
+#let ink-faint   = rgb("{{ tk.color.ink_faint }}")
+#let rule-color  = rgb("{{ tk.color.rule }}")
+#let rule-strong = rgb("{{ tk.color.rule_strong }}")
+#let paper       = rgb("{{ tk.color.paper }}")
+#let surface     = rgb("{{ tk.color.surface }}")
+#let accent-soft = accent.lighten({{ (100 - (tk.color.accent_tint * 100)) | int }}%)
+
+// ─── tipografia ─────────────────────────────────────────────────────────────
+#let serif = "{{ tk.type.serif }}"
+#let sans  = "{{ tk.type.sans }}"
+#let mono  = "{{ tk.type.mono }}"
+
+#let s-body       = {{ tk.type.scale.body }}
+#let s-small      = {{ tk.type.scale.small }}
+#let s-caption    = {{ tk.type.scale.caption }}
+#let s-code       = {{ tk.type.scale.code }}
+#let s-h2         = {{ tk.type.scale.h2 }}
+#let s-h3         = {{ tk.type.scale.h3 }}
+#let s-h4         = {{ tk.type.scale.h4 }}
+#let s-chapnum    = {{ tk.type.scale.chapter_number }}
+#let s-chaptitle  = {{ tk.type.scale.chapter_title }}
+#let s-parttitle  = {{ tk.type.scale.part_title }}
+#let s-head       = {{ tk.type.scale.running_head }}
+#let s-folio      = {{ tk.type.scale.folio }}
+
+#let w-display = {{ tk.type.weight.display }}
+#let w-strong  = {{ tk.type.weight.strong }}
+#let w-light   = {{ tk.type.weight.light }}
+
+#let sp-block  = {{ tk.space.block }}
+#let sp-tight  = {{ tk.space.block_tight }}
+#let hairline  = {{ tk.rules.hairline }}
+#let medium    = {{ tk.rules.medium }}
+
+// ─── rótulos do sistema (idioma do livro) ───────────────────────────────────
+#let L = (
+{% for key in ["chapter","part","figure","table","listing","exercise","example","summary","answers","glossary","toc","colophon","tip","warning","note","key","practice","continues","of"] %}
+  {{ key }}: "{{ theme.s(key) }}",
+{% endfor %}
+)
+
+// ─── estado interno ─────────────────────────────────────────────────────────
+#let _chinfo = state("chinfo", (number: none, kicker: none))
+#let _book   = state("book", (title: "", author: ""))
+
+// ════════════════════════════════════════════════════════════════════════════
+// PRIMITIVAS
+// ════════════════════════════════════════════════════════════════════════════
+
+// RÓTULO EM CAIXA ALTA — o único elemento decorativo da coleção.
+#let caps(body, color: ink-soft, size: s-small, weight: w-strong) = text(
+  font: sans, size: size, weight: weight, fill: color,
+  tracking: {{ tk.type.tracking.label }},
+)[#upper(body)]
+
+#let hrule(color: rule-color, thickness: hairline, width: 100%) = line(
+  length: width, stroke: thickness + color,
+)
+
+// Título corrente: capítulo vigente naquela página.
+#let _current-chapter() = {
+  let hs = query(selector(heading.where(level: 1)).before(here()))
+  if hs.len() > 0 { hs.last().body } else { none }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// COMPONENTES EDITORIAIS
+// ════════════════════════════════════════════════════════════════════════════
+
+// 1. CAPÍTULO — abertura de página inteira.
+#let chapter(number: none, kicker: none, numbered: true, title) = {
+  _chinfo.update((number: number, kicker: kicker))
+  if numbered and number != none { counter(heading).update((number - 1,)) }
+  if numbered {
+    heading(level: 1, title)
+  } else {
+    heading(level: 1, numbering: none, title)
+  }
+}
+
+#let _chapter-opener(it) = page(header: none, footer: none)[
+  #pagebreak(to: "{{ tk.page.first_page_parity }}", weak: true)
+  #set par(first-line-indent: 0pt, justify: false, leading: 0.62em)
+  #set text(hyphenate: false)
+  #context {
+    let info = _chinfo.get()
+    v({{ tk.space.chapter_title_gap }})
+    if info.number != none {
+      block(below: -1mm)[#caps(L.chapter, color: ink-faint, size: s-small)]
+      block(below: 3mm)[
+        #text(font: sans, size: s-chapnum, weight: w-light, fill: accent,
+              tracking: {{ tk.type.tracking.display }})[#info.number]
+      ]
+    }
+    block(width: 92%, above: 0pt, below: 6mm)[
+      #text(font: sans, size: s-chaptitle, weight: w-display, fill: ink,
+            tracking: {{ tk.type.tracking.display }})[
+        #it.body
+      ]
+    ]
+    if info.kicker != none and info.kicker != "" {
+      block(width: 74%, above: 0pt)[
+        #text(font: serif, size: 12pt, weight: 400, style: "italic", fill: ink-soft)[
+          #info.kicker
+        ]
+      ]
+    }
+    v(5mm)
+    hrule(color: accent, thickness: medium, width: 22mm)
+  }
+]
+
+// 2. SEÇÃO / SUBSEÇÃO — numeração 4.1, sem enfeite.
+#let _section-rules(body) = {
+  set text(hyphenate: true)
+  show heading: set text(hyphenate: false)
+  show heading.where(level: 2): it => block(
+    above: {{ tk.space.section_before }}, below: {{ tk.space.section_after }}, width: 100%,
+  )[
+    #text(font: sans, size: s-h2, weight: w-display, fill: ink)[
+      #if it.numbering != none [
+        #text(fill: accent)[#counter(heading).display(it.numbering)]
+        #h(2.5mm)
+      ]
+      #it.body
+    ]
+  ]
+  show heading.where(level: 3): it => block(
+    above: {{ tk.space.subsection_before }}, below: {{ tk.space.subsection_after }},
+  )[
+    #text(font: sans, size: s-h3, weight: w-strong, fill: ink)[#it.body]
+  ]
+  show heading.where(level: 4): it => block(above: 10pt, below: 3pt)[
+    #caps(it.body, color: ink, size: s-h4, weight: w-strong)
+  ]
+  body
+}
+
+// 3. CAIXA DE DESTAQUE — uma só, cinco variantes.
+#let callout(kind: "note", title: none, nobreak: false, body) = {
+  let conf = (
+{% for name, c in tk.callouts.items() %}
+    {{ name }}: (color: rgb("{{ theme.resolve_color(c.color) }}"), glyph: "{{ c.glyph }}", label: L.{{ c.label_key }}),
+{% endfor %}
+  )
+  let c = conf.at(kind, default: conf.note)
+  block(
+    width: 100%, above: sp-block, below: sp-block, breakable: not nobreak,
+    fill: surface,
+    stroke: (left: {{ tk.rules.accent_bar }} + c.color),
+    inset: (left: {{ tk.space.callout_padding }}, rest: {{ tk.space.callout_padding }}),
+  )[
+    #block(below: 3pt)[
+      #text(size: s-small, fill: c.color)[#c.glyph]
+      #h(1.6mm)
+      #caps(if title != none and title != "" { title } else { c.label }, color: c.color)
+    ]
+    #set text(size: s-small)
+    #set par(first-line-indent: 0pt, spacing: 0.55em)
+    #body
+  ]
+}
+
+// 4. CÓDIGO — realce nativo, título opcional, numeração de linha opcional.
+#let codeblock(lang: "text", title: none, numbered: false, nobreak: false, code) = {
+  block(width: 100%, above: sp-block, below: sp-block, breakable: not nobreak)[
+    #if title != none and title != "" {
+      block(
+        width: 100%, above: 0pt, below: 0pt,
+        fill: rgb("{{ tk.code.background }}"),
+        stroke: (top: hairline + rgb("{{ tk.code.border }}"),
+                 left: hairline + rgb("{{ tk.code.border }}"),
+                 right: hairline + rgb("{{ tk.code.border }}")),
+        inset: (x: {{ tk.space.code_padding }}, y: 4pt),
+      )[
+        #caps(title, color: ink-soft, size: 7.4pt)
+        #h(1fr)
+        #text(font: mono, size: 7.4pt, fill: ink-faint)[#lang]
+      ]
+    }
+    #block(
+      width: 100%, above: 0pt,
+      fill: rgb("{{ tk.code.background }}"),
+      stroke: hairline + rgb("{{ tk.code.border }}"),
+      inset: (x: {{ tk.space.code_padding }}, y: {{ tk.space.code_padding }}),
+    )[
+      #set text(font: mono, size: s-code)
+      #set par(justify: false, leading: 0.55em, first-line-indent: 0pt)
+      #show raw.line: it => {
+        if numbered {
+          box(width: 6mm)[
+            #text(fill: ink-faint, size: 0.85em)[#it.number]
+          ]
+        }
+        it.body
+      }
+      #code
+    ]
+  ]
+}
+
+// 5. FIGURA — imagem com legenda numerada por capítulo.
+#let fig(path, caption: none, alt: none, width: 100%) = figure(
+  image(path, width: width, alt: alt),
+  caption: caption,
+  kind: image,
+  supplement: L.figure,
+)
+
+// 6. DIAGRAMA — desenhado pela pipeline, nunca à mão.
+#let diagram(width: 100mm, height: 50mm, caption: none, body) = figure(
+  block(width: width, height: height, breakable: false)[
+    #set text(font: sans, fill: ink)
+    #body
+  ],
+  caption: caption,
+  kind: image,
+  supplement: L.figure,
+)
+
+// Primitivas de desenho usadas pelos diagramas gerados.
+#let dg-rect(x, y, w, h, label: [], sub: none, fill: white, stroke: rule-strong,
+             radius: 0pt, size: 8.2pt, bold: false) = place(
+  top + left, dx: x, dy: y,
+  block(width: w, height: h, fill: fill, radius: radius,
+        stroke: {{ tk.diagram.stroke }} + stroke, inset: 2pt)[
+    #set align(center + horizon)
+    #set par(leading: 0.45em, justify: false)
+    #stack(spacing: 1mm,
+      text(size: size, weight: if bold { w-strong } else { 400 })[#label],
+      ..if sub != none and sub != "" { (text(size: size * 0.82, fill: ink-soft)[#sub],) } else { () }
+    )
+  ]
+)
+
+#let dg-poly(x, y, w, h, points, label: [], fill: white, stroke: rule-strong,
+             size: 8.2pt) = {
+  place(top + left, dx: x, dy: y, polygon(
+    fill: fill, stroke: {{ tk.diagram.stroke }} + stroke,
+    ..points.map(p => (p.at(0) * w, p.at(1) * h)),
+  ))
+  place(top + left, dx: x, dy: y, block(width: w, height: h)[
+    #set align(center + horizon)
+    #set par(leading: 0.45em, justify: false)
+    #text(size: size)[#label]
+  ])
+}
+
+#let dg-path(pts, stroke-color: ink-soft, arrow: true, dashed: false,
+             head: {{ tk.diagram.arrow_head }}) = {
+  let dash = if dashed { "dashed" } else { "solid" }
+  for i in range(pts.len() - 1) {
+    place(top + left, line(
+      start: pts.at(i), end: pts.at(i + 1),
+      stroke: (paint: stroke-color, thickness: {{ tk.diagram.stroke }}, dash: dash),
+    ))
+  }
+  if arrow and pts.len() >= 2 {
+    let a = pts.at(pts.len() - 2)
+    let b = pts.at(pts.len() - 1)
+    let dx = b.at(0) - a.at(0)
+    let dy = b.at(1) - a.at(1)
+    let len = calc.max(calc.sqrt(
+      calc.pow(dx / 1mm, 2) + calc.pow(dy / 1mm, 2)), 0.001) * 1mm
+    let ux = dx / (len / 1mm) / 1mm
+    let uy = dy / (len / 1mm) / 1mm
+    let px = -uy
+    let py = ux
+    place(top + left, polygon(
+      fill: stroke-color, stroke: none,
+      b,
+      (b.at(0) - ux * head - px * head * 0.45, b.at(1) - uy * head - py * head * 0.45),
+      (b.at(0) - ux * head + px * head * 0.45, b.at(1) - uy * head + py * head * 0.45),
+    ))
+  }
+}
+
+#let dg-label(x, y, body, size: 7.4pt, fill: ink-soft) = place(
+  top + left, dx: x, dy: y,
+  block(inset: (x: 1pt), fill: paper)[#text(size: size, fill: fill)[#body]],
+)
+
+// 7. EXEMPLO TRABALHADO.
+#let example(title: none, body) = block(
+  width: 100%, above: sp-block, below: sp-block, breakable: true,
+  stroke: (left: hairline + rule-strong), inset: (left: 5mm, y: 1mm),
+)[
+  #block(below: 3pt)[
+    #caps(L.example, color: ink-faint, size: 7.4pt)
+    #if title != none and title != "" [ #h(2mm) #text(font: sans, size: s-small, weight: w-strong)[#title] ]
+  ]
+  #body
+]
+
+// 8. EXERCÍCIO — número e dificuldade na coluna da esquerda.
+#let exercise(number: 1, level: 1, body) = block(
+  width: 100%, above: sp-block, below: sp-tight, breakable: true,
+)[
+  #grid(columns: (8mm, 1fr), gutter: 0pt,
+    block[
+      #text(font: sans, size: s-small, weight: w-display, fill: accent)[#number]
+      #if level > 1 [
+        #linebreak()
+        #text(size: 5.5pt, fill: ink-faint, tracking: 0.5pt)[#("•" * level)]
+      ]
+    ],
+    block[#body]
+  )
+]
+
+// 9. RESUMO DO CAPÍTULO.
+#let summary(body) = block(
+  width: 100%, above: {{ tk.space.section_before }}, below: sp-block, breakable: true,
+  fill: surface, inset: 9pt,
+)[
+  #block(below: 4pt)[#caps(L.summary, color: accent)]
+  #set text(size: s-small)
+  #set par(first-line-indent: 0pt, spacing: 0.55em)
+  #body
+]
+
+// 10. CITAÇÃO.
+#let quote-block(attribution: none, body) = block(
+  width: 100%, above: sp-block, below: sp-block, inset: (left: 6mm, right: 6mm),
+)[
+  #set par(first-line-indent: 0pt, justify: false)
+  #text(font: serif, size: s-small, style: "italic", fill: ink-soft)[#body]
+  #if attribution != none and attribution != "" [
+    #v(1.5mm)
+    #caps(attribution, color: ink-faint, size: 7.2pt)
+  ]
+]
+
+// 11. TABELA — fios horizontais só; a coluna elástica ocupa a mancha.
+#let tbl(columns: (), header: (), rows: (), aligns: (), caption: none) = figure(
+  block(width: 100%)[
+    #set text(size: s-small)
+    #set par(justify: false, first-line-indent: 0pt, leading: 0.5em)
+    #table(
+      columns: columns,
+      align: (col, row) => {
+        let a = if col < aligns.len() { aligns.at(col) } else { "left" }
+        let h = if a == "right" { right } else if a == "center" { center } else { left }
+        h + horizon
+      },
+      stroke: none,
+      inset: (x: 3pt, y: 4.5pt),
+      table.hline(stroke: medium + ink),
+      table.header(..header.map(h => caps(h, color: ink, size: 7.4pt))),
+      table.hline(stroke: hairline + rule-strong),
+      ..rows.flatten(),
+      table.hline(stroke: medium + ink),
+    )
+  ],
+  caption: caption,
+  kind: table,
+  supplement: L.table,
+)
+
+// 12. VERBETE (alimenta o glossário).
+#let term(name, body) = block(above: sp-tight, below: sp-tight)[
+  #text(font: sans, size: s-small, weight: w-strong)[#name]
+  #h(2mm)
+  #text(size: s-small, fill: ink-soft)[#body]
+]
+
+// 13. PARTE.
+#let part-page(number: none, title, blurb: none) = page(header: none, footer: none)[
+  #pagebreak(to: "odd", weak: true)
+  #v(1fr)
+  #align(center)[
+    #caps(L.part + " " + str(number), color: accent)
+    #v(5mm)
+    #text(font: sans, size: s-parttitle, weight: w-light, fill: ink,
+          tracking: {{ tk.type.tracking.display }})[#title]
+    #if blurb != none [
+      #v(6mm)
+      #block(width: 70%)[
+        #text(font: serif, size: 11pt, style: "italic", fill: ink-soft)[#blurb]
+      ]
+    ]
+  ]
+  #v(1.6fr)
+]
+
+// ════════════════════════════════════════════════════════════════════════════
+// PÁGINAS DE APOIO
+// ════════════════════════════════════════════════════════════════════════════
+
+#let title-page(title: "", subtitle: none, author: "", volume: none,
+                collection: "", tagline: none, publisher: "") = page(
+  header: none, footer: none,
+)[
+  #set par(first-line-indent: 0pt, justify: false, leading: 0.55em)
+  #v(24mm)
+  #caps(collection, color: accent, size: 9pt)
+  #if volume != none [ #h(2mm) #text(font: sans, size: 9pt, fill: ink-faint)[#volume] ]
+  #v(10mm)
+  #text(font: sans, size: 30pt, weight: w-display, fill: ink,
+        tracking: {{ tk.type.tracking.display }})[#title]
+  #if subtitle != none and subtitle != "" [
+    #v(4mm)
+    #block(width: 85%)[
+      #text(font: serif, size: 13pt, style: "italic", fill: ink-soft)[#subtitle]
+    ]
+  ]
+  #v(1fr)
+  #hrule(color: accent, thickness: medium, width: 22mm)
+  #v(4mm)
+  #text(font: sans, size: 11pt, weight: w-strong, fill: ink)[#author]
+  #v(2mm)
+  #caps(publisher, color: ink-faint, size: 8pt)
+  #v(10mm)
+]
+
+#let copyright-page(title: "", author: "", publisher: "", year: "", isbn: none,
+                    edition: "", notice: none) = page(header: none, footer: none)[
+  #v(1fr)
+  #set text(size: 8pt, fill: ink-soft)
+  #set par(first-line-indent: 0pt, justify: false, spacing: 0.7em)
+  #text(weight: w-strong, fill: ink)[#title] \
+  © #year #author \
+  #publisher
+  #v(4mm)
+  #edition
+  #if isbn != none and isbn != "" [ \ ISBN #isbn ]
+  #v(4mm)
+  #if notice != none [ #notice ]
+  #v(4mm)
+  #text(size: 7.4pt, fill: ink-faint)[
+    Composto em {{ tk.type.serif }}, {{ tk.type.sans }} e {{ tk.type.mono }}.
+    Diagramado por uma pipeline de tipografia programática.
+  ]
+]
+
+#let toc-page(depth: 2) = page(header: none, footer: none)[
+  #set par(first-line-indent: 0pt, justify: false, leading: 0.5em)
+  #block(below: 9mm)[
+    #text(font: sans, size: 18pt, weight: w-display, fill: ink)[#L.toc]
+    #v(2mm)
+    #hrule(color: accent, thickness: medium, width: 16mm)
+  ]
+  #show outline.entry.where(level: 1): it => link(it.element.location(), block(
+    width: 100%, above: 6mm, below: 2.5mm,
+  )[
+    #text(font: sans, size: 10.5pt, weight: w-strong, fill: ink)[
+      #box(width: 7mm)[
+        #if it.element.numbering != none {
+          text(fill: accent)[#counter(heading).at(it.element.location()).at(0)]
+        }
+      ]
+      #it.body()
+      #box(width: 1fr, inset: (x: 2mm), line(length: 100%, stroke: hairline + rule-color))
+      #text(fill: ink-faint, weight: 400)[#it.page()]
+    ]
+  ])
+  #show outline.entry.where(level: 2): it => link(it.element.location(), block(
+    width: 100%, above: 1.8mm, below: 0pt,
+  )[
+    #text(size: 9pt, fill: ink-soft)[
+      #h(7mm)
+      #box(width: 8mm)[#it.prefix()]
+      #it.body()
+      #box(width: 1fr, inset: (x: 2mm), line(length: 100%, stroke: hairline + rule-color))
+      #text(font: sans, size: 8.5pt, fill: ink-faint)[#it.page()]
+    ]
+  ])
+  #outline(title: none, depth: depth, indent: 0pt)
+]
+
+// ════════════════════════════════════════════════════════════════════════════
+// DOCUMENTO
+// ════════════════════════════════════════════════════════════════════════════
+
+#let book(title: "", author: "", subtitle: none, keywords: (), lang: "pt",
+          region: "BR", gutter-extra: 0mm, body) = {
+  set document(title: title, author: author, keywords: keywords)
+
+  set page(
+    width: {{ tk.page.trim.width }},
+    height: {{ tk.page.trim.height }},
+    margin: (
+      inside: {{ tk.page.margin.inside }} + gutter-extra,
+      outside: {{ tk.page.margin.outside }},
+      top: {{ tk.page.margin.top }},
+      bottom: {{ tk.page.margin.bottom }},
+    ),
+    binding: {{ tk.page.binding }},
+    fill: paper,
+    header: context {
+      let cur = here().page()
+      let h1s = query(heading.where(level: 1))
+      // sem cabeçalho na página que abre capítulo
+      if h1s.any(h => h.location().page() == cur) { return }
+      let title-here = _current-chapter()
+      if title-here == none { return }
+      set text(font: sans, size: s-head, fill: ink-faint,
+               tracking: {{ tk.type.tracking.running_head }})
+      if calc.even(cur) {
+        [#upper(_book.get().title)]
+      } else {
+        align(right)[#upper(title-here)]
+      }
+      v(-2mm)
+      hrule(color: rule-color, thickness: hairline)
+    },
+    footer: context {
+      let cur = here().page()
+      let h1s = query(heading.where(level: 1))
+      set text(font: sans, size: s-folio, fill: if h1s.any(h => h.location().page() == cur) { ink-faint } else { ink-soft })
+      if calc.even(cur) { [#cur] } else { align(right)[#cur] }
+    },
+  )
+
+  set text(font: serif, size: s-body, fill: ink, lang: lang, region: region,
+           hyphenate: {{ "true" if tk.type.hyphenate else "false" }})
+  set par(
+    justify: {{ "true" if tk.type.justify else "false" }},
+    leading: {{ tk.type.leading }},
+    first-line-indent: (amount: {{ tk.type.paragraph_indent }}, all: false),
+    spacing: {{ tk.type.paragraph_spacing }} + {{ tk.type.leading }},
+  )
+  set heading(numbering: (..n) => {
+    let nums = n.pos()
+    if nums.len() == 2 { numbering("1.1", ..nums) } else { none }
+  })
+  set figure(numbering: n => context numbering("1.1", counter(heading).get().at(0, default: 0), n))
+  set figure.caption(separator: [#h(2mm)])
+  show figure.caption: it => block(width: 100%)[
+    #set align(left)
+    #set text(size: s-caption, fill: ink-soft)
+    #caps([#it.supplement #context it.counter.display(it.numbering)], color: accent, size: 7.2pt)
+    #h(2mm)
+    #it.body
+  ]
+  show figure: set block(above: {{ tk.space.figure_gap }} + sp-block,
+                         below: {{ tk.space.figure_gap }} + sp-block)
+  // numeração de figura reinicia a cada capítulo
+  show heading.where(level: 1): it => { counter(figure.where(kind: image)).update(0); counter(figure.where(kind: table)).update(0); _chapter-opener(it) }
+  set raw(theme: "editorial.tmTheme")
+  show raw: set text(font: mono, size: s-code)
+  show raw.where(block: false): it => box(
+    fill: rgb("{{ tk.code.background }}"), inset: (x: 1.6pt, y: 0pt), outset: (y: 2.4pt),
+    radius: 1pt,
+  )[#text(size: {{ tk.type.scale.code_inline }}, fill: rgb("{{ tk.code.palette.text }}"))[#it]]
+  show link: it => text(fill: accent)[#it]
+  show strong: it => text(weight: w-strong)[#it.body]
+  show quote: it => quote-block(it.body)
+
+  _book.update((title: title, author: author))
+
+  _section-rules(body)
+}

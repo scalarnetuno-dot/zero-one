@@ -1,0 +1,34 @@
+# ─── NOVO VOLUME ─────────────────────────────────────────────────────────────
+# Criado por:  python -m pipeline new {{SLUG}} --title "{{TITLE}}" --accent blue
+# Só existem quatro decisões por livro: metadados, cor, conteúdo e assets.
+title: "{{TITLE}}"
+subtitle: "{{SUBTITLE}}"
+author: "Thiago Pablicio"
+volume: {{VOLUME}}
+accent: {{ACCENT}}        # red · blue · green · orange · purple · teal · amber · slate
+language: pt-BR
+year: 2026
+edition: "1ª edição"
+isbn: ""
+
+description: >-
+  Uma frase que explica para quem é o livro e o que a pessoa sai sabendo.
+  Vai para a contracapa, para o EPUB e para a página da KDP.
+
+keywords: []
+
+cover_bullets:
+  - "O que o leitor sai sabendo fazer"
+  - "O que este livro não tenta ser"
+
+course_slug: ""           # curso da Knowpill que originou o volume, se houver
+
+# Ordem dos capítulos. Apague a lista e a pipeline usa a ordem alfabética.
+chapters:
+  - 01-primeiro-capitulo.md
+
+# Ajuste fino de tokens SÓ deste volume. Use com parcimônia: o valor da
+# coleção é a consistência.
+# theme:
+#   type:
+#     size: 10.5pt
