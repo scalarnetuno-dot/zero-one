@@ -17,6 +17,7 @@ from .model import (
     Exercise, Figure, Heading, Http, ListBlock, Paragraph, Ref, Story, Summary,
     Table, Text, Tree, plain,
 )
+from .loader import asset_dir
 from .theme import Theme, _mm
 
 Level = Literal["error", "warn", "info"]
@@ -69,7 +70,8 @@ def validate_ast(book: Book, theme: Theme) -> list[Issue]:
                     out.append(Issue("warn", where, f"título órfão: “{b.title}”"))
 
         for b in ch.walk():
-            out += _check_block(b, ch, where, theme, max_cols, min_dpi, labels, refs)
+            out += _check_block(b, ch, book, where, theme, max_cols, min_dpi,
+                                labels, refs)
 
     for name in book.missing:
         out.append(Issue("info", "book.yaml", f"capítulo ainda não escrito: {name}"))
@@ -81,8 +83,9 @@ def validate_ast(book: Book, theme: Theme) -> list[Issue]:
     return out
 
 
-def _check_block(b: Block, ch: Chapter, where: str, theme: Theme, max_cols: int,
-                 min_dpi: int, labels: set[str], refs: list[tuple[str, str]]) -> list[Issue]:
+def _check_block(b: Block, ch: Chapter, book: Book, where: str, theme: Theme,
+                 max_cols: int, min_dpi: int, labels: set[str],
+                 refs: list[tuple[str, str]]) -> list[Issue]:
     out: list[Issue] = []
 
     if isinstance(b, Paragraph):
@@ -198,8 +201,8 @@ def _check_block(b: Block, ch: Chapter, where: str, theme: Theme, max_cols: int,
 
     elif isinstance(b, Art):
         if b.src:
-            path = (ch.source.parent.parent / "assets" / Path(b.src).name
-                    if ch.source else Path(b.src))
+            path = (asset_dir(book) / Path(b.src).name
+                if ch.source else Path(b.src))
             if not path.exists():
                 out.append(Issue("error", where, f"arte ausente: {b.src}"))
             else:

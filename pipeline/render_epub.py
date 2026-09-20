@@ -17,6 +17,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .diagrams import DiagramLayout, build as build_diagram
+from .loader import asset_dir
 from .model import (
     Anatomy, Block, Book, Callout, Chapter, Code, CodeBlock, Compare, Diagram,
     Em, Example, Exercise, Figure, Heading, Http, Inline, Link, ListBlock,
@@ -524,7 +525,7 @@ def write_epub(book: Book, theme: Theme, out: Path,
         manifest.append(f'    <item id="{item_id}" href="{rel}" '
                         f'media-type="image/png"/>')
 
-    assets = book.root / "assets"
+    assets = asset_dir(book)
     # figura e ilustração: as duas precisam viajar dentro do EPUB
     used = {Path(b.src).name for _, b in book.walk()
             if isinstance(b, (Figure, Art)) and getattr(b, "src", "")}

@@ -15,7 +15,7 @@ from pathlib import Path
 
 import typst
 
-from .loader import book_dir, load_book, theme_overrides
+from .loader import asset_dir, book_dir, load_book, theme_overrides
 from .model import Book
 from .theme import FONTS, Theme, _mm, load_theme
 
@@ -32,14 +32,14 @@ def spine_width(pages: int, paper: str = "white") -> float:
 
 def find_cover_art(slug: str, book: Book | None = None) -> Path | None:
     """A arte da capa do volume: `cover_image:` no book.yaml ou assets/capa.png."""
-    d = book_dir(slug)
     book = book or load_book(slug)
+    d = book.root
     named = book.meta.extra.get("cover_image")
     if named:
-        p = d / "assets" / Path(str(named)).name
+        p = asset_dir(book) / Path(str(named)).name
         return p if p.exists() else None
     for name in COVER_ART_NAMES:
-        p = d / "assets" / name
+        p = asset_dir(book) / name
         if p.exists():
             return p
     return None

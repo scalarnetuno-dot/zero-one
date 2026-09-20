@@ -18,7 +18,7 @@ import typst
 
 from .cover import build_front, find_cover_art, merge_with_cover
 from .diagram_png import render_all as render_diagram_png
-from .loader import book_dir, load_book, theme_overrides
+from .loader import asset_dir, book_dir, load_book, theme_overrides
 from .model import Art, Book
 from .render_epub import write_epub
 from .render_typst import render as render_typst
@@ -162,7 +162,7 @@ def _build_pdf(book: Book, theme: Theme, out: Path,
     src = out / "typst"
     src.mkdir(parents=True, exist_ok=True)
 
-    assets_src = book_dir(book.meta.slug) / "assets"
+    assets_src = asset_dir(book)
     assets_dst = src / "assets"
     if assets_src.exists():
         shutil.rmtree(assets_dst, ignore_errors=True)

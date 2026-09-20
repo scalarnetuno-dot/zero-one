@@ -1,31 +1,131 @@
-# ─── NOVO VOLUME ─────────────────────────────────────────────────────────────
-# Criado por:  python -m pipeline new python-one --title "Python One" --accent blue
-# Só existem quatro decisões por livro: metadados, cor, conteúdo e assets.
+# ─── VOLUME 2 ────────────────────────────────────────────────────────────────
 title: "Python One"
-subtitle: "Uma ideia por vez, rodando na sua mão"
+subtitle: "Do primeiro print à API REST em produção"
 author: "Thiago Nogueira"
 volume: 2
-accent: blue        # red · blue · green · orange · purple · teal · amber · slate
+accent: blue
 language: pt-BR
 year: 2026
 edition: "1ª edição"
 isbn: ""
 
 description: >-
-  Uma frase que explica para quem é o livro e o que a pessoa sai sabendo.
-  Vai para a contracapa, para o EPUB e para a página da KDP.
+  Python do zero até uma API REST completa: FastAPI, PostgreSQL, SQLAlchemy,
+  validação, JWT, testes e Docker. Um único projeto cresce capítulo a
+  capítulo — nada de exemplos soltos, nada de teoria antes da hora.
 
-keywords: []
+keywords: [Python, FastAPI, API REST, SQLAlchemy, PostgreSQL, JWT, CRUD, backend, Pydantic]
+
+cover_image: capa.png
+cover_full: true
 
 cover_bullets:
-  - "O que o leitor sai sabendo fazer"
-  - "O que este livro não tenta ser"
+  - "Um projeto só, crescendo do capítulo 1 ao 42"
+  - "Cada conceito aparece quando o projeto precisa dele"
+  - "Erros de verdade, lidos linha por linha"
+  - "API com validação, segurança, testes e Docker"
+  - "Sem promessa de 'aprenda em 24 horas' e sem atalho que cobra depois"
 
-course_slug: ""           # curso da Knowpill que originou o volume, se houver
+course_slug: python-one
 
-# Ordem dos capítulos. Apague a lista e a pipeline usa a ordem alfabética.
+# ─── PARTES ──────────────────────────────────────────────────────────────────
+parts:
+  - id: p1
+    title: "Começando do zero"
+    blurb: >-
+      Você escreve Python antes de entender Python. A linguagem entra pela
+      porta da prática: rodar, errar, ler o erro, consertar.
+  - id: p2
+    title: "O Python que você realmente precisa"
+    blurb: >-
+      Não a linguagem toda — a parte dela que sustenta uma API. Módulos,
+      objetos, exceções e tipagem moderna, na dose exata.
+  - id: p3
+    title: "Entrando no FastAPI"
+    blurb: >-
+      O framework que lê tipos Python e devolve documentação, validação e
+      rotas prontas. E o preço disso: entender o que ele decide por você.
+  - id: p4
+    title: "Construindo o CRUD"
+    blurb: >-
+      A espinha dorsal do livro. Schema, banco, repositório, serviço e rota
+      — nesta ordem, uma camada por vez.
+  - id: p5
+    title: "API de verdade"
+    blurb: >-
+      O que separa um CRUD de exercício de uma API que outra pessoa usa:
+      validação, erro honesto, paginação e busca.
+  - id: p6
+    title: "O Python que ninguém vê no tutorial"
+    blurb: >-
+      Relacionamentos, migrações, injeção de dependência e async — onde o
+      framework fica poderoso e perigoso na mesma medida.
+  - id: p7
+    title: "Segurança"
+    blurb: >-
+      Autenticação, autorização e um token que diz quem você é sem que o
+      servidor precise lembrar.
+  - id: p8
+    title: "Testes"
+    blurb: >-
+      A rede que permite mexer no código sem medo. Unidade, integração e
+      um banco de verdade dentro do teste.
+  - id: p9
+    title: "Documentação e ferramentas"
+    blurb: >-
+      Uma API que ninguém sabe usar não existe. E um projeto sem histórico
+      não tem volta.
+  - id: p10
+    title: "Projeto final"
+    blurb: >-
+      Agora sem mastigar. Você recebe os requisitos e constrói a loja
+      inteira — e depois a coloca no ar.
+
+# ─── CAPÍTULOS ───────────────────────────────────────────────────────────────
 chapters:
-  - 01-primeiro-capitulo.md
+  - 00-antes-de-comecar.md
+  - 01-o-que-vamos-construir.md
+  - 02-primeiro-programa.md
+  - 03-variaveis-e-tipos.md
+  - 04-operadores.md
+  - 05-condicionais.md
+  - 06-repeticoes.md
+  - 07-funcoes.md
+  - 08-estruturas-de-dados.md
+  - 09-modulos-e-ambiente.md
+  - 10-classes-e-objetos.md
+  - 11-encapsulamento.md
+  - 12-heranca-e-protocolos.md
+  - 13-excecoes.md
+  - 14-tipagem-e-dataclasses.md
+  - 15-o-que-e-fastapi.md
+  - 16-primeiro-projeto-fastapi.md
+  - 17-primeira-api.md
+  - 18-modelando-com-pydantic.md
+  - 19-banco-de-dados.md
+  - 20-sqlalchemy.md
+  - 21-repository.md
+  - 22-service.md
+  - 23-o-crud-completo.md
+  - 24-schemas.md
+  - 25-validacao.md
+  - 26-tratamento-de-erros.md
+  - 27-paginacao.md
+  - 28-filtros-e-buscas.md
+  - 29-relacionamentos.md
+  - 30-migrations.md
+  - 31-dependency-injection.md
+  - 32-async.md
+  - 33-autenticacao.md
+  - 34-jwt.md
+  - 35-usuarios-e-permissoes.md
+  - 36-testando-python.md
+  - 37-testando-services.md
+  - 38-testando-a-api.md
+  - 39-testando-o-banco.md
+  - 40-openapi.md
+  - 41-git.md
+  - 42-projeto-final.md
 
 # Ajuste fino de tokens SÓ deste volume. Use com parcimônia: o valor da
 # coleção é a consistência.

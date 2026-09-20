@@ -11,6 +11,7 @@ import re
 from pathlib import Path
 
 from .diagrams import DiagramLayout, build as build_diagram
+from .loader import asset_dir
 from .parser import parse_inline
 from .model import (
     Anatomy, Block, Book, Callout, Chapter, Code, CodeBlock, Compare, Diagram,
@@ -193,7 +194,7 @@ class TypstRenderer:
         try:
             from PIL import Image
 
-            caminho = self.book.root / src
+            caminho = asset_dir(self.book) / Path(src).name
             with Image.open(caminho) as im:
                 proporcao = im.height / im.width
         except Exception:

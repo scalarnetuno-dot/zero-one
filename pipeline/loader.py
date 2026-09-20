@@ -36,7 +36,7 @@ def list_books() -> list[str]:
 
 def load_book(slug: str) -> Book:
     d = book_dir(slug)
-    cfg: dict[str, Any] = yaml.safe_load((d / "book.yaml").read_text(encoding="utf-8")) or {}
+    cfg = load_config(slug)
     coll = yaml.safe_load((COLLECTION / "collection.yaml").read_text(encoding="utf-8"))
     c = coll.get("collection", {})
 
@@ -103,6 +103,30 @@ def load_book(slug: str) -> Book:
     return book
 
 
+def load_config(slug: str) -> dict[str, Any]:
+    """Lê a configuração do livro, herdando a configuração de uma fonte."""
+    d = book_dir(slug)
+    cfg: dict[str, Any] = yaml.safe_load(
+        (d / "book.yaml").read_text(encoding="utf-8")) or {}
+    source_slug = str(cfg.get("preview_source", "") or "")
+    if source_slug and source_slug != slug:
+        base = load_config(source_slug)
+        base.update(cfg)
+        cfg = base
+    return cfg
+
+
+def asset_dir(book: Book) -> Path:
+    """Retorna a pasta de assets própria ou herdada do volume fonte."""
+    source_slug = str(book.meta.extra.get("preview_source", "") or "")
+    if source_slug:
+        source = book_dir(source_slug) / "assets"
+        if source.exists():
+            return source
+    own = book.root / "assets"
+    return own
+
+
 _KNOWN = {
     "title", "subtitle", "author", "volume", "accent", "language", "isbn",
     "publisher", "year", "edition", "description", "keywords", "course_slug",
@@ -111,7 +135,7 @@ _KNOWN = {
 
 
 def theme_overrides(slug: str) -> dict[str, Any]:
-    cfg = yaml.safe_load((book_dir(slug) / "book.yaml").read_text(encoding="utf-8")) or {}
+    cfg = load_config(slug)
     return cfg.get("theme", {}) or {}
 
 

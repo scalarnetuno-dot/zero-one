@@ -17,6 +17,7 @@ from pathlib import Path
 from .build import BUILD, build, prepare
 from .cover import build_wrap
 from .loader import BOOKS, list_books, load_book
+from .preview import generate_preview
 from .theme import COLLECTION, load_theme
 from .validate import validate_ast
 
@@ -117,6 +118,13 @@ def cmd_clean(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_preview(args: argparse.Namespace) -> int:
+    for slug in _slugs(args.slug):
+        generated = generate_preview(slug)
+        print(f"  prévia  {slug}: {len(generated)} capítulos gerados")
+    return 0
+
+
 def _slugs(raw: str) -> list[str]:
     return list_books() if raw in ("all", "*") else [raw]
 
@@ -160,6 +168,10 @@ def main(argv: list[str] | None = None) -> int:
     cl = sub.add_parser("clean", help="apaga o build")
     cl.add_argument("slug")
     cl.set_defaults(fn=cmd_clean)
+
+    pv = sub.add_parser("preview", help="gera capítulos e assets de uma prévia")
+    pv.add_argument("slug")
+    pv.set_defaults(fn=cmd_preview)
 
     args = p.parse_args(argv)
     return args.fn(args)

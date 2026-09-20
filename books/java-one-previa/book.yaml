@@ -1,0 +1,31 @@
+# ─── PRÉVIA — Java One ────────────────────────────────────────────────────
+# Mesmo sumário do volume completo (books/java-one). Só o conteúdo dos
+# capítulos fora de preview_chapters são substituídos por um aviso de
+# "disponível na edição completa".
+#
+# Capítulos liberados nesta prévia: 0, 1, 2, 15, 20, 40.
+# Para regenerar: make preview BOOK=java-one-previa
+
+title: "Java One — Prévia"
+edition: "Prévia · 1ª edição"
+
+description: >-
+  Prévia de Java One: Java do zero até uma API REST completa com Spring
+  Boot, PostgreSQL, JPA, validação, JWT, testes e Docker. Esta edição traz
+  o sumário completo dos 42 capítulos e o conteúdo integral de uma amostra
+  deles — início, entrada no Spring, banco de dados e versionamento — para
+  você sentir o ritmo do livro antes de seguir para a edição completa.
+
+keywords: [prévia]
+
+cover_bullets:
+  - "Prévia gratuita — sumário completo, amostra de capítulos liberada"
+  - "Um projeto só, crescendo do capítulo 1 ao 42 na edição completa"
+  - "Cada conceito aparece quando o projeto precisa dele"
+  - "API com validação, segurança, testes e Docker na versão completa"
+
+# O restante do sumário, metadados e assets vem de java-one.
+course_slug: java-one-previa
+preview_source: java-one
+preview_chapters: [0, 1, 2, 15, 20, 40]
+
