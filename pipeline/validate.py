@@ -38,6 +38,12 @@ def validate_ast(book: Book, theme: Theme) -> list[Issue]:
     labels: set[str] = set()
     refs: list[tuple[str, str]] = []
 
+    # Todo capítulo é alvo de `@cap:<slug>`. Assim "no capítulo 26" deixa de
+    # ser um número digitado à mão — e um capítulo que mude de lugar vira
+    # erro de build, não uma frase errada impressa.
+    for ch in book.chapters:
+        labels.add(f"cap:{ch.slug}")
+
     for ch in book.chapters:
         where = f"{ch.source.name if ch.source else ch.slug}"
         if not ch.title.strip():

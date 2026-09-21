@@ -177,6 +177,7 @@ class HtmlRenderer:
                  diagram_png: dict[int, str] | None = None):
         self.theme = theme
         self.book = book
+        self.chapters_by_slug = {ch.slug: ch for ch in book.chapters}
         self.fig_n = 0
         self.tbl_n = 0
         self.chapter_n = 0
@@ -200,9 +201,20 @@ class HtmlRenderer:
             elif isinstance(n, Link):
                 out.append(f'<a href="{e(n.href)}">{self.inline(n.children)}</a>')
             elif isinstance(n, Ref):
-                out.append(f'<a href="#{e(n.target.replace(":", "-"))}">'
-                           f'{e(n.target.split(":")[-1])}</a>')
+                out.append(self.ref(n))
         return "".join(out)
+
+    def ref(self, n: Ref) -> str:
+        """`@cap:<slug>` vira link para o capítulo; o resto, âncora interna."""
+        kind, _, target = n.target.partition(":")
+        if kind == "cap":
+            ch = self.chapters_by_slug.get(target)
+            if ch is not None:
+                return (f'<a href="ch-{e(ch.slug)}.xhtml">'
+                        f'{e(str(ch.number))}</a>')
+            return e(target)
+        return (f'<a href="#{e(n.target.replace(":", "-"))}">'
+                f'{e(n.target.split(":")[-1])}</a>')
 
     def blocks(self, blocks: list[Block]) -> str:
         return "\n".join(self.block(b) for b in blocks)

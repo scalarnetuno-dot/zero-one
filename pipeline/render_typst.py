@@ -46,6 +46,7 @@ class TypstRenderer:
         self.pages = pages_estimate
         self.text_w = theme.text_width_mm(pages_estimate)
         self.numbered_chapter = True
+        self.chapter_numbers = {ch.slug: ch.number for ch in book.chapters}
         self.answers: list[tuple[Chapter, Exercise]] = []
         self.art: list[Art] = []
         self.terms: list[Term] = []
@@ -65,8 +66,16 @@ class TypstRenderer:
             elif isinstance(n, Link):
                 out.append(f"#link({tstr(n.href)})[{self.inline(n.children)}]")
             elif isinstance(n, Ref):
-                out.append(f"@{label_of(n.target)}")
+                out.append(self.ref(n))
         return "".join(out)
+
+    def ref(self, n: Ref) -> str:
+        """`@cap:<slug>` vira o número do capítulo; o resto vira label Typst."""
+        kind, _, target = n.target.partition(":")
+        if kind == "cap":
+            number = self.chapter_numbers.get(target)
+            return str(number) if number else esc(target)
+        return f"@{label_of(n.target)}"
 
     # ─── blocos ──────────────────────────────────────────────────────────
     def blocks(self, blocks: list[Block], indent: int = 0) -> str:

@@ -1,0 +1,139 @@
+# ─── VOLUME 3 ────────────────────────────────────────────────────────────────
+title: "PHP One"
+subtitle: "Do zero à API com Laravel"
+author: "Thiago Nogueira"
+volume: 3
+accent: purple
+language: pt-BR
+year: 2026
+edition: "1ª edição"
+isbn: ""
+
+description: >-
+  PHP moderno do zero até uma API Laravel em produção: Composer, orientação a
+  objetos, HTTP, Eloquent, Sanctum, Policies, filas, testes e deploy. Um
+  projeto só, crescendo capítulo a capítulo — e a linguagem antes do
+  framework, para você entender o que o Laravel está fazendo por baixo.
+
+keywords: [PHP, Laravel, API REST, Eloquent, Composer, Sanctum, Pest, PHPUnit, backend, MySQL]
+
+cover_image: capa.png
+cover_full: true
+
+cover_bullets:
+  - "PHP moderno: strict types, enums, readonly, match"
+  - "O framework entra quando você já entende o problema"
+  - "Um framework de quarenta linhas, escrito à mão, antes do Laravel"
+  - "API com validação, autorização, filas, testes e documentação"
+  - "Sem catálogo de comandos do Artisan e sem 'é só um CRUD'"
+
+course_slug: php-one
+
+# ─── PARTES ──────────────────────────────────────────────────────────────────
+parts:
+  - id: p1
+    title: "PHP do zero"
+    blurb: >-
+      A linguagem antes de qualquer framework. Rodar, errar, ler a mensagem,
+      consertar — e descobrir cedo os dois ou três lugares em que o PHP
+      resolve sozinho o que você não pediu.
+  - id: p2
+    title: "Do script ao projeto"
+    blurb: >-
+      O momento em que um arquivo vira trinta. Composer, autoload, namespaces
+      e as primeiras classes — a fronteira entre escrever PHP e manter um
+      projeto PHP.
+  - id: p3
+    title: "O PHP que o Laravel exige"
+    blurb: >-
+      Interfaces, exceções, tipagem estrita e enums. Nenhum recurso aparece
+      por ser novo: cada um está aqui porque o framework vai pedir por ele
+      duzentas páginas adiante.
+  - id: p4
+    title: "A web por baixo do framework"
+    blurb: >-
+      HTTP, REST e um framework de quarenta linhas escrito à mão. Depois
+      deste trecho, nenhuma parte do Laravel vai parecer mágica — vai parecer
+      trabalho que alguém já fez.
+  - id: p5
+    title: "Dentro do Laravel"
+    blurb: >-
+      Estrutura, configuração, rotas, controllers e respostas. O framework
+      chegando depois do problema, que é a única ordem em que ele faz
+      sentido.
+  - id: p6
+    title: "Banco de dados"
+    blurb: >-
+      SQL o bastante para entender o que o Eloquent gera — e o Eloquent como
+      ferramenta sobre banco, não como substituto de saber banco.
+  - id: p7
+    title: "A API de verdade"
+    blurb: >-
+      O que separa um CRUD de exercício de uma API que outra pessoa consome:
+      validação, formato de saída, paginação, filtros e erro honesto.
+  - id: p8
+    title: "Arquitetura e segurança"
+    blurb: >-
+      Onde a regra de negócio mora, quantas camadas o seu projeto realmente
+      precisa, e as duas perguntas que toda requisição responde: quem é você
+      e o que você pode.
+  - id: p9
+    title: "Depois da resposta"
+    blurb: >-
+      Eventos, filas, cache e log. O trabalho que não cabe dentro da
+      requisição — e o que você vai querer ter medido quando algo quebrar.
+  - id: p10
+    title: "Provar e publicar"
+    blurb: >-
+      Testes que dizem o que estão tentando provar, documentação que nasce do
+      código, e o caminho até o dia do deploy sem plantão de madrugada.
+
+# ─── CAPÍTULOS ───────────────────────────────────────────────────────────────
+chapters:
+  - 00-antes-de-comecar.md
+  - 01-o-que-vamos-construir.md
+  - 02-primeiro-programa.md
+  - 03-variaveis-e-tipos.md
+  - 04-operadores.md
+  - 05-condicionais.md
+  - 06-repeticoes.md
+  - 07-funcoes.md
+  - 08-arrays.md
+  - 09-strings.md
+  - 10-do-include-ao-composer.md
+  - 11-namespaces-e-autoload.md
+  - 12-classes-e-objetos.md
+  - 13-encapsulamento.md
+  - 14-heranca-interfaces-e-traits.md
+  - 15-excecoes.md
+  - 16-tipagem-estrita.md
+  - 17-enums-datas-e-valores.md
+  - 18-o-que-e-http.md
+  - 19-o-que-e-uma-api-rest.md
+  - 20-um-framework-de-quarenta-linhas.md
+  - 21-o-que-e-o-laravel.md
+  - 22-primeiro-projeto-laravel.md
+  - 23-configuracao-ambiente-e-artisan.md
+  - 24-rotas-e-controllers.md
+  - 25-requests-e-responses.md
+  - 26-blade.md
+  - 27-banco-de-dados-e-sql.md
+  - 28-migrations-seeders-e-factories.md
+  - 29-eloquent.md
+  - 30-relacionamentos.md
+  - 31-o-crud-completo.md
+  - 32-validation-e-form-requests.md
+  - 33-api-resources.md
+  - 34-paginacao-filtros-e-buscas.md
+  - 35-erros-padronizados.md
+  - 36-service-container.md
+  - 37-services.md
+  - 38-middleware.md
+  - 39-autenticacao.md
+  - 40-autorizacao.md
+  - 41-events-jobs-e-filas.md
+  - 42-cache-logs-e-medicao.md
+  - 43-testes.md
+  - 44-testes-de-feature-http-e-banco.md
+  - 45-documentacao-da-api.md
+  - 46-git-ci-e-deploy.md
