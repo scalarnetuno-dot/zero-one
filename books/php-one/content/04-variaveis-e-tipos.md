@@ -1,13 +1,13 @@
 ---
 title: "Variáveis e tipos"
-number: 3
+number: 4
 slug: variaveis-e-tipos
 part: p1
 kicker: "Trinta e um pendentes na tela, vinte e sete no papel. Os quatro extras deviam exatamente zero real."
 goal: >-
-  Usar os tipos básicos com consciência, distinguir ausência de vazio e de
-  zero, entender a conversão automática do PHP e saber por que a multa da
-  biblioteca não é `float`.
+  Guardar valores nos cinco tipos do dia a dia, inspecioná-los com
+  `var_dump`, escolher entre aspas simples e duplas, e distinguir ausência
+  de vazio e de zero.
 ---
 
 :::story Vinte e sete
@@ -18,19 +18,20 @@ O relatório dizia trinta e um. A régua dizia vinte e sete.
 
 — Tem quatro sobrando aí.
 
-— Talvez a senhora tenha pulado alguma linha — arriscou a Tainá.
+— Talvez a senhora tenha pulado uma linha — arriscou a Tainá.
 
-Vera conferiu de novo. Vinte e sete.
+Vera conferiu de novo, com a régua, sem pressa nenhuma, enquanto a Tainá
+olhava. Vinte e sete.
 
-Os quatro nomes extras tinham uma coisa em comum, que levou a Tainá uma hora
-para encontrar: todos haviam devolvido **no prazo**. A multa deles tinha
-sido calculada, registrada e gravada com o valor R$ 0,00.
+Levou uma hora para a Tainá achar o que os quatro nomes extras tinham em
+comum: todos haviam devolvido **no prazo**. A multa deles tinha sido
+calculada, registrada e gravada com o valor R$ 0,00.
 
 O Sistema perguntava assim se a multa já tinha sido processada:
 
 ```php
 if (!$multa) {
-    $pendentes[] = $emprestimo;
+    $pendente = true;
 }
 ```
 
@@ -39,35 +40,56 @@ E zero, em PHP, é falso.
 — A conta está certa — disse Dedé, quando viu. — O relatório é que não sabe
 a diferença entre "não deve nada" e "ninguém calculou".
 
-Vera anotou no caderno. Depois riscou e escreveu de novo, com outra letra:
+Vera anotou no caderno dela. Depois riscou e escreveu de novo, com outra
+letra, maior:
 
 > *"o sistema precisa saber a diferença entre zero e nada"*
+
+— Isso aí vale pra quantos sistemas? — perguntou a Tainá.
+
+— Pra todos que eu já usei.
 :::
 
-Essa frase é a regra que falta ao relatório: zero é um valor; nada é uma
-ausência.
+Este capítulo é sobre guardar valores e saber o que foi guardado. A história
+acima é sobre a segunda parte, que é a que costuma faltar.
 
-## Quando zero vira ausência
+## `$` na frente de tudo
 
-```php
-$devolvido_em = null;   // ainda não devolveu
-$observacao = "";       // devolveu, sem observação
-$multa = 0;             // devolveu, sem multa
+Em PHP, toda variável começa com `$`, e nenhuma precisa ser declarada antes
+de receber um valor:
+
+```php title="primeiras.php" numbered
+<?php
+
+$titulo = "O Cortiço";
+$exemplares = 3;
+
+echo $titulo, "\n";
+echo $exemplares, "\n";
 ```
 
-Três valores, três significados completamente diferentes. E, para um `if`
-simples, os três são a mesma coisa: falsos.
+```text
+O Cortiço
+3
+```
 
-Isso não é defeito do PHP — toda linguagem dinâmica tem uma lista de valores
-"falsos". O que torna o caso do PHP mais perigoso é o tamanho da lista, que
-inclui um item que surpreende quase todo mundo.
+Não existe uma linha dizendo "vou criar uma variável chamada `$titulo` do
+tipo texto". A atribuição cria a variável e o tipo vem junto com o valor.
 
-## Dê um tipo ao que você sabe
+O `$` tem pouca cerimônia e um efeito colateral bom: `$titulo` é sempre uma
+variável, em qualquer lugar do arquivo. Não existe ambiguidade entre nome de
+variável, nome de função e palavra reservada da linguagem. Em compensação,
+esquecer o `$` é um erro que o PHP demora a perceber, porque `titulo` sem
+cifrão é sintaxe válida — é o nome de uma constante que ele vai procurar e
+não achar.
 
-Em PHP, toda variável começa com `$` e nenhuma precisa ser declarada. Isso é
-pouca cerimônia e tem um efeito colateral bom: `$titulo` é sempre uma
-variável, em qualquer contexto, inclusive dentro de uma string. Não há
-ambiguidade entre nome de variável, nome de função e palavra reservada.
+Sobre nomes: valem letras, números e sublinhado, e o primeiro caractere não
+pode ser número. Maiúsculas e minúsculas são diferentes — `$titulo` e
+`$Titulo` são duas variáveis. A convenção em PHP moderno é
+`$nomeComposto`, em *camelCase*, ainda que muito código antigo use
+`$nome_composto`.
+
+## Os cinco tipos do dia a dia
 
 ```php title="tipos.php" numbered
 <?php
@@ -78,8 +100,11 @@ $peso_kg = 0.42;
 $disponivel = true;
 $devolvido_em = null;
 
-var_dump($titulo, $exemplares, $peso_kg, $disponivel,
-    $devolvido_em);
+var_dump($titulo);
+var_dump($exemplares);
+var_dump($peso_kg);
+var_dump($disponivel);
+var_dump($devolvido_em);
 ```
 
 ```text
@@ -90,235 +115,205 @@ bool(true)
 NULL
 ```
 
-Repare no `string(10)` para uma palavra de nove letras: o `ç` ocupa dois
-bytes. Esse detalhe tem um capítulo próprio, o @cap:strings, e já vale como
-aviso.
+Cinco valores, cinco tipos. O `var_dump` imprime o tipo e o valor, e é por
+isso que ele é a ferramenta mais usada em depuração de PHP: com `echo`, os
+cinco sairiam como `O Cortiço`, `3`, `0.42`, `1` e nada.
 
-| Tipo | Exemplo | Onde aparece no projeto |
+| Tipo | O que guarda | No acervo |
 |---|---|---|
-| `string` | `"O Cortiço"` | título, ISBN, nome |
-| `int` | `3` | tombo, identificador, dias de atraso |
-| `float` | `0.42` | peso, percentual — **não** dinheiro |
-| `bool` | `true` | `ativo`, `renovavel` |
-| `array` | `[1, 2, 3]` | tudo, e é o capítulo @cap:arrays |
-| `null` | `null` | "não informado", "ainda não aconteceu" |
-| `object` | `new Livro()` | uma entidade com estado e comportamento |
+| `string` | texto | título, autor, ISBN, nome do leitor |
+| `int` | número inteiro | tombo, dias de atraso, quantidade |
+| `float` | número com casas decimais | peso, percentual, média |
+| `bool` | `true` ou `false` | se o exemplar está disponível |
+| `null` | a ausência de valor | data de devolução de quem não devolveu |
 
-Tabela: `true`, `false` e `null` não diferenciam maiúsculas, mas a convenção
-da PSR-12 é minúscula.
+Tabela: `true`, `false` e `null` podem ser escritos em maiúsculas, mas a
+convenção é minúscula.
 
-## Uma experiência curta
+Repare no `string(10)` da saída, para uma palavra de nove letras. O número
+entre parênteses não é a contagem de letras: é a contagem de **bytes**, e o
+`ç` ocupa dois. Isso é consequência de como o texto é armazenado, e por ora
+basta saber que o número existe e que ele nem sempre bate com o que você
+conta no olho.
 
-```php title="o_teste_que_explica.php" numbered
-<?php
-
-$valores = [null, "", "0", 0, 0.0, [], "a", 1];
-
-foreach ($valores as $v) {
-    printf(
-        "%-6s isset:%d  empty:%d  is_null:%d  bool:%d\n",
-        var_export($v, true),
-        isset($v), empty($v), is_null($v), (bool) $v
-    );
-}
-```
-
-```text
-NULL   isset:0  empty:1  is_null:1  bool:0
-''     isset:1  empty:1  is_null:0  bool:0
-'0'    isset:1  empty:1  is_null:0  bool:0
-0      isset:1  empty:1  is_null:0  bool:0
-0.0    isset:1  empty:1  is_null:0  bool:0
-array  isset:1  empty:1  is_null:0  bool:0
-'a'    isset:1  empty:0  is_null:0  bool:1
-1      isset:1  empty:0  is_null:0  bool:1
-```
-
-Olhe a coluna `bool`. As seis primeiras linhas são todas `0` — todas falsas.
-O relatório da Vera tratava seis situações diferentes como se fossem uma.
-
-E a linha do `'0'` é a famosa: **a string `"0"` é falsa em PHP**. É a única
-string não vazia que se comporta assim, e existe por herança de uma época em
-que tudo que vinha de formulário era texto e `"0"` precisava significar
-zero.
+Existem outros dois tipos importantes — `array` e `object` —, que guardam
+várias coisas de uma vez em vez de uma só. Eles entram quando houver várias
+coisas para guardar.
 
 :::key
-`isset()` responde "existe e não é nulo". `empty()` responde "é um dos
-valores falsos". As duas perguntas são diferentes, e **nenhuma delas** é
-"tem conteúdo". Quando o que você precisa é distinguir ausência de zero, a
-resposta é `=== null` ou `is_null()`.
+Sempre que você não tiver certeza do que tem dentro de uma variável, a
+resposta custa uma linha: `var_dump($x);`. É mais rápido que raciocinar,
+mais confiável que lembrar, e a única forma de distinguir o número `3` do
+texto `"3"` — que se parecem na tela e se comportam de formas diferentes.
 :::
 
-:::practice
-Rode o trecho acima e guarde a saída. Ela responde, de uma vez, umas quinze
-dúvidas que vão aparecer nos próximos capítulos — e é bem mais rápida de
-consultar do que a documentação.
-:::
+## Aspas simples e aspas duplas guardam coisas diferentes
 
-## O centavo que desaparece
+As duas criam texto, e param de ser equivalentes assim que você coloca uma
+variável dentro:
 
-Uma semana depois do relatório, a Vera trouxe outro papel.
-
-```text
-$ php -r 'var_dump(0.1 + 0.2);'
-float(0.30000000000000004)
-$ php -r 'var_dump(0.1 + 0.2 == 0.3);'
-bool(false)
-```
-
-Isso não é bug. É como todo computador representa número com vírgula: em
-base 2. E `0.1` em base 2 é uma dízima infinita, do mesmo jeito que `1/3` é
-infinita em base 10.
-
-Na décima sétima casa ninguém se importa. O problema é que o erro se
-acumula:
-
-```php title="por_que_nao_float.php" numbered
+```php title="aspas.php" numbered
 <?php
 
-$total = 0.0;
+$titulo = "O Cortiço";
 
-for ($i = 0; $i < 1000; $i++) {
-    $total += 0.50;
-}
-
-var_dump($total);
-var_dump($total === 500.0);
+echo "Temos: $titulo\n";
+echo 'Temos: $titulo\n';
 ```
 
 ```text
-float(500.0000000000171)
+Temos: O Cortiço
+Temos: $titulo\n
+```
+
+A primeira linha usa **aspas duplas**. Dentro delas, o PHP procura nomes de
+variável e troca cada um pelo valor. Isso se chama **interpolação**. A barra
+invertida também é interpretada: `\n` virou quebra de linha de verdade.
+
+A segunda linha usa **aspas simples**. Dentro delas, quase nada é
+interpretado: `$titulo` saiu como cinco caracteres literais, e `\n` saiu
+como dois. Por isso a saída ficou tudo em uma linha só.
+
+Quando o nome da variável encosta em outra letra, o PHP não consegue
+adivinhar onde ele termina:
+
+```php title="chaves.php" numbered
+<?php
+
+$tipo = "exemplar";
+
+echo "Três {$tipo}es\n";
+```
+
+```text
+Três exemplares
+```
+
+Sem as chaves, o PHP procuraria uma variável chamada `$tipoes`, não a
+encontraria e avisaria. Com `{}`, a fronteira fica explícita. Usar chaves
+sempre que houver interpolação poupa essa decisão.
+
+:::key
+Regra prática: **aspas simples quando o texto é literal, aspas duplas
+quando há variável dentro.** Não é questão de desempenho — a diferença é
+imperceptível. É questão de dizer a intenção: aspas simples avisam a quem lê
+que ali não tem nada para ser substituído.
+:::
+
+## `null` não é vazio, e vazio não é zero
+
+```php title="tres_afirmacoes.php" numbered
+<?php
+
+$devolvido_em = null;   // ainda não devolveu
+$observacao = "";       // devolveu, e não havia nada a observar
+$multa = 0;             // devolveu, e não deve nada
+```
+
+Três valores, três afirmações completamente diferentes sobre o mundo. E,
+para um `if` simples, os três se comportam do mesmo jeito: nenhum deles
+entra.
+
+```php title="o_defeito.php" numbered
+<?php
+
+$multa = 0;
+
+if ($multa) {
+    echo "tem multa\n";
+} else {
+    echo "nao tem multa\n";
+}
+```
+
+```text
+nao tem multa
+```
+
+O `if` não recebeu `true` nem `false`: recebeu o número zero. Quando isso
+acontece, o PHP converte o valor para verdadeiro ou falso antes de decidir —
+e zero é falso.
+
+É exatamente o defeito do relatório da Vera, escrito de trás para frente. O
+Sistema perguntava `if (!$multa)`, que é "se a multa for falsa", achando que
+estava perguntando "se a multa não existir".
+
+Há três ferramentas para fazer a pergunta certa, e elas não são
+intercambiáveis:
+
+```php title="tres_perguntas.php" numbered
+<?php
+
+$multa = 0;
+
+var_dump(isset($multa));    // a variável existe e não é null?
+var_dump(empty($multa));    // o valor é um dos "falsos"?
+var_dump(is_null($multa));  // o valor é exatamente null?
+```
+
+```text
+bool(true)
+bool(true)
 bool(false)
 ```
 
-Mil multas de cinquenta centavos deveriam dar quinhentos reais. Deram
-quinhentos reais e um erro que só aparece na comparação — ou no fechamento
-do mês, quando o total do sistema e o total do caixa divergem em centavos e
-ninguém sabe qual dos dois está certo.
+Leia devagar, porque as três respostas são diferentes para o mesmo valor.
 
-## Duas perguntas imprecisas
+`isset` respondeu `true`: a variável existe e não é nula. `empty` respondeu
+`true`: zero é um valor falso. `is_null` respondeu `false`: zero não é nulo,
+zero é zero.
 
-As duas falhas têm a mesma raiz: **o PHP aceitou uma pergunta imprecisa e
-respondeu com precisão**.
+Trocando o valor por `null`, as três respostas se invertem:
 
-`if (!$multa)` é uma pergunta imprecisa. Ela parece perguntar "a multa está
-ausente?" e na verdade pergunta "a multa é um dos seis valores falsos?". O
-PHP respondeu exatamente isso.
+```text
+bool(false)   isset  — não existe, ou existe e é null
+bool(true)    empty  — null é falso
+bool(true)    is_null
+```
 
-`$total += 0.50` é uma operação imprecisa. Ela parece somar cinquenta
-centavos e na verdade soma a melhor aproximação binária de cinquenta
-centavos. O PHP fez exatamente isso, mil vezes.
+:::key
+`isset()` pergunta "existe e não é nulo?". `empty()` pergunta "é um valor
+falso?". E **nenhuma das duas** pergunta "tem conteúdo?".
 
-:::history
-O padrão que rege o `float` — o IEEE 754, de 1985 — foi obra de um comitê
-liderado por William Kahan, que ganhou o prêmio Turing por isso. Antes dele,
-cada fabricante de processador arredondava do seu jeito, e o mesmo cálculo
-dava resultados diferentes em máquinas diferentes.
-
-O `0.30000000000000004` não é um defeito do padrão: é o padrão funcionando,
-e funcionando igual em toda parte. O defeito é usar um tipo pensado para
-medida física em um valor que precisa ser exato.
+Quando o que você precisa é distinguir ausência de zero — que é o caso da
+multa da Vera —, a pergunta é `=== null`, e nenhuma outra serve.
 :::
 
-## Valores que não mentem
-
-**Para a ausência, pergunte o que você quer saber:**
+A correção do relatório são duas perguntas separadas, cada uma dizendo o que
+quer saber:
 
 ```php title="explicito.php" numbered
 <?php
 
+$multa = 0;
+
 if ($multa === null) {
-    $pendentes[] = $emprestimo;
+    echo "ninguem calculou ainda\n";
 }
 
-if ($multa > 0) {
-    $devedores[] = $emprestimo;
+if ($multa === 0) {
+    echo "calculado, e nao deve nada\n";
 }
 ```
 
-Duas perguntas diferentes, dois `if` diferentes, nenhuma ambiguidade. Com o
-tipo declarado como `?int`, um analisador estático também pode exigir que
-você trate o `null` antes de comparar.
-
-**Para dinheiro, guarde centavos como inteiro:**
-
-```php title="dinheiro.php" numbered
-<?php
-
-const MULTA_POR_DIA_EM_CENTAVOS = 80;
-const TETO_DE_MULTA_EM_CENTAVOS = 2000;
-
-$dias = 1000;
-$total = min($dias * MULTA_POR_DIA_EM_CENTAVOS,
-    TETO_DE_MULTA_EM_CENTAVOS);
-
-echo 'R$ ', number_format($total / 100, 2, ',', '.'), "\n";
-```
-
 ```text
-R$ 20,00
+calculado, e nao deve nada
 ```
 
-:::key
-Inteiro em centavos é exato, soma sem erro, compara com `===` e cabe em
-`int` até noventa quatrilhões — o que dá alguma folga para uma biblioteca de
-bairro. A divisão por 100 acontece **só na hora de exibir**, nunca no meio
-do cálculo.
+Os três sinais de igual comparam valor **e** tipo, sem converter nada. Dois
+sinais fariam uma coisa diferente, e essa diferença rende uma história boa o
+bastante para ocupar o próximo capítulo inteiro.
 
-Mais tarde, essa regra pode morar numa classe `Dinheiro`, para que ninguém
-precise lembrar dela. Por ora, a convenção é: **toda variável de dinheiro
-termina em `_em_centavos`.** O nome carrega a unidade, e some uma categoria
-inteira de erro.
+:::practice
+Rode o `tres_perguntas.php` acima trocando o valor de `$multa` por: `null`,
+`0`, `""`, `"0"`, `false` e `"a"`. Anote as três respostas de cada um.
+
+Seis linhas de anotação que respondem, de uma vez, umas quinze dúvidas que
+vão aparecer nas próximas semanas — e é mais rápido de consultar do que a
+documentação.
 :::
 
-Use `float` para peso, temperatura, percentual e média. Para dinheiro,
-nunca.
-
-## Type juggling
-
-Vale conhecer o comportamento que gerou a fama da linguagem:
-
-```text
-$ php -r 'var_dump("10" + 5);'
-int(15)
-$ php -r 'var_dump("10" . 5);'
-string(3) "105"
-$ php -r 'var_dump(true + true);'
-int(2)
-```
-
-O PHP converte automaticamente quando a operação exige um tipo diferente do
-recebido. `+` é aritmético, então `"10"` vira `10`. `.` é concatenação,
-então `5` vira `"5"`.
-
-O que mudou — e mudou para melhor — é o que acontece quando a conversão não
-faz sentido:
-
-```text
-$ php -r 'var_dump("abc" + 5);'
-PHP Fatal error: Uncaught TypeError: Unsupported operand
-types: string + int
-```
-
-No PHP 7 isso dava `5` com um aviso. No PHP 8 é erro fatal. A linguagem
-passou a recusar o absurdo em vez de improvisar.
-
-:::pitfall
-Um resquício que sobrevive e convém nunca usar:
-
-```text
-$ php -r 'var_dump("10 livros" + 5);'
-PHP Warning: A non-numeric value encountered
-int(15)
-```
-
-A string começa com número, então o PHP aproveita o começo e descarta o
-resto, com um aviso que ninguém lê. `declare(strict_types=1)` corta boa parte
-dessas conversões — mas todo código PHP que você vai **ler** por aí depende
-delas.
-:::
-
-## Constantes
+## Valores que não podem mudar
 
 ```php title="constantes.php" numbered
 <?php
@@ -326,24 +321,42 @@ delas.
 const DIAS_DE_EMPRESTIMO = 14;
 const LIMITE_POR_LEITOR = 3;
 
-echo DIAS_DE_EMPRESTIMO, "\n";
+echo "Prazo: ", DIAS_DE_EMPRESTIMO, " dias\n";
 ```
 
-Sem `$` na frente e sem reatribuição possível. `const` é resolvida na
-compilação e é a forma preferida; `define()` é de execução e só faz falta
-quando o nome ou o valor são dinâmicos.
+```text
+Prazo: 14 dias
+```
 
-Essas constantes podem virar configuração quando o prazo deixar de ser uma
-decisão do programador. Por enquanto, o valor de mantê-las é estarem **num
-lugar só**.
+Uma **constante** é um valor com nome que não pode ser reatribuído. Repare
+em duas diferenças: não tem `$` na frente, e o nome vem em maiúsculas com
+sublinhado — convenção universal em PHP, não obrigação da linguagem.
+
+Tentar mudar uma dá erro:
+
+```text
+PHP Fatal error: Cannot redefine constant DIAS_DE_EMPRESTIMO
+```
+
+Existe também `define('DIAS_DE_EMPRESTIMO', 14)`, que faz quase o mesmo. A
+diferença prática: `const` é resolvida quando o arquivo é lido e só aceita
+valor fixo; `define()` roda durante a execução e aceita um nome ou um valor
+calculado na hora. Use `const` por padrão.
+
+O valor de trocar `14` por `DIAS_DE_EMPRESTIMO` não é evitar digitação. É
+que o número passa a existir **num lugar só**. Quando a Vera resolver mudar
+o prazo para vinte e um dias durante as férias escolares, a alteração é uma
+linha — e você não vai passar a tarde procurando todos os `14` do sistema,
+descobrindo que alguns eram dias de empréstimo e outros eram o número de
+prateleiras.
 
 :::note Na sua carreira
 Quando alguém do negócio diz que o número do sistema está errado, a chance
 de essa pessoa estar certa é alta — e a chance de o sistema estar
 tecnicamente funcionando é alta também. As duas coisas ao mesmo tempo.
 
-A Vera não sabia programar e encontrou um defeito que passou quinze anos em
-produção, porque ela tinha duas coisas que nenhum teste automatizado tem: o
+A Vera não sabe programar e encontrou um defeito que passou quinze anos em
+produção, porque tinha duas coisas que nenhum teste automatizado tem: o
 número certo, contado na mão, e a teimosia de conferir.
 
 O reflexo certo ao receber esse tipo de relato não é explicar por que o
@@ -353,120 +366,130 @@ linha de código.
 :::
 
 :::summary
-- Toda variável começa com `$` e não precisa ser declarada.
-- `null` é ausência, `""` é vazio, `0` é zero — três afirmações diferentes.
-- A string `"0"` é falsa; é a única string não vazia que é.
-- `isset` pergunta "existe?", `empty` pergunta "é falso?"; nenhuma pergunta
-  "tem conteúdo?".
-- Dinheiro é `int` em centavos, dividido por 100 só na exibição.
-- O nome da variável carrega a unidade: `_em_centavos`.
-- O PHP 8 recusa conversão absurda com erro fatal, em vez de improvisar.
+- Toda variável começa com `$` e não precisa ser declarada: a atribuição
+	cria a variável e define o tipo.
+- Os cinco tipos do dia a dia são `string`, `int`, `float`, `bool` e `null`.
+- `var_dump` mostra tipo e valor; `echo` mostra só o valor.
+- Aspas duplas interpolam variáveis e interpretam `\n`; aspas simples não.
+- `null` é ausência, `""` é vazio, `0` é zero — três afirmações diferentes
+	que um `if` simples trata como uma só.
+- `isset` pergunta "existe?", `empty` pergunta "é falso?"; para distinguir
+	ausência de zero, use `=== null`.
+- `const` dá nome a um valor fixo e o coloca num lugar só.
 :::
 
 :::checkpoint
-Você declara e inspeciona variáveis, distingue ausência de vazio e de zero,
-e consegue defender numa revisão por que a multa é `int`.
+Você declara variáveis dos cinco tipos, descobre o tipo de qualquer uma com
+`var_dump`, escolhe as aspas pela intenção e explica em uma frase a
+diferença entre `null`, `""` e `0`.
 :::
 
 :::exercise level=1
-Crie variáveis para um exemplar — tombo, título, disponível, devolvido em —
-e imprima o tipo de cada uma com `var_dump`.
+Crie variáveis para descrever um exemplar — tombo, título, se está
+disponível, e a data de devolução — e imprima o tipo de cada uma.
 
 :::answer
 ```php
 <?php
 
-$tombo = 812;
+$tombo = 2117;
 $titulo = "O Cortiço";
 $disponivel = false;
 $devolvido_em = null;
 
 var_dump($tombo, $titulo, $disponivel, $devolvido_em);
 ```
-`$devolvido_em` como `null` é uma afirmação: o empréstimo está aberto. Se
-fosse `""`, diria "devolveu em data desconhecida" — que é outra coisa, e
-provavelmente um erro de importação.
+
+```text
+int(2117)
+string(10) "O Cortiço"
+bool(false)
+NULL
+```
+
+O `var_dump` aceita vários valores de uma vez, separados por vírgula.
+
+E repare na escolha de `$devolvido_em`: `null` é uma afirmação — o
+empréstimo está aberto. Se fosse `""`, estaria dizendo "devolveu em data
+desconhecida", que é outra coisa, e quase sempre um erro de importação de
+dados antigos.
 :::
 
 :::exercise level=2
-Escreva uma função que receba dias de atraso e devolva a multa em centavos,
-com teto de R$ 20,00. Teste com 0, 1, 25 e 100 dias.
+Sem rodar, escreva o que cada linha imprime. Depois rode e confira.
 
-:::answer
 ```php
 <?php
 
-function multaEmCentavos(int $dias): int
-{
-    if ($dias <= 0) {
-        return 0;
-    }
+$n = 5;
+$texto = "livros";
 
-    return min($dias * 80, 2000);
-}
-
-var_dump(
-    multaEmCentavos(0),
-    multaEmCentavos(1),
-    multaEmCentavos(25),
-    multaEmCentavos(100),
-);
-```
-```text
-int(0) int(80) int(2000) int(2000)
-```
-O caso de 25 dias é o que prova o teto: 25 × 80 = 2000, exatamente no
-limite. Testar o valor da borda, e não só um acima e um abaixo, é o hábito
-que o capítulo @cap:testes vai formalizar.
-:::
-
-:::exercise level=3
-O trecho abaixo veio do Sistema. Ele decide se o leitor pode pegar outro
-livro. Aponte os três defeitos e diga qual deles nunca aparece em teste.
-
-```php
-$emprestimos = buscar_emprestimos($leitor);
-if (!$emprestimos) {
-    return true;
-}
-if (count($emprestimos) < LIMITE) {
-    return true;
-}
-return false;
+echo "Temos $n $texto\n";
+echo 'Temos $n $texto\n';
+echo "Temos {$n}00 $texto\n";
 ```
 
 :::answer
-**Defeito 1 — `!$emprestimos` trata coisas diferentes como iguais.** Se
-`buscar_emprestimos` devolver `[]` porque o leitor não tem empréstimo, a
-resposta `true` está certa. Se devolver `null` ou `false` porque a
-**consulta falhou**, a resposta continua `true` — e o sistema libera o
-empréstimo porque não conseguiu verificar. Falhar liberando é a pior forma
-de falhar.
+```text
+Temos 5 livros
+Temos $n $texto\nTemos 500 livros
+```
 
-**Defeito 2 — o primeiro `if` é desnecessário.** `count([])` é zero, que já
-é menor que o limite. Aquele bloco existe porque quem escreveu não confiava
-no bloco seguinte — e código escrito por desconfiança é código que ninguém
-ousa remover depois.
+A segunda linha é a que pega quase todo mundo, e por dois motivos ao mesmo
+tempo: as variáveis saíram literais **e** o `\n` também, então a terceira
+linha começou grudada na segunda.
 
-**Defeito 3 — a função devolve `true`/`false` e perde o motivo.** Quem chama
-não sabe se a recusa foi por limite, por multa pendente ou por falha. No
-capítulo @cap:excecoes isso vira uma exceção com dados anexados, e no
-@cap:services a regra inteira passa a morar num lugar só.
-
-**O que nunca aparece em teste é o primeiro.** Um teste escreve
-`buscar_emprestimos` devolvendo array — vazio ou cheio —, porque é isso que
-a função devolve quando tudo vai bem. O caminho do `null` só existe quando o
-banco cai, e ninguém escreve teste para o banco caindo a menos que já tenha
-sido mordido uma vez.
-
-É o mesmo padrão da história de abertura: o defeito não estava no caso
-normal nem no caso de erro. Estava no caso **de fronteira**, em que o
-sistema tecnicamente funcionou e respondeu a pergunta errada.
+A terceira mostra por que as chaves existem. Sem elas, `"$n00"` faria o PHP
+procurar uma variável chamada `$n00`.
 :::
 
-:::story A piada final
-Na Vertexo, na mesma semana, o Cléber pediu um indicador no painel: "total
-de contratos pendentes".
+:::exercise level=3
+O trecho abaixo veio do Sistema. Ele decide se um empréstimo entra na lista
+de pendências. Aponte o defeito e escreva a versão correta.
+
+```php
+$multa = calcularMulta($emprestimo);
+
+if (!$multa) {
+    $pendente = true;
+} else {
+    $pendente = false;
+}
+```
+
+:::answer
+O defeito é o `!$multa`, que pergunta "a multa é um valor falso?" quando a
+intenção era perguntar "a multa ainda não foi calculada?".
+
+Quatro valores diferentes passam por aquele `if` como se fossem o mesmo:
+`null` (não calculou), `0` (calculou e não deve nada), `""` (veio texto
+vazio de algum lugar) e `false` (a função falhou). Só o primeiro deveria
+marcar pendência.
+
+```php
+$multa = calcularMulta($emprestimo);
+
+$pendente = ($multa === null);
+```
+
+Duas observações sobre a versão corrigida.
+
+A primeira: o `if/else` sumiu. Quando os dois ramos só atribuem `true` e
+`false` à mesma variável, a comparação já é a resposta — e uma comparação
+lida em voz alta soa como a regra de negócio: *pendente é quando a multa é
+nula*.
+
+A segunda, e é a mais importante: se `calcularMulta` puder devolver `false`
+em caso de falha, a versão corrigida marca esse empréstimo como **não
+pendente**, e o problema fica invisível. Uma função que devolve ora um
+número, ora `null`, ora `false` obriga quem chama a adivinhar qual dos três
+aconteceu. O conserto de verdade é a função devolver uma coisa só — e é por
+isso que ela vai voltar a este livro.
+:::
+
+:::story Por que um contrato teria valor zero?
+Na Vertexo, na mesma semana, o Cléber pediu um indicador novo no painel da
+diretoria: "total de contratos pendentes".
 
 Dedé perguntou o que contava como pendente.
 
@@ -481,6 +504,9 @@ molhada.
 
 Três semanas depois, a área comercial começou a cadastrar contratos de
 cortesia, com valor zero, para clientes em período de teste.
+
+O painel da diretoria passou a mostrar dezessete contratos pendentes.
+Existiam trinta e quatro.
 
 Dedé já tinha escrito `=== null`.
 :::

@@ -3,97 +3,94 @@ title: "Antes de começar"
 slug: antes-de-comecar
 matter: front
 numbered: false
-kicker: "Um livro técnico escrito por alguém que já perdeu uma sexta-feira por causa de um ponto e vírgula."
+kicker: "Quinze anos no ar, meio milhão de empréstimos e um arquivo chamado funcoes2_NOVO_final.php."
 ---
 
-Existe uma piada recorrente sobre PHP que já dura vinte anos, e ela tem um
-fundo verdadeiro: a linguagem cresceu rápido, cresceu torta e carregou por
-muito tempo decisões que não envelheceram bem. Quem aprendeu PHP em 2009
-aprendeu a escrever coisas que hoje seriam recusadas em qualquer revisão de
-código.
+Esta é a pasta que atende o balcão de uma biblioteca de bairro:
 
-O que quase ninguém conta é o resto da história. O PHP 8 é uma linguagem
-tipada, rápida e previsível, com enums, `readonly`, `match` e um sistema de
-pacotes que funciona. E continua atendendo uma parte enorme da web —
-inclusive a parte que paga salário.
+```text
+backup_16-03-2019.sql
+config.php
+conexao.php
+emprestimo.php
+funcoes.php
+funcoes2.php
+funcoes2_NOVO.php
+funcoes2_NOVO_final.php
+index.php
+login.php
+relatorio.php
+relatorio_novo_OK.php
+teste.php
+```
 
-Este livro é sobre o PHP de agora, escrito por quem conhece o de antes.
+São quatorze mil linhas de PHP escritas em 2009 e remendadas desde então por
+quem estava disponível na hora. O backup mais recente é de 2019 e mora na
+mesma pasta do site, o que significa que qualquer pessoa com o endereço
+certo baixa o acervo inteiro.
 
-## A Casa Amarela
+E funciona.
 
-O projeto começa pequeno: uma biblioteca de bairro, quatro mil títulos e um
-sistema antigo que ainda atende o balcão. Vera conhece as regras de
-empréstimo; Tainá está aprendendo a programar; Dedé herdou o problema; Seu
-Juvenal quer uma tela nova para ontem. O código também participa da história:
-há um `funcoes2_NOVO_final.php`, senhas antigas e decisões que sobreviveram
-porque, apesar de tudo, o sistema funcionava.
+Quinze anos no ar, meio milhão de empréstimos registrados, nenhum livro
+perdido por culpa do software. A Vera abre o sistema às nove, empresta,
+devolve, cobra multa e fecha às seis. Nesses quinze anos ele saiu do ar duas
+vezes, as duas por causa da hospedagem.
 
-Você vai transformar esse cenário numa aplicação de verdade. Primeiro, um
-programa pequeno que roda. Depois, dados que têm nome e tipo, regras que
-podem ser testadas, uma API, banco de dados, autenticação e deploy. Cada
-mudança nasce de uma necessidade do acervo, não de uma lista de recursos da
-linguagem.
+Você vai substituir esse sistema. Não porque ele é ruim — porque ele não tem
+mais para onde crescer. E o PHP que entra no lugar mal se parece com o que
+escreveu essa pasta: este é o PHP de agora, ensinado por quem conhece o de
+antes.
 
-O PHP moderno aparece com seus acertos e suas cicatrizes. Quando uma
-decisão histórica causar um defeito, o código vai mostrar o defeito. Quando
-uma solução simples bastar, ela vence a arquitetura de palco.
+## A biblioteca, a empresa e a data
 
-:::key
-Leia com um terminal aberto. Execute os exemplos, altere os valores e tente
-quebrá-los. A memória de uma linguagem nasce mais depressa de uma saída
-inesperada do que de uma definição decorada.
-:::
+A **Biblioteca Comunitária Casa Amarela** tem quatro mil títulos e oito mil
+exemplares. A **Vertexo Sistemas** — cento e oitenta pessoas, especialista em
+transformação digital para clientes que não conseguem descrever o que têm
+hoje — assinou o contrato para trocar o Sistema. Quem vai fazer o trabalho
+é você.
 
-## O elenco
+E existe uma data que ninguém pode empurrar.
 
-Vera é a especialista do domínio, embora nunca tenha recebido esse título.
-Tainá faz as perguntas que desmontam uma explicação apressada. Dedé traduz
-problemas em código e aprende a não esconder decisões atrás de abstrações.
-Seu Juvenal fornece prazos, requisitos e a frase "é só uma alteraçãozinha".
+Nada disso é cenário. Prazo que não se move, orçamento que encolhe,
+requisito que chega no pior momento e um sistema legado que precisa
+continuar atendendo o balcão enquanto o substituto é construído — é isso que
+transforma escolha técnica em decisão. Optar entre duas formas de escrever a
+mesma coisa só fica interessante quando uma delas custa uma terça-feira.
 
-O Sistema não é um vilão. Ele tem quinze anos de serviço e os defeitos de
-quem foi crescendo sem projeto. Modernizá-lo aos poucos será mais honesto do
-que fingir que uma equipe consegue apagar a vida real com um botão de
-reescrever.
+## Quem aparece
 
-## Como trabalhar
+**Dedé** tem sete anos de carreira, três deles na Vertexo, e é a voz que
+explica o porquê. Está há oito meses ouvindo que a promoção sai no próximo
+ciclo.
 
-O código pressupõe os passos anteriores, mas a regra mais importante é
-parar para testar. Os exercícios pedem pequenas decisões: escolher um tipo,
-explicar uma comparação, prever uma saída, corrigir um defeito. Faça-os sem
-consultar a resposta imediatamente. Um programa que você consegue prever é
-mais valioso que um programa que apenas consegue copiar.
+**Tainá** é estagiária, terceiro período. Faz as perguntas que desmontam uma
+explicação apressada — não por ingenuidade, mas porque é a única pessoa da
+sala que não perde nada ao dizer que não entendeu. Anota tudo num caderno.
 
-## O ambiente
+**Vera** é bibliotecária da Casa Amarela há trinta e um anos. Sabe de cor
+todas as regras de empréstimo e nunca escreveu nenhuma.
 
-Três coisas, todas gratuitas:
+**Márcia** administra o prazo. O trabalho real dela é receber uma data
+impossível de cima e reemiti-la para baixo em forma de sprint.
 
-| O quê | Versão | Para quê |
-|---|---|---|
-| PHP | 8.3 ou mais novo | a linguagem |
-| Composer | 2.x | dependências, a partir do capítulo 10 |
-| Um editor | qualquer um | VS Code, PhpStorm, Vim |
+**Dr. Aurélio** é diretor de tecnologia. Nunca escreveu código e não finge
+que escreveu.
 
-Tabela: MySQL ou PostgreSQL só aparecem na metade do livro. Não instale
-agora.
+**Seu Juvenal** preside a associação de moradores. Traz o requisito novo
+sempre no pior momento, sempre embrulhado em "é só uma alteraçãozinha", e
+sempre com razão sobre a necessidade.
 
-A instalação passo a passo está no capítulo @cap:o-que-vamos-construir,
-junto do teste que confirma que deu certo.
+E o **Sistema**, com maiúscula, é aquela pasta do começo. Ele não é o vilão.
+Cada coisa moderna que aparecer aqui vai ser medida contra ele — e em
+algumas dessas medições o Sistema ganha.
 
-:::warning Cuidado com a versão do sistema
-Em várias distribuições Linux, `apt install php` instala uma versão antiga —
-7.4 ainda aparece por aí. E no macOS, o PHP que vinha de fábrica foi
-removido. Confira com `php -v` antes de acreditar que está instalado, e
-prefira os repositórios oficiais: `ondrej/php` no Ubuntu, Homebrew no macOS.
-:::
-
-## Convenções
+## Como o livro mostra as coisas
 
 Código aparece assim, às vezes com o nome do arquivo:
 
-```php title="exemplo.php"
-$multa = 720;
-echo 'R$ ' . number_format($multa / 100, 2, ',', '.');
+```php title="multa.php"
+$multa_em_centavos = 720;
+echo 'R$ ' . number_format($multa_em_centavos / 100, 2, ',', '.');
 ```
 
 O que o terminal responde aparece sem nome de arquivo e sem realce:
@@ -108,7 +105,21 @@ importam.
 
 :::key
 Comando de terminal aparece com `$` na frente. O `$` representa o prompt e
-não faz parte do comando. Em PHP isso confunde mais do que em outras
-linguagens, porque `$` também começa toda variável — dentro de um bloco PHP,
-ele é código; na primeira coluna de um bloco de terminal, é o prompt.
+não faz parte do comando: não digite. Em PHP isso confunde mais do que em
+outras linguagens, porque `$` também começa toda variável — dentro de um
+bloco de código PHP ele é código; na primeira coluna de um bloco de
+terminal, é o prompt.
 :::
+
+Você não precisa instalar nada para começar a ler. Quando o primeiro
+programa precisar rodar, a instalação vem junto, com o teste que confirma
+que deu certo.
+
+:::practice
+Leia com um terminal aberto. Execute os exemplos, altere os valores e tente
+quebrá-los. A memória de uma linguagem nasce mais depressa de uma saída
+inesperada do que de uma definição decorada.
+:::
+
+A data que ninguém pode empurrar é 31 de março. Até lá, a Vera abre às nove
+e o Sistema atende.

@@ -1,127 +1,237 @@
 ---
 title: "Operadores"
-number: 4
+number: 6
 slug: operadores
 part: p1
-kicker: "Seu Juvenal digitou a senha errada e entrou como bibliotecária-chefe. O culpado tem dois caracteres."
+kicker: "O totem informou à Dona Marlene que ela tinha menos três dias de atraso e uma multa de R$ 2,40 negativos."
 goal: >-
-  Comparar com segurança, tratar ausência sem escada de `if`, concatenar sem
-  surpresa, e entender por que um sinal de igual a menos já abriu a porta de
-  muito sistema.
+  Calcular, concatenar e combinar valores sem surpresa — e conhecer os quatro
+  pontos em que a ordem de avaliação do PHP não é a que você leu.
 ---
 
-:::story Entrei sem querer
-Sexta, 10h20. Seu Juvenal ligou com aquele tom de quem descobriu uma coisa
-boa.
+:::story Menos três dias
+O totem da entrada era o único pedaço novo do Sistema. Tinha sido instalado
+em 2019, com um teclado de números e uma tela pequena, e servia para o
+leitor digitar a carteirinha e ver a própria situação.
 
-— Ó, eu consegui entrar no sistema!
+Dona Marlene digitou a dela numa terça de manhã e chamou a Vera.
 
-— Ótimo. A senha nova funcionou?
-
-— Não, eu errei a senha. Mas entrei do mesmo jeito. E entrei como a Vera.
-
-Dedé pediu para ele repetir devagar.
-
-Seu Juvenal tinha tentado o usuário da Vera com uma senha qualquer — segundo
-ele, "alguma coisa com 240". O Sistema aceitou e abriu o painel da
-bibliotecária-chefe, com permissão para apagar acervo.
-
-Ele achou que era um recurso.
-:::
-
-O Sistema não tinha sido invadido. Ele estava fazendo exatamente o que o
-código mandava — e o código mandava com dois caracteres a menos do que
-devia.
-
-## Quando a linguagem completa a frase
+— Ó aqui, minha filha.
 
 ```text
-$ php -r 'var_dump(1 == "1");'
-bool(true)
-$ php -r 'var_dump(1 === "1");'
-bool(false)
+LEITOR: 1183 - MARLENE S. COUTINHO
+ATRASO: -3 dias
+MULTA:  R$ -2,40
 ```
 
-`==` compara **depois de converter**. `===` compara valor **e tipo**, sem
-converter nada.
+— A senhora devolveu antes do prazo.
 
-A comparação frouxa existe desde sempre por um motivo histórico honesto:
-tudo que vem de formulário HTML é texto, e exigir conversão manual em cada
-`if` seria insuportável em 1998. O preço foi uma coleção de comportamentos
-surpreendentes que a linguagem passou vinte e cinco anos podando.
+— Eu sei. Mas está escrito que a biblioteca me deve dois e quarenta.
 
-:::trivia
-No PHP 7, `0 == "abc"` era **verdadeiro**: a string virava `0`. Qualquer
-comparação frouxa entre zero e texto passava. O PHP 8 inverteu a regra —
-agora o número é que vira string quando a string não é numérica — e
-`0 == "abc"` virou `false`.
+— Não deve.
 
-Foi uma das poucas quebras de compatibilidade da história do PHP que
-praticamente ninguém reclamou. A proposta se chamava *Saner string to number
-comparisons*, e o nome já dizia o que a comunidade achava do comportamento
-anterior.
+— Está escrito.
+
+Vera olhou para a tela por um tempo. Depois olhou para a Dona Marlene, que
+tinha setenta e nove anos e uma paciência infinita para esse tipo de
+conversa.
+
+— A senhora quer em livro ou em dinheiro?
+
+— Em livro está bom.
 :::
 
-## A comparação que você realmente quis fazer
+A conta do totem estava certa. Faltava uma pergunta antes dela.
 
-| Comparação | `==` | `===` |
-|---|---|---|
-| `1` e `"1"` | `true` | `false` |
-| `0` e `""` | `false` (desde o PHP 8) | `false` |
-| `"abc"` e `0` | `false` (desde o PHP 8) | `false` |
-| `null` e `false` | `true` | `false` |
-| `"1e3"` e `"1000"` | `true` | `false` |
-| `[1, 2]` e `[1, 2]` | `true` | `true` |
+## Aritmética, e as três divisões
 
-Tabela: A quarta linha causa defeito silencioso — `null == false` faz "não
-informado" passar por "negado". A quinta causou o incidente da Casa Amarela.
+Os quatro operadores de sempre funcionam como você espera:
 
-A recomendação geral é simples: **use `===` por padrão.** Escreva `==` só
-quando a conversão for exatamente o que você quer, e deixe um comentário
-dizendo por quê.
-
-## Ferramentas para a regra de empréstimo
-
-```php title="operadores.php" numbered
+```php title="aritmetica.php" numbered
 <?php
 
-$dias = 9;
-$limite = 14;
+$exemplares = 8000;
+$prateleiras = 37;
 
-var_dump($dias <=> $limite);
+echo $exemplares + $prateleiras, "\n";
+echo $exemplares - $prateleiras, "\n";
+echo $exemplares * $prateleiras, "\n";
+echo $exemplares / $prateleiras, "\n";
+```
 
-$assunto = $dados['assunto'] ?? 'Geral';
-$dados['status'] ??= 'disponivel';
+```text
+8037
+7963
+296000
+216.21621621622
+```
 
-$cidade = $leitor?->endereco?->cidade;
+Repare na última. A divisão com `/` devolve `float` sempre que não for
+exata — e você não pode pendurar 216,216 livros numa prateleira. Quando a
+pergunta é sobre coisas inteiras, existem dois outros operadores:
+
+```php title="divisoes.php" numbered
+<?php
+
+$exemplares = 8000;
+$por_prateleira = 37;
+
+var_dump($exemplares / $por_prateleira);
+var_dump(intdiv($exemplares, $por_prateleira));
+var_dump($exemplares % $por_prateleira);
+```
+
+```text
+float(216.21621621622)
+int(216)
+int(8)
+```
+
+`intdiv` devolve quantas vezes cabe inteiro: **216 prateleiras cheias**. O
+`%`, chamado de módulo ou resto, devolve o que sobrou: **8 livros** para a
+prateleira 217.
+
+As duas respostas juntas contam a história completa, e é quase sempre isso
+que se quer: quantas caixas preciso, e quanto sobra na última.
+
+:::pitfall
+O `%` fica estranho com números negativos, e a razão é que ele segue o sinal
+do **dividendo**, não do divisor:
+
+```text
+$ php -r 'var_dump(-7 % 3);'
+int(-1)
+```
+
+Muita gente espera `2`. Se o seu cálculo pode receber negativo e você
+precisa de um resto sempre positivo — para distribuir em ciclos, por
+exemplo —, a forma segura é `(($a % $b) + $b) % $b`.
+:::
+
+Existe ainda a potência, `**`:
+
+```text
+$ php -r 'echo 2 ** 10;'
+1024
+```
+
+E, para acrescentar ou tirar um, o atalho `++` e `--`:
+
+```php title="incremento.php" numbered
+<?php
+
+$paginas = 10;
+
+$paginas++;
+echo $paginas, "\n";
+
+$paginas--;
+echo $paginas, "\n";
+```
+
+```text
+11
+10
+```
+
+Existe a forma `++$paginas`, antes do nome, que incrementa e só depois
+devolve o valor. A diferença entre as duas só aparece quando você usa o
+resultado na mesma expressão, o que é uma economia de uma linha em troca de
+uma leitura mais difícil. Prefira incrementar numa linha e usar na seguinte.
+
+## Concatenação é `.`, nunca `+`
+
+```php title="concatenar.php" numbered
+<?php
+
+$titulo = "O Cortiço";
+$ano = 1890;
 
 $linha = $titulo . ' (' . $ano . ')';
+
+echo $linha, "\n";
 ```
 
-**`<=>`, o operador nave espacial**, devolve `-1`, `0` ou `1` conforme o
-lado esquerdo seja menor, igual ou maior. Parece inútil até você precisar
-ordenar por dois critérios:
+```text
+O Cortiço (1890)
+```
 
-```php title="ordenar.php" numbered
+O ponto gruda dois textos. Repare que o `$ano` é um número e foi grudado sem
+reclamação: o `.` exige texto, então o número vira texto.
+
+Em PHP, `+` é **sempre** aritmético. Não existe soma de textos:
+
+```text
+$ php -r 'var_dump("a" + "b");'
+PHP Fatal error: Uncaught TypeError: Unsupported operand
+types: string + string
+```
+
+Isso incomoda quem vem do JavaScript e é, na prática, uma vantagem. Em PHP,
+`"10" + 5` nunca vai devolver `"105"` por acidente: ou é conta, ou é erro.
+
+## Atribuir e operar de uma vez
+
+```php title="composta.php" numbered
 <?php
 
-usort($emprestimos, fn(array $a, array $b): int =>
-    [$a['devolver_ate'], $a['leitor']]
-    <=>
-    [$b['devolver_ate'], $b['leitor']]
-);
+$total = 0;
+$total += 80;       // o mesmo que $total = $total + 80
+$total += 80;
+echo $total, "\n";
+
+$relatorio = "Atrasados:\n";
+// o mesmo que $relatorio = $relatorio . "- Marlene..."
+$relatorio .= "- Marlene\n";
+$relatorio .= "- Juvenal\n";
+echo $relatorio;
 ```
 
-O `<=>` compara **arrays inteiros**, posição por posição, parando na
-primeira diferença. Ordenação por vários critérios de graça, numa linha —
-escrever isso com `if` aninhado leva seis linhas e erra o desempate com
-facilidade.
+```text
+160
+Atrasados:
+- Marlene
+- Juvenal
+```
 
-**`??` devolve o lado esquerdo se ele existe e não é nulo**; senão, o
-direito. A diferença para `?:` importa e é a mesma armadilha do capítulo
+Todos os operadores aritméticos têm a forma composta: `+=`, `-=`, `*=`,
+`/=`, `%=`, `**=`. E o `.` tem a dele, `.=`, que é como se monta texto aos
+poucos.
+
+O `.=` tem um uso que aparece direto: montar um relatório linha a linha,
+acrescentando ao final de uma variável que começou vazia.
+
+## Quando o valor pode não estar lá
+
+```php title="coalescencia.php" numbered
+<?php
+
+$assunto = null;
+
+$etiqueta = $assunto ?? 'Geral';
+
+echo $etiqueta, "\n";
+```
+
+```text
+Geral
+```
+
+O `??` é a **coalescência nula**: devolve o lado esquerdo se ele existir e
+não for nulo; caso contrário, devolve o direito. Ele existe porque a
+alternativa é uma escada de três linhas para cada valor opcional.
+
+Existe também `??=`, que só atribui se o que estava lá era nulo:
+
+```php
+$status ??= 'disponivel';
+```
+
+Há um primo parecido e perigoso, o `?:`, chamado de ternário curto. A
+diferença entre os dois é exatamente a armadilha do capítulo
 @cap:variaveis-e-tipos:
 
-:::compare left="`?:` usa truthiness" right="`??` usa existência" lang="php"
+:::compare left="`?:` olha se é falso" right="`??` olha se é nulo" lang="php"
 $m = $multa ?: 500;
 // multa = 0 vira 500
 ---
@@ -129,314 +239,304 @@ $m = $multa ?? 500;
 // multa = 0 continua 0
 :::
 
-**`?->` chama o método apenas se o objeto não for nulo** — a expressão
-inteira vira `null` em vez de erro fatal.
+O `?:` pergunta "esse valor é falso?", e zero é falso. O `??` pergunta "esse
+valor é nulo?", e zero não é nulo. Quando o valor em jogo for número ou
+texto que pode legitimamente ser zero ou vazio, `??` é o operador correto e
+`?:` é um defeito esperando o dia certo.
+
+## O ternário completo
+
+```php title="ternario.php" numbered
+<?php
+
+$dias = 3;
+
+$mensagem = $dias > 0 ? 'em atraso' : 'em dia';
+
+echo $mensagem, "\n";
+```
+
+```text
+em atraso
+```
+
+Lê-se: se a condição for verdadeira, o valor é o do meio; senão, o do fim.
+É um `if/else` que **devolve um valor** em vez de executar blocos, e serve
+bem quando a decisão cabe confortavelmente numa linha.
 
 :::pitfall
-`?->` é conveniente e esconde uma pergunta. Se `$leitor` pode ser nulo, **por
-quê**? Às vezes a resposta é legítima — o empréstimo de 2011 não tem leitor
-cadastrado. Às vezes é sintoma de que falta uma guarda mais acima. Uma
-cadeia de três `?->` quase sempre é o segundo caso.
-:::
-
-**Concatenação é `.`, nunca `+`.** Em PHP, `+` é sempre aritmético: `"a" +
-"b"` é erro fatal desde o PHP 8. Isso incomoda quem vem de JavaScript e é,
-na prática, uma vantagem — `"10" + 5` nunca vai devolver `"105"` por
-acidente.
-
-## Dois caracteres na porta
-
-Dedé abriu o `login.php` do Sistema.
-
-```php title="login.php (o Sistema, 2009)" numbered
-<?php
-
-$senha_enviada = md5($_POST['senha']);
-
-if ($senha_enviada == $usuario['senha']) {
-    $_SESSION['usuario'] = $usuario;
-    header('Location: painel.php');
-}
-```
-
-Um `==` onde deveria haver outra coisa inteiramente. E o efeito depende de
-um detalhe do MD5:
+Ternário aninhado é proibido por consequência, não por gosto. Desde o
+PHP 8, escrever um dentro do outro sem parênteses é **erro de sintaxe**:
 
 ```text
-$ php -r 'echo md5("240610708"), "\n";'
-0e462097431906509019562988736854
-$ php -r 'echo md5("QNKCDZO"), "\n";'
-0e830400451993494058024219903391
+$ php -r 'echo true ? 1 : true ? 2 : 3;'
+PHP Fatal error: Unparenthesized `a ? b : c ? d : e` is not
+supported
 ```
 
-Dois hashes diferentes. E:
-
-```text
-$ php -r 'var_dump(md5("240610708") == md5("QNKCDZO"));'
-bool(true)
-```
-
-As duas strings parecem notação científica: zero elevado a alguma coisa.
-Zero elevado a qualquer coisa é zero. O PHP converte as duas para `0.0` e
-compara os números.
-
-O hash da senha da Vera, gravado em 2009, começava com `0e` e tinha só
-dígitos depois. Qualquer senha cujo MD5 tivesse o mesmo formato entrava na
-conta dela — e existem milhares de strings assim, catalogadas em listas
-públicas há mais de uma década.
-
-Seu Juvenal acertou uma por acaso.
-
-:::story Quatro minutos
-Dedé escreveu um script de vinte linhas que testava uma lista pública de
-strings com hash no formato `0e`.
-
-Em quatro minutos, tinha encontrado duas contas de atendente com hash
-vulnerável.
-
-A da Vera era uma delas.
-
-— Desde quando? — perguntou ela.
-
-— Desde 2009.
-
-Vera ficou quieta por um tempo. Depois:
-
-— E quantas pessoas sabiam disso?
-
-— Ninguém sabia. Foi o Seu Juvenal, errando a senha.
+A linguagem passou a recusar a construção porque a ordem de avaliação dela
+surpreendia todo mundo, inclusive quem a tinha escrito. Quando a decisão tem
+três saídas, ela merece um `if` com nome.
 :::
 
-## O defeito tinha três camadas
+## Comparar devolvendo um número
 
-Três erros empilhados, e vale separar porque o conserto de cada um é
-diferente.
-
-**Erro 1 — `==` entre segredos.** A comparação frouxa transformou duas
-strings distintas em iguais. Um `===` teria evitado este incidente
-específico.
-
-**Erro 2 — MD5 para senha.** Mesmo com `===`, o MD5 é rápido demais: uma
-placa de vídeo comum calcula bilhões por segundo, o que torna a quebra por
-força bruta viável. Senhas precisam de um algoritmo lento, como o usado por
-`password_hash()`.
-
-**Erro 3 — comparação em tempo variável.** Mesmo com `===`, a comparação de
-strings do PHP para no primeiro caractere diferente. Um valor que acerta os
-cinco primeiros caracteres demora mensuravelmente mais que um que erra o
-primeiro — e, com requisições suficientes, dá para descobrir um segredo
-caractere a caractere sem nunca acertá-lo inteiro.
-
-:::key
-Em comparação de segredo — senha, token, assinatura — não use `==` nem
-`===`. Use `hash_equals()`, que percorre o comprimento inteiro sempre,
-independentemente de onde está a diferença:
-
-```php
-if (hash_equals($esperado, $enviado)) {
-```
-
-A ordem dos argumentos importa: o valor **conhecido** vem primeiro. E, para
-senha especificamente, nem isso — a resposta é `password_verify()`, do
-capítulo @cap:autenticacao, que já faz a comparação em tempo constante e
-ainda trata do algoritmo.
-:::
-
-## Uma entrada que merece desconfiança
-
-```php title="login.php (a versão que sobrevive)" numbered
+```php title="nave.php" numbered
 <?php
 
-$usuario = buscarUsuarioPorEmail($_POST['email'] ?? '');
+$dias = 9;
+$limite = 14;
 
-if ($usuario === null) {
-    password_hash('dummy', PASSWORD_DEFAULT);
-    recusar();
-}
-
-if (!password_verify($_POST['senha'] ?? '', $usuario->senhaHash)) {
-    recusar();
-}
-
-entrar($usuario);
+var_dump($dias <=> $limite);
+var_dump($limite <=> $dias);
+var_dump($dias <=> 9);
 ```
 
-Quatro decisões nesse trecho, e três delas não são sobre operadores:
+```text
+int(-1)
+int(1)
+int(0)
+```
 
-O `?? ''` garante que a ausência do campo não vire aviso de índice
-indefinido — a aplicação direta do operador que acabamos de ver.
+O `<=>` é chamado de **nave espacial** pelo formato. Ele devolve `-1` se o
+lado esquerdo for menor, `1` se for maior e `0` se forem iguais.
 
-`password_verify` resolve os três erros de uma vez: algoritmo adequado,
-comparação em tempo constante, e nenhuma decisão sua sobre hash.
-
-O `password_hash('dummy', ...)` no caminho do usuário inexistente parece
-desperdício e é proposital: sem ele, a resposta para um e-mail que não existe
-volta em microssegundos e a de uma senha errada volta em centenas de
-milissegundos. A diferença de tempo entrega quem tem conta no sistema.
-
-E `recusar()` devolve **a mesma mensagem** nos dois casos. Dizer "usuário
-não encontrado" entrega a lista de quem é cliente.
-
-:::note Na sua carreira
-Encontrar uma falha de segurança num sistema que não é seu é uma situação
-socialmente desconfortável, e a forma de comunicar muda o resultado.
-
-O que funciona: escrever por escrito, para a pessoa responsável, com **o
-impacto em linguagem de negócio** primeiro e o detalhe técnico depois. "É
-possível entrar na conta da bibliotecária-chefe sem saber a senha, e apagar
-o acervo" comunica melhor que "há uma comparação frouxa de hash MD5".
-
-O que não funciona: demonstrar publicamente. Entrar na conta de alguém para
-provar o ponto, mesmo com boa intenção, transfere o problema para você — e a
-conversa deixa de ser sobre a falha e passa a ser sobre o seu acesso.
-
-E há uma regra prática que vale para a vida inteira: **registre a data**. Se
-o conserto demorar seis meses e algo acontecer, a diferença entre "eu avisei"
-e "eu avisei em 14 de março, neste e-mail" é enorme.
-:::
+Três respostas num operador só parece uma curiosidade até você precisar
+ordenar uma lista. Todo algoritmo de ordenação faz a mesma pergunta milhares
+de vezes — "esses dois, qual vem primeiro?" — e `-1`, `0` e `1` são
+exatamente as três respostas possíveis. Quando houver uma lista de
+empréstimos para ordenar por data de devolução, é esse operador que vai
+responder.
 
 ## Precedência
 
-A ordem completa tem vinte níveis e não vale decorar. Vale conhecer os
-quatro pontos em que as pessoas erram:
+A ordem completa de avaliação tem vinte níveis e não vale decorar. Vale
+conhecer os quatro pontos em que as pessoas erram:
 
-| Expressão | Lida como | Surpresa |
+| Escrito | Lido como | A surpresa |
 |---|---|---|
 | `!$a === $b` | `(!$a) === $b` | `!` vem antes de `===` |
-| `$a . $b + $c` | erro no PHP 8 | antes era `($a.$b)+$c` |
+| `$a . $b + $c` | erro no PHP 8 | antes era `($a . $b) + $c` |
 | `$a ?? $b ? $c : $d` | erro de sintaxe | `??` e `?:` não se misturam |
 | `$a = $b or $c` | `($a = $b) or $c` | `or` é mais fraco que `=` |
 
-Tabela: A última linha é a razão de `and` e `or` em palavras existirem além
+Tabela: A última linha é a razão de existirem `and` e `or` em palavras além
 de `&&` e `||` — e a razão de não usá-los.
 
+A primeira linha merece atenção porque produz um defeito que passa em
+revisão. Você escreve `!$ativo === $esperado` pensando "não é verdade que
+ativo seja igual a esperado". O PHP lê "o contrário de ativo é igual a
+esperado", que é outra pergunta e às vezes dá a mesma resposta — até o dia
+em que não dá.
+
 :::key
-Parêntese não tem custo em execução e não tem custo de leitura. Se duas
-pessoas na revisão precisarem discutir a ordem de avaliação, o parêntese já
-deveria estar lá.
+Parêntese não custa nada em execução e não custa nada em leitura. Se duas
+pessoas numa revisão de código precisarem parar para discutir a ordem de
+avaliação, o parêntese já deveria estar lá.
 :::
 
-`&&` e `||` também curto-circuitam — o lado direito só é avaliado se
-necessário —, e isso vira proteção:
+E há um comportamento de `&&` e `||` que vale conhecer, porque ele deixa de
+ser curiosidade e vira proteção: os dois **curto-circuitam**. O lado direito
+só é avaliado se o esquerdo não tiver decidido a questão sozinho.
 
 ```php
-if ($emprestimo !== null && $emprestimo->estaAtrasado()) {
+if ($dias_de_atraso > 0 && calcularMulta($emprestimo) > 0) {
 ```
 
-Se `$emprestimo` for nulo, o método nunca é chamado. A ordem dos dois lados
-é o que separa o código que roda do que quebra.
+Se `$dias_de_atraso` for zero, o `&&` já sabe que o resultado é falso e a
+função nem chega a ser chamada. Inverter a ordem dos dois lados faria a
+conta rodar oito mil vezes sem necessidade.
+
+## A pergunta que faltava no totem
+
+```php title="atraso.php (o Sistema)" numbered
+<?php
+
+$dias_de_atraso = 14 - 17;
+$multa_em_centavos = $dias_de_atraso * 80;
+
+echo $dias_de_atraso, " dias, ", $multa_em_centavos, " centavos\n";
+```
+
+```text
+-3 dias, -240 centavos
+```
+
+A subtração está correta. O problema é que ela responde "quantos dias de
+diferença", e o totem mostra a resposta como se fosse "quantos dias de
+atraso". Devolver antes do prazo produz diferença negativa, e o resto do
+programa acreditou.
+
+O conserto tem uma linha:
+
+```php title="atraso.php (corrigido)" numbered
+<?php
+
+$diferenca = 14 - 17;
+$dias_de_atraso = max(0, $diferenca);
+$multa_em_centavos = $dias_de_atraso * 80;
+
+echo $dias_de_atraso, " dias, ", $multa_em_centavos, " centavos\n";
+```
+
+```text
+0 dias, 0 centavos
+```
+
+`max()` devolve o maior entre os valores recebidos. Com `0` como um dos
+lados, ele vira um piso: o resultado nunca desce abaixo de zero. Existe
+`min()` para o oposto, que é como se escreve um teto — e é exatamente o que
+limita a multa a vinte reais.
+
+:::key
+Toda conta que pode dar negativo precisa de uma decisão explícita sobre o
+que fazer quando der. `max(0, $x)` é uma decisão; deixar passar também é,
+só que tomada por omissão e descoberta pela Dona Marlene.
+:::
+
+:::note Na sua carreira
+O defeito do totem estava em produção havia cinco anos e ninguém tinha
+aberto chamado, porque os leitores que devolviam adiantado olhavam a tela,
+achavam estranho e iam embora. O sistema só registra o que alguém reclama.
+
+Quando você herdar um sistema, a lista de chamados abertos não é a lista de
+defeitos: é a lista de defeitos que incomodaram alguém o bastante para
+justificar uma ligação. A diferença entre as duas listas costuma ser grande,
+e a segunda só aparece quando você senta ao lado de quem usa.
+
+Uma tarde de observação no balcão rende mais do que uma semana lendo código.
+Leve caderno e não sugira nada no primeiro dia.
+:::
 
 :::summary
-- `==` converte antes de comparar; `===` compara valor e tipo. Use `===`.
-- Comparação de segredo usa `hash_equals`; senha usa `password_verify`.
-- Resposta de login não distingue e-mail inexistente de senha errada — nem
-  na mensagem, nem no tempo.
-- `<=>` ordena, inclusive arrays inteiros, com vários critérios de graça.
-- `??` olha existência; `?:` olha truthiness — e zero separa os dois.
-- `+` é sempre aritmético; concatenação é `.`.
-- `&&` e `||` curto-circuitam, e a ordem dos lados é proteção.
+- `/` devolve `float`; `intdiv` devolve o inteiro; `%` devolve o resto, com
+	o sinal do dividendo.
+- Concatenação é `.`; `+` é sempre aritmético e dá erro entre textos.
+- `+=` e `.=` acumulam valor e texto.
+- `??` olha se é nulo; `?:` olha se é falso — e zero separa os dois.
+- `<=>` devolve −1, 0 ou 1, que são as três respostas que ordenação precisa.
+- Ternário aninhado sem parênteses é erro de sintaxe desde o PHP 8.
+- `&&` e `||` curto-circuitam: a ordem dos lados é proteção.
+- Conta que pode dar negativo precisa de `max(0, ...)` ou de uma decisão
+	escrita sobre o que fazer.
+:::
+
+:::checkpoint
+Você escreve uma expressão com quatro operadores e prevê o resultado sem
+rodar, escolhe entre `/`, `intdiv` e `%` pela pergunta que está fazendo, e
+sabe quando `??` e `?:` dão respostas diferentes.
 :::
 
 :::exercise level=1
-Escreva uma expressão que pegue o assunto de um livro vindo de um array,
-usando `"Geral"` quando o campo não existir — sem substituir um assunto
-vazio informado de propósito.
+A Casa Amarela recebeu uma doação de 250 livros e tem caixas que comportam
+18 cada. Quantas caixas cheias saem, e quantos livros sobram na última?
+Imprima as duas respostas.
 
 :::answer
 ```php
-$assunto = $dados['assunto'] ?? 'Geral';
+<?php
+
+$livros = 250;
+$por_caixa = 18;
+
+$cheias = intdiv($livros, $por_caixa);
+$sobra = $livros % $por_caixa;
+
+echo $cheias, " caixas cheias e ", $sobra, " livros na ultima\n";
 ```
-`??` olha existência, então `''` informado permanece `''`. Com `?:`, a
-string vazia viraria `"Geral"` — que é outro comportamento, e às vezes é o
-desejado. A escolha entre os dois é uma decisão, não um detalhe.
+
+```text
+13 caixas cheias e 16 livros na ultima
+```
+
+Se a pergunta fosse "quantas caixas preciso comprar", a resposta seria 14 —
+e a conta seria `intdiv($livros, $por_caixa) + ($livros % $por_caixa > 0 ? 1 : 0)`,
+ou simplesmente `ceil($livros / $por_caixa)`.
+
+A diferença entre 13 e 14 é a diferença entre duas perguntas parecidas, e
+quem entrega a resposta errada normalmente não errou a conta.
 :::
 
 :::exercise level=2
-Ordene uma lista de empréstimos por data de devolução crescente e, em caso
-de empate, por nome do leitor. Depois inverta só a data, mantendo o nome
-crescente.
+Sem rodar, diga o que cada linha imprime.
+
+```php
+$a = null;
+$b = 0;
+
+echo $a ?? 'vazio', "\n";
+echo $b ?? 'vazio', "\n";
+echo $b ?: 'vazio', "\n";
+```
 
 :::answer
-```php
-usort($e, fn($a, $b) =>
-    [$a['devolver_ate'], $a['leitor']]
-    <=> [$b['devolver_ate'], $b['leitor']]
-);
-
-usort($e, fn($a, $b) =>
-    [$b['devolver_ate'], $a['leitor']]
-    <=> [$a['devolver_ate'], $b['leitor']]
-);
+```text
+vazio
+0
+vazio
 ```
-Na segunda, repare que só a posição de `devolver_ate` foi trocada entre os
-lados: inverter um critério é trocar `$a` por `$b` naquela posição, e não
-negar o resultado inteiro — negar inverteria também o desempate.
+
+A primeira: `$a` é nulo, então o `??` devolve o lado direito.
+
+A segunda: `$b` é zero, que **não é nulo**, então o `??` devolve o próprio
+zero.
+
+A terceira: `$b` é zero, que **é falso**, então o `?:` devolve o lado
+direito — e uma multa de zero real acabou de virar a palavra "vazio" no
+comprovante de alguém.
 :::
 
 :::exercise level=3
-O trecho abaixo valida um token de recuperação de senha, enviado por
-e-mail. Ele tem três falhas de naturezas diferentes. Aponte as três e
-reescreva.
+O trecho abaixo calcula o valor a devolver a um leitor que pagou multa
+adiantada e depois teve o atraso recalculado. Ele tem dois defeitos. Aponte
+os dois e escreva a versão correta.
 
 ```php
-if ($_GET['token'] == $usuario['token_recuperacao']) {
-    redefinirSenha($usuario, $_POST['nova_senha']);
-}
+$pago = 1500;
+$devido = 800;
+
+$diferenca = $pago - $devido;
+$mensagem = $diferenca ?: 'nada a devolver';
+
+echo "Devolver: R$ " . $diferenca / 100 . "\n";
+echo $mensagem . "\n";
 ```
 
 :::answer
-**Falha 1 — comparação frouxa.** É o incidente deste capítulo. Se o token
-guardado tiver formato numérico ou `0e`, tokens diferentes comparam iguais.
-E se `token_recuperacao` for `null` — porque nenhuma recuperação foi pedida
-—, um token ausente convertido pode passar.
+**Defeito 1: o `?:` com um número.** Quando `$pago` e `$devido` forem
+iguais, `$diferenca` é zero, o `?:` considera zero falso e `$mensagem`
+recebe `'nada a devolver'`. Nesse caso específico funciona por acaso — mas
+o mesmo código, com a intenção de mostrar o valor, esconderia qualquer
+diferença de zero. A pergunta correta é sobre o valor, não sobre a
+verdade dele.
 
-**Falha 2 — ataque de tempo.** Mesmo com `===`, a comparação para no
-primeiro caractere diferente, e o tempo de resposta entrega o token
-caractere a caractere.
-
-**Falha 3 — o token não expira e não é consumido.** O código não verifica
-data de validade nem invalida o token depois do uso. Um token que vazou num
-e-mail encaminhado em 2023 continua funcionando hoje, quantas vezes quiser.
+**Defeito 2: a conta pode dar negativo.** Se o recálculo aumentar a multa,
+`$devido` passa a ser maior que `$pago` e o sistema anuncia "Devolver:
+R$ -3.5", que é o defeito do totem outra vez, com outra roupa.
 
 ```php
-$token = $_GET['token'] ?? '';
-$guardado = $usuario->tokenRecuperacao;
+$pago = 1500;
+$devido = 800;
 
-if ($guardado === null || $usuario->tokenExpiraEm < time()) {
-    recusar();
+$a_devolver = max(0, $pago - $devido);
+$a_cobrar = max(0, $devido - $pago);
+
+$reais = number_format($a_devolver / 100, 2, ',', '.');
+
+if ($a_devolver > 0) {
+    echo "Devolver: R$ ", $reais, "\n";
+} elseif ($a_cobrar > 0) {
+    echo "Cobrar a diferenca\n";
+} else {
+    echo "Nada a acertar\n";
 }
-
-if ($token === '' || !hash_equals($guardado, $token)) {
-    recusar();
-}
-
-redefinirSenha($usuario, $_POST['nova_senha'] ?? '');
-$usuario->limparTokenRecuperacao();
 ```
 
-E há uma quarta coisa, que não é falha de operador e é a mais grave de
-todas: **o token viaja em `$_GET`**. Query string aparece no log do
-servidor, no histórico do navegador, e no cabeçalho `Referer` enviado para
-qualquer recurso de terceiro carregado naquela página — um script de
-analytics, uma fonte, um pixel. O token de recuperação da senha de alguém
-sai da sua aplicação para um servidor que você não controla.
+O que mudou de verdade não foi a conta: foram as **três saídas**. O código
+original tinha duas variáveis e assumia um único cenário; a versão corrigida
+reconhece que "pagou a mais", "pagou a menos" e "pagou certo" são três
+situações diferentes, e que o programa precisa saber em qual delas está.
 
-A forma correta é `POST` com o token no corpo, e é assim que o capítulo
-@cap:autenticacao vai construí-lo.
-:::
-
-:::story A piada final
-Na segunda, Seu Juvenal voltou ao assunto na reunião da associação.
-
-— Uma coisa boa: eu descobri que o sistema tem uma falha grave.
-
-A Vera, sem levantar os olhos:
-
-— O senhor descobriu errando a senha.
-
-— Descobrir é descobrir.
-
-Ele não estava totalmente errado, e essa é a parte incômoda. Quinze anos de
-produção, nenhum teste, nenhuma auditoria — e a vulnerabilidade foi
-encontrada por um senhor de setenta e dois anos digitando errado.
+Repare também na divisão por 100 aparecendo uma vez só, na hora de montar o
+texto. A conta inteira foi feita em centavos.
 :::

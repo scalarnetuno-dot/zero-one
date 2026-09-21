@@ -1,6 +1,6 @@
 ---
 title: "Strings"
-number: 9
+number: 11
 slug: strings
 part: p1
 kicker: "Metade dos defeitos de um sistema brasileiro mora na distância entre um caractere e um byte."
@@ -38,9 +38,10 @@ acha".
 — Juntaram uma vez. Aí voltou.
 :::
 
-Esse é o capítulo mais brasileiro do livro. Quase tudo que ele trata
-desaparece se o seu sistema for em inglês — e nada disso desaparece se ele
-for em português.
+Os três José de Alencar são o mesmo defeito em três roupas: um texto
+gravado com uma codificação e lido com outra, um texto digitado sem acento,
+e um texto com espaço a mais. Nenhum dos três dá erro. Os três partem a
+busca da Vera em pedaços.
 
 ## O nome que chegou quebrado
 
@@ -83,8 +84,9 @@ A família `mb_` — de *multibyte* — trabalha com **caracteres**.
 | `strtolower` | `mb_strtolower` |
 | `str_pad` | não tem equivalente direto |
 
-Tabela: A extensão `mbstring` precisa estar instalada — foi por isso que o
-capítulo @cap:o-que-vamos-construir pediu para conferir com `php -m`.
+Tabela: A extensão `mbstring` precisa estar instalada. Foi por isso que o
+capítulo @cap:o-que-vamos-construir pediu para conferir a lista do `php -m`
+antes de qualquer coisa.
 
 ```text
 $ php -r 'echo mb_strlen("José"), "\n";'
@@ -100,10 +102,10 @@ O último é o que mais pega gente desprevenida: `strtoupper("josé")` devolve
 ASCII.
 
 :::key
-Regra operacional para o resto do livro: **em texto que pode ter acento, use
-`mb_`**. Nome, título, endereço, observação. As funções de byte continuam
-certas para o que é garantidamente ASCII — um ISBN, um código, um hash — e
-são mais rápidas, o que só importa em volume alto.
+Regra operacional: **em texto que pode ter acento, use `mb_`**. Nome,
+título, endereço, observação. As funções de byte continuam certas para o que
+é garantidamente ASCII — um ISBN, um código, um hash — e são mais rápidas, o
+que só importa em volume muito alto.
 :::
 
 ## Texto com intenção
@@ -135,8 +137,8 @@ que a expressão cresce:
 <?php
 
 echo "Tombo: {$exemplar['tombo']}\n";
-echo "Leitor: {$emprestimo->leitor->nome}\n";
-echo "Total: {$valores[0]}\n";
+echo "Primeiro: {$valores[0]}\n";
+echo "Multa: {$multas['total_em_centavos']}\n";
 ```
 
 :::key
@@ -186,10 +188,15 @@ $sql = <<<SQL
     SQL;
 ```
 
-Se `$termo` vier de uma busca, quem digitar `' OR 1=1 --` lê a tabela
-inteira. O capítulo @cap:banco-de-dados-e-sql mostra a forma correta — o
-valor viaja **separado** do comando —, e ela vale desde já: **nunca
-interpole dado externo em SQL, nem em HTML, nem em comando de terminal.**
+Se `$termo` vier de um campo de busca, quem digitar `' OR 1=1 --` fecha a
+aspa, acrescenta a própria condição e lê a tabela inteira. O comando deixou
+de ser um comando e virou um formulário em branco para o visitante
+preencher.
+
+A forma correta manda o valor **separado** do comando, de modo que ele nunca
+possa ser lido como instrução. A regra vale desde já e vale para tudo: **não
+interpole dado externo dentro de SQL, de HTML nem de comando de
+terminal.**
 :::
 
 ## O recibo cortado no meio
@@ -226,10 +233,10 @@ ficou um caractere mais curta que a de cima. Numa impressora térmica de
 balcão, isso é uma coluna desalinhada em todo recibo com acento — ou seja,
 em quase todos.
 
-## O que um texto realmente contém
+## Por que o alinhamento saiu torto
 
-Porque **alinhamento é uma operação visual sobre caracteres**, e as funções
-usadas contam bytes. As duas coisas coincidem em inglês e divergem em
+Porque **alinhamento é uma operação visual sobre caracteres**, e as duas
+funções usadas contam bytes. As duas coisas coincidem em inglês e divergem em
 português, o que faz o defeito passar por qualquer teste escrito com
 `"Test"` e `"Example"`.
 
@@ -355,9 +362,11 @@ circulam na internet, que esquecem metade dos casos.
 :::key
 A chave de busca é **guardada ao lado** do texto original, nunca no lugar
 dele. A Casa Amarela mostra "José de Alencar" e procura por "jose de
-alencar". No capítulo @cap:migrations-seeders-e-factories isso vira uma
-coluna indexada, e no @cap:paginacao-filtros-e-buscas vira a busca que
-encontra o autor mesmo com o teclado sem cedilha.
+alencar".
+
+Dois campos, dois trabalhos: um serve para a pessoa ler, o outro serve para
+o programa comparar. Tentar fazer as duas coisas com um campo só é
+exatamente o que produziu os três cadastros.
 :::
 
 :::note Na sua carreira
@@ -386,10 +395,17 @@ Formulário, query string, arquivo, corpo de requisição, variável de
 ambiente: tudo chega como texto. O `"2"` que parece número é `string`, e vai
 se comportar como string em todo lugar que não converter.
 
-Converter na **borda** — logo na entrada, uma vez — é o que faz o resto do
-programa trabalhar com tipos de verdade. É o que o capítulo
-@cap:validation-e-form-requests vai automatizar, e é a razão de o capítulo
-@cap:tipagem-estrita insistir tanto.
+Converter na **borda** — logo na entrada, uma vez, num lugar só — é o que
+faz o resto do programa trabalhar com tipos de verdade:
+
+```php
+$pagina = (int) ($_GET['pagina'] ?? 1);
+$dias = (int) ($_POST['dias'] ?? 0);
+```
+
+Depois dessas duas linhas, `$pagina` e `$dias` são números em todo o resto
+do programa, e nenhuma função adiante precisa desconfiar. Sem elas, o `"2"`
+viaja como texto até encontrar o primeiro `===` e responder errado.
 
 :::summary
 - Aspas simples são literais; duplas interpolam. Use `{$var}` sempre.
@@ -456,10 +472,9 @@ function resumo(string $texto, int $limite): string
 }
 ```
 O `!== false` em vez de `if ($ultimoEspaco)` é obrigatório: `mb_strrpos`
-devolve `0` quando o espaço está na primeira posição, e zero é falso. É a
-armadilha do capítulo @cap:variaveis-e-tipos aparecendo num lugar
-específico — e é por isso que as funções de posição do PHP têm fama de
-confundir.
+devolve `0` quando o espaço está na primeira posição, e zero é falso. Um
+título que comece com uma palavra de uma letra só perderia o corte — e é
+por isso que as funções de posição do PHP têm fama de confundir.
 :::
 
 :::exercise level=3
@@ -473,16 +488,28 @@ a restauração testada num banco separado. Uma unificação errada é
 irreversível, e "temos backup" é uma frase que só significa alguma coisa
 depois que alguém restaurou um.
 
-**Passo 1 — medir, sem alterar.** Uma consulta que agrupa por chave
-normalizada e mostra os grupos com mais de um registro:
+**Passo 1 — medir, sem alterar nada.** Rode a normalização sobre a lista
+inteira de autores, em memória, e agrupe pela chave gerada:
 
-```sql
-SELECT chave, COUNT(*), GROUP_CONCAT(nome)
-FROM autor GROUP BY chave HAVING COUNT(*) > 1;
+```php
+$por_chave = [];
+
+foreach ($autores as $autor) {
+    $chave = chaveDeBusca($autor['nome']);
+    $por_chave[$chave][] = $autor['nome'];
+}
+
+foreach ($por_chave as $chave => $nomes) {
+    if (count($nomes) > 1) {
+        echo $chave, ': ', implode(' | ', $nomes), "\n";
+    }
+}
 ```
 
-Isso responde quantos casos existem de verdade. Podem ser três José de
-Alencar e mais duzentos que ninguém notou.
+`implode` junta os itens de um array num texto, separados pelo que você
+passar. O resultado responde quantos casos existem de verdade — e a resposta
+costuma ser desconfortável. Podem ser três José de Alencar e mais duzentos
+que ninguém notou.
 
 **Passo 2 — escolher o registro canônico, com regra escrita.** A regra que
 eu usaria: vence o nome com acentuação correta e maior número de títulos
@@ -513,19 +540,38 @@ gravado errado, uma migração única que identifica exatamente os registros
 afetados antes de tocá-los.
 :::
 
-:::story A piada final
-Um mês depois, com a chave de busca funcionando, Vera testou.
+:::story Quatrocentos e sessenta e um
+Um mês depois, com a chave de busca no ar, Vera testou.
 
-Digitou "alencar". Vieram os 461 títulos, de um autor só.
+Digitou "alencar". Vieram 461 títulos, de um autor só.
 
 Digitou "ALENCAR". Mesma coisa.
 
-Digitou "alencr".
+Digitou "  alencar  ", com espaço dos dois lados, olhando para a Tainá.
 
-— Esse não acha — disse Dedé. — Erro de digitação é outro capítulo.
+Mesma coisa.
 
-Vera anotou no caderno dela, que agora tinha uma seção chamada "para
-perguntar depois".
+— Agora digita errado — disse Tainá.
 
-Na linha de baixo já estava escrito: *"e se o livro tiver dois autores?"*
+Vera digitou "alencr".
+
+Nada.
+
+— Esse não acha.
+
+— Mas eu sei quem eu quero.
+
+— O sistema não sabe.
+
+Vera anotou no caderno, na seção "para perguntar depois", que já tinha
+quatro linhas.
+
+Na sexta, Márcia leu a seção inteira em voz alta na reunião de status,
+demorando no fim de cada item.
+
+— São quatro. A gente entrega duas até março.
+
+— E as outras duas?
+
+— Ficam escritas. Escrito é melhor do que na cabeça da Vera.
 :::

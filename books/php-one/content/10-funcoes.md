@@ -1,13 +1,13 @@
 ---
 title: "Funções"
-number: 7
+number: 10
 slug: funcoes
 part: p1
-kicker: "Uma regra que mora em dez lugares muda em nove. O décimo é sempre o que gera o boleto."
+kicker: "Uma regra que mora em dez lugares muda em nove. O décimo é sempre o que gera o comprovante."
 goal: >-
   Extrair regra para função, usar parâmetros e retorno com intenção,
-  entender escopo sem recorrer a `global`, e escrever funções que podem ser
-  testadas sem subir nada.
+  entender escopo sem recorrer a `global`, passar comportamento como
+  argumento, e provar que a regra está certa sem subir nada.
 ---
 
 :::story Cinquenta centavos
@@ -16,7 +16,7 @@ R$ 0,50 para R$ 0,80. Seu Juvenal mandou mensagem no sábado:
 
 > *"É só trocar o número, né? Pra segunda dá?"*
 
-Dedé abriu o Sistema e deu uma busca por `0.5`.
+Dedé abriu o Sistema e buscou por `0.5`.
 
 Sete resultados.
 
@@ -25,20 +25,19 @@ impresso. O do e-mail de cobrança. Um dentro de um `if` que só roda em
 dezembro, por algum motivo. Um comentado, com a data `// 2014` do lado. E um
 sétimo, em `funcoes2_NOVO_final.php`, escrito como `50/100`.
 
-Ele trocou os seis primeiros. Na segunda, a Vera ligou dizendo que o recibo
-impresso continuava com o valor antigo.
+Ele trocou os seis que estavam em uso e subiu no domingo.
+
+Na segunda, a Vera ligou dizendo que o recibo impresso continuava com o
+valor antigo.
 
 O recibo não usava nenhum dos sete. Tinha o próprio, escrito como
-`$dias * 0.50`, dentro de uma string de HTML, numa linha com quatrocentos e
+`$dias * 0.50`, no meio de uma string de HTML, numa linha com quatrocentos e
 doze caracteres.
 :::
 
-Essa história não é sobre PHP. É sobre a diferença entre **escrever uma
-regra** e **espalhar uma conta**.
-
 ## Uma regra em dez lugares
 
-Código duplicado não dá erro. Não aparece no log, não quebra teste, não
+Código duplicado não dá erro. Não aparece no log, não quebra nada, não
 reclama na revisão — especialmente quando as cópias são levemente
 diferentes, como `0.5`, `50/100` e `0.50`.
 
@@ -47,23 +46,24 @@ requisito garantido de qualquer sistema.
 
 :::key
 A pergunta que identifica duplicação problemática não é "esse código é
-parecido?". É: **"quando essa regra mudar, quantos lugares eu preciso
-lembrar?"**. Se a resposta for maior que um, você tem uma função esperando
-para nascer.
+parecido?". É: **"quando essa regra mudar, de quantos lugares eu preciso
+lembrar?"**
+
+Se a resposta for maior que um, existe uma função esperando para nascer.
 :::
 
-## Dê um nome à decisão
+## Dar nome à decisão
 
 ```php title="multa.php" numbered
 <?php
 
-function multaEmCentavos(int $diasDeAtraso): int
+function multaEmCentavos(int $dias_de_atraso): int
 {
-    if ($diasDeAtraso <= 0) {
+    if ($dias_de_atraso <= 0) {
         return 0;
     }
 
-    return min($diasDeAtraso * 80, 2000);
+    return min($dias_de_atraso * 80, 2000);
 }
 
 echo multaEmCentavos(0), "\n";
@@ -77,170 +77,259 @@ echo multaEmCentavos(90), "\n";
 2000
 ```
 
-`function`, nome, parênteses, tipos, corpo. `return` devolve o valor e
-encerra a função na hora — o que vier depois não roda.
+A palavra `function`, o nome, os parâmetros entre parênteses, o tipo do que
+volta, e o corpo entre chaves.
 
-O valor está em centavos pelo motivo do capítulo @cap:variaveis-e-tipos, e o
-teto de R$ 20,00 está ali porque a ata da diretoria também definiu isso. Os
-dois números vão sair daqui no capítulo
-@cap:configuracao-ambiente-e-artisan; por ora, o importante é que eles estão
-**num lugar só**.
+`return` faz duas coisas ao mesmo tempo: devolve o valor **e encerra a
+função na hora**. Nada depois dele roda. É por isso que o primeiro `if` não
+precisa de `else`: se o atraso for zero ou negativo, a função já acabou.
+
+O `min()` devolve o menor entre os valores recebidos, o que aqui funciona
+como teto: a multa nunca passa de dois mil centavos.
+
+E repare onde estão os dois números da regra — `80` e `2000`. Num lugar só.
+É a diferença entre a busca do Dedé devolver sete resultados e devolver um.
 
 :::anatomy title="As partes de uma função"
 lang: php
 code: |
   function multaEmCentavos(
       int $dias,
-      int $porDia = 80,
+      int $por_dia = 80,
   ): int {
-      return min($dias * $porDia, 2000);
+      return min($dias * $por_dia, 2000);
   }
 notes:
-  - { line: 1, text: "O nome é um verbo ou uma pergunta. `multa()` é ambíguo; `multaEmCentavos()` não." }
-  - { line: 2, text: "`int $dias` é obrigatório: quem chama precisa informar." }
-  - { line: 3, text: "`= 80` é o valor padrão. Parâmetro com padrão vem depois dos obrigatórios." }
-  - { line: 3, text: "A vírgula final é permitida desde o PHP 8 e evita ruído no diff." }
-  - { line: 4, text: "`: int` é o tipo de retorno. Sem ele, a função promete qualquer coisa." }
+  - { line: 1, text: "O nome é um verbo ou uma pergunta. `multa()` é ambíguo; `multaEmCentavos()` diz até a unidade." }
+  - { line: 2, text: "`int $dias` é obrigatório: quem chama precisa informar, e precisa ser inteiro." }
+  - { line: 3, text: "`= 80` é o valor padrão. Parâmetro com padrão vem sempre depois dos obrigatórios." }
+  - { line: 3, text: "A vírgula no último parâmetro é permitida desde o PHP 8 e evita ruído quando alguém acrescenta outro." }
+  - { line: 4, text: "`: int` é o tipo do retorno. Sem ele, a função promete qualquer coisa." }
 :::
 
-## Um contrato pequeno
+Os tipos não são enfeite. Com eles, isto acontece:
+
+```text
+$ php -r 'function m(int $d): int { return $d * 80; } echo m("tres");'
+PHP Fatal error: Uncaught TypeError: m(): Argument #1 ($d)
+must be of type int, string given
+```
+
+A função recusou o argumento errado na porta, com uma mensagem que diz qual
+argumento, qual tipo era esperado e qual chegou. Sem a declaração `int`, o
+PHP tentaria converter `"tres"` e produziria um resultado sem sentido, em
+silêncio.
+
+## Tratar o caso ruim e sair
+
+O `return` no meio da função abre uma forma de escrever decisões que não
+existia antes:
+
+:::compare left="Aninhado" right="Cláusula de guarda" lang="php"
+function emprestar($l, $e) {
+    if ($l !== null) {
+        if ($l['ativo']) {
+            if (!$e['preso']) {
+                return 'ok';
+            }
+        }
+    }
+    return 'recusado';
+}
+---
+function emprestar($l, $e) {
+    if ($l === null) {
+        return 'sem leitor';
+    }
+    if (!$l['ativo']) {
+        return 'inativo';
+    }
+    if ($e['preso']) {
+        return 'indisponivel';
+    }
+    return 'ok';
+}
+:::
+
+Isso se chama **cláusula de guarda**: trate o caso ruim, saia, e deixe o
+caminho principal encostado na margem esquerda.
+
+O lado esquerdo cresce para a direita a cada regra nova. Com as onze regras
+da Vera, o `return 'ok'` ficaria a quarenta e quatro espaços da margem, e
+quem lê precisaria segurar onze condições na cabeça para entender como
+chegou lá.
+
+E repare no ganho que não é de formatação: cada motivo de recusa ficou
+**ao lado da sua condição**, em vez de num `return` genérico a doze linhas
+de distância. A versão da direita consegue dizer por que recusou; a da
+esquerda, não.
+
+:::key
+Se o corpo principal da sua função está com três níveis de indentação, quase
+sempre faltam guardas no começo. Indentação profunda não é problema
+estético: é o número de condições que o leitor precisa manter na cabeça ao
+mesmo tempo.
+:::
+
+## Parâmetros que se leem
 
 ```php title="chamadas.php" numbered
 <?php
 
 function registrarDevolucao(
-    int $emprestimoId,
-    int $diasDeAtraso,
-    bool $isentarMulta = false,
-    bool $notificarLeitor = true,
+    int $emprestimo_id,
+    int $dias_de_atraso,
+    bool $isentar_multa = false,
+    bool $notificar_leitor = true,
 ): void {
-    // ...
+    echo $emprestimo_id, ' ', $dias_de_atraso, ' ',
+         var_export($isentar_multa, true), ' ',
+         var_export($notificar_leitor, true), "\n";
 }
 
 registrarDevolucao(812, 9);
 registrarDevolucao(812, 9, true, false);
-registrarDevolucao(812, 9, isentarMulta: true);
-registrarDevolucao(
-    emprestimoId: 812,
-    diasDeAtraso: 9,
-    notificarLeitor: false,
-);
+registrarDevolucao(812, 9, isentar_multa: true);
 ```
 
-A terceira e a quarta chamadas usam **argumentos nomeados**, um recurso do
-PHP 8. Compare a segunda com a terceira: `registrarDevolucao(812, 9, true,
-false)` obriga quem lê a abrir a função para descobrir o que são aquele
-`true` e aquele `false`.
+```text
+812 9 false true
+812 9 true false
+812 9 true true
+```
+
+`: void` diz que a função não devolve nada — ela faz alguma coisa e pronto.
+`var_export($x, true)` devolve o valor como texto, o que aqui serve para
+enxergar `true` e `false`, que o `echo` imprimiria como `1` e nada.
+
+A terceira chamada usa **argumentos nomeados**, um recurso do PHP 8. Compare
+com a segunda: `registrarDevolucao(812, 9, true, false)` obriga quem lê a
+abrir a função para descobrir o que são aquele `true` e aquele `false`.
 
 :::key
-Quando uma chamada tem um `true` ou um `false` solto, nomeie o argumento. É
-o ganho de legibilidade mais barato que existe — zero custo de execução,
+Quando uma chamada tiver um `true` ou um `false` solto, nomeie o argumento.
+É o ganho de legibilidade mais barato que existe — zero custo de execução,
 zero linhas a mais — e resolve para sempre a dúvida de quem lê o código daqui
 a seis meses, que provavelmente é você.
 :::
 
 Argumentos nomeados também deixam pular os do meio: na terceira chamada,
-`$isentarMulta` foi informado sem mencionar `$notificarLeitor`.
+`$isentar_multa` foi informado sem mencionar `$notificar_leitor`.
 
 :::pitfall
 Ao adotar argumentos nomeados, o **nome do parâmetro vira contrato
-público**. Renomear `$isentarMulta` para `$semMulta` passa a quebrar quem
-chama — e o erro só aparece em execução, com uma mensagem sobre argumento
-desconhecido. Em código de biblioteca isso é sério; em código de aplicação,
-é um incômodo gerenciável. Vale saber antes de renomear.
+público**. Renomear `$isentar_multa` para `$sem_multa` passa a quebrar quem
+chama, e o erro só aparece em execução, com uma mensagem sobre argumento
+desconhecido.
+
+Em código de biblioteca isso é sério. Em código de aplicação, é um incômodo
+administrável. Vale saber antes de renomear, não depois.
 :::
 
-## Retorno: prometa um tipo só
+## Prometa um tipo só
 
 ```php title="retorno.php" numbered
 <?php
 
 function buscarLeitor(int $id): ?array
 {
-    $leitores = [47 => ['nome' => 'Marlene']];
+    $leitores = [
+        47 => ['nome' => 'Marlene'],
+        12 => ['nome' => 'Juvenal'],
+    ];
 
     return $leitores[$id] ?? null;
 }
+
+var_dump(buscarLeitor(47));
+var_dump(buscarLeitor(99));
 ```
 
-`?array` significa "array ou `null`". É um contrato honesto: quem chama sabe
-que precisa tratar a ausência.
+```text
+array(1) { ["nome"]=> string(7) "Marlene" }
+NULL
+```
+
+A interrogação em `?array` significa "array ou `null`". É um contrato
+honesto: quem chama sabe, olhando a assinatura, que precisa tratar a
+ausência.
 
 O que você **não** quer é uma função que devolve coisas de naturezas
-diferentes conforme o humor:
+diferentes conforme o dia:
 
 :::compare left="Promessa quebrada" right="Promessa honesta" lang="php"
 function buscar($id) {
-    if (!$id) return false;
-    if ($erro) return "erro";
+    if (!$id) {
+        return false;
+    }
+    if ($erro) {
+        return "erro";
+    }
     return $dados;
 }
 ---
-function buscar(int $id): ?Leitor
+function buscar(int $id): ?array
 {
-    return $this->leitores[$id]
+    return $this_acervo[$id]
         ?? null;
 }
 :::
 
 Do lado esquerdo, quem chama precisa testar três tipos diferentes e ainda
-distinguir `false` de `"erro"` de array vazio. É o tipo de função que gera,
-em quem a consome, um `if` de cinco linhas em cada ponto de uso.
+distinguir `false` de `"erro"` de array vazio. É o tipo de função que produz,
+em cada ponto de uso, um `if` de cinco linhas — e o que acontece na prática é
+que alguém escreve `if (!$resultado)` e volta ao defeito do relatório da
+Vera.
 
-Do lado direito, há uma resposta: o objeto ou nada. E o caso de erro — que
-existe e é real — vira uma exceção no capítulo @cap:excecoes, que é o lugar
-dele.
+Do lado direito há uma resposta só: o registro, ou nada.
 
-Existe também `: void`, para funções que não devolvem nada, e `: never`,
-para funções que nunca retornam porque sempre lançam exceção ou encerram o
-programa. Os dois aparecem no capítulo @cap:tipagem-estrita.
-
-## O relatório que perdeu uma variável
+## O relatório que zerou
 
 :::story O relatório que zerou
-Tainá escreveu a função de totalização do relatório mensal. Testou. Deu
-zero.
+Tainá escreveu a totalização do relatório mensal. Testou. Deu zero.
 
 ```php
-$totalGeral = 0;
+$total_geral = 0;
 
 function somar(int $valor): void
 {
-    $totalGeral += $valor;
+    $total_geral = $total_geral + $valor;
 }
 
 foreach ($multas as $m) {
     somar($m);
 }
 
-echo $totalGeral;
+echo $total_geral;
 ```
 
 — Não faz sentido — ela disse. — Eu somei oito mil reais e ele imprime zero.
 
 Dedé olhou por dois segundos.
 
-— Ele imprime zero porque a `$totalGeral` de dentro da função não é a de
+— Ele imprime zero porque a `$total_geral` de dentro da função não é a de
 fora. São duas variáveis com o mesmo nome, e a de dentro morre quando a
 função termina.
 
 — Mas em Python isso daria erro.
 
-— Em PHP dá um aviso e continua. É pior.
+— Em PHP dá um aviso e continua.
+
+— Isso é pior.
+
+— É muito pior.
 :::
 
 ```text
-PHP Warning: Undefined variable $totalGeral in /app/rel.php
+PHP Warning: Undefined variable $total_geral in /app/rel.php
 on line 5
 ```
 
-Um aviso. Não um erro fatal. O programa seguiu, somou zero com zero oito mil
-vezes, e imprimiu um número plausível.
-
-## O relatório que perdeu uma variável
+Um aviso, não um erro fatal. O programa seguiu, somou zero com zero oito mil
+vezes, e imprimiu um número perfeitamente plausível.
 
 Em PHP, o escopo de função é **fechado**. Diferente de JavaScript e de
-Python, uma função não enxerga as variáveis de fora — nem para ler.
+Python, uma função não enxerga as variáveis de fora — nem para ler:
 
 ```php title="escopo.php" numbered
 <?php
@@ -249,33 +338,47 @@ $prazo = 14;
 
 function diasDeEmprestimo(): int
 {
-    return $prazo;    // Warning: Undefined variable
+    return $prazo;
 }
+
+echo diasDeEmprestimo(), "\n";
 ```
 
-Existe uma palavra-chave que quebra essa regra:
+```text
+PHP Warning: Undefined variable $prazo
+PHP Fatal error: Uncaught TypeError: diasDeEmprestimo():
+Return value must be of type int, null returned
+```
+
+Repare que o tipo de retorno salvou o dia. Sem o `: int`, a função devolveria
+`null` em silêncio e o problema apareceria três telas adiante.
+
+Existe uma palavra-chave que quebra a regra do escopo:
 
 ```php
 function somar(int $valor): void
 {
-    global $totalGeral;
-    $totalGeral += $valor;
+    global $total_geral;
+    $total_geral = $total_geral + $valor;
 }
 ```
 
-Isso funciona. E é quase sempre a resposta errada.
+Isso funciona, e é quase sempre a resposta errada.
 
 :::warning
 Uma função que lê ou escreve variável global não pode ser testada sozinha,
-não pode ser chamada duas vezes com confiança, e não pode ser lida sem
-conhecer o programa inteiro. Pior: ela cria uma dependência **invisível** —
-nada na assinatura diz que aquela função precisa de `$totalGeral`.
+não pode ser chamada duas vezes com confiança, e não pode ser entendida sem
+conhecer o programa inteiro.
 
-A regra que este livro segue do capítulo @cap:services em diante: **tudo que
-a função precisa entra por parâmetro; tudo que ela produz sai por retorno.**
+Pior: ela cria uma dependência **invisível**. Nada na assinatura diz que
+aquela função precisa de `$total_geral` — quem lê `somar(int $valor): void`
+não tem como saber.
+
+A regra que evita isso cabe numa frase: **tudo que a função precisa entra
+por parâmetro; tudo que ela produz sai por retorno.**
 :::
 
-A versão correta não precisa de nada além do que já foi visto:
+A versão correta não usa nada que você ainda não tenha visto:
 
 ```php title="correto.php" numbered
 <?php
@@ -285,66 +388,93 @@ function somarMultas(array $multas): int
     $total = 0;
 
     foreach ($multas as $valor) {
-        $total += $valor;
+        $total = $total + $valor;
     }
 
     return $total;
 }
 
-$totalGeral = somarMultas($multas);
+echo somarMultas([50, 240, 2000]), "\n";
 ```
 
-Ou, já que `array_sum` existe:
-
-```php
-$totalGeral = array_sum($multas);
+```text
+2290
 ```
 
 ## Uma função que dá para provar
 
-A função `multaEmCentavos()` do começo do capítulo tem uma propriedade que
-vale nomear: dado o mesmo `$diasDeAtraso`, ela devolve **sempre** o mesmo
-resultado, e não mexe em nada fora dela.
+A `multaEmCentavos()` do começo do capítulo tem uma propriedade que vale
+nomear: dado o mesmo número de dias, ela devolve **sempre** o mesmo
+resultado, e não mexe em nada fora dela. Isso se chama **função pura**.
 
-Isso se chama **função pura**, e a consequência prática aparece no capítulo
-@cap:testes:
+A consequência prática é que dá para conferir a regra inteira sem banco, sem
+servidor e sem abrir o navegador:
 
-```php title="tests/MultaTest.php" numbered
+```php title="conferir_multa.php" numbered
 <?php
 
-test('multa tem teto de vinte reais', function () {
-    expect(multaEmCentavos(90))->toBe(2000);
-});
+function multaEmCentavos(int $dias): int
+{
+    if ($dias <= 0) {
+        return 0;
+    }
 
-test('sem atraso não há multa', function () {
-    expect(multaEmCentavos(0))->toBe(0);
-    expect(multaEmCentavos(-3))->toBe(0);
-});
+    return min($dias * 80, 2000);
+}
+
+$casos = [
+    [-3, 0],
+    [0, 0],
+    [1, 80],
+    [24, 1920],
+    [25, 2000],
+    [90, 2000],
+];
+
+foreach ($casos as [$dias, $esperado]) {
+    $obtido = multaEmCentavos($dias);
+    $marca = $obtido === $esperado ? 'ok    ' : 'FALHOU';
+
+    echo $marca, ' ', $dias, ' dias -> ', $obtido, "\n";
+}
 ```
 
-Quatro linhas, sem banco, sem servidor, sem configuração. Rodam em
-milissegundos e provam a regra que a diretoria aprovou em ata.
+```text
+ok     -3 dias -> 0
+ok     0 dias -> 0
+ok     1 dias -> 80
+ok     24 dias -> 1920
+ok     25 dias -> 2000
+ok     90 dias -> 2000
+```
 
-Compare com o que seria testar a mesma regra dentro daquela string de HTML
-de quatrocentos e doze caracteres do recibo. Não é que fosse difícil: é que
-não existe ponto de entrada. A função não é uma formalidade — ela é o que
-torna a regra **alcançável**.
+Seis casos, um arquivo, milissegundos. Isso é um teste — sem framework, sem
+biblioteca, sem configuração. O `foreach ($casos as [$dias, $esperado])`
+desempacota cada par direto nas duas variáveis, e a comparação com `===`
+confere valor e tipo.
+
+Repare nos casos escolhidos: `24` e `25` cercam o ponto em que o teto passa
+a valer, e `-3` cobre a devolução adiantada. Testar a **borda**, e não só um
+valor qualquer no meio, é o que faz esse arquivo valer alguma coisa.
+
+Agora compare com o que seria conferir a mesma regra dentro daquela string
+de HTML de quatrocentos e doze caracteres do recibo. Não é que fosse
+difícil: é que não existe ponto de entrada. A função não é formalidade — é o
+que torna a regra **alcançável**.
 
 :::note Na sua carreira
-"Extrair função" é a refatoração mais segura que existe e a mais subestimada
-em entrevista técnica. Quando pedirem para você melhorar um trecho de
-código, comece por aí — antes de propor arquitetura, padrão de projeto ou
-microsserviço.
+"Extrair função" é a refatoração mais segura que existe e a mais
+subestimada em entrevista técnica. Quando pedirem para você melhorar um
+trecho de código, comece por aí, antes de propor arquitetura, padrão de
+projeto ou microsserviço.
 
-E há um efeito colateral em código legado: você não precisa de permissão
-para extrair uma função. Não muda comportamento, não muda banco, não muda
-contrato. É a única melhoria que dá para fazer numa terça-feira comum,
-enquanto conserta outra coisa, sem abrir reunião.
+E há um efeito colateral valioso em código legado: você não precisa de
+permissão para extrair uma função. Não muda comportamento, não muda banco,
+não muda contrato com ninguém. É a única melhoria que dá para fazer numa
+terça-feira comum, enquanto conserta outra coisa, sem abrir reunião.
 :::
 
-## Closures e arrow functions
-
-Uma função também pode ser um valor:
+## Uma função também pode ser um valor
 
 ```php title="closure.php" numbered
 <?php
@@ -360,34 +490,121 @@ echo $formatar(2000), "\n";
 R$ 20,00
 ```
 
-Closures não enxergam o escopo de fora automaticamente — a mesma regra de
-antes. Para capturar uma variável, você pede:
+Uma função sem nome, guardada numa variável. Chama-se **closure**, e a
+variável passa a ser chamável como se fosse o nome de uma função.
+
+Closures seguem a mesma regra de escopo: não enxergam o que está fora. Para
+capturar uma variável, você pede:
 
 ```php title="use.php" numbered
 <?php
 
-$multaPorDia = 80;
+$multa_por_dia = 80;
 
-$calcular = function (int $dias) use ($multaPorDia): int {
-    return $dias * $multaPorDia;
+$calcular = function (int $dias) use ($multa_por_dia): int {
+    return $dias * $multa_por_dia;
 };
+
+echo $calcular(3), "\n";
+
+$multa_por_dia = 150;
+echo $calcular(3), "\n";
 ```
 
-`use ($x)` captura **por valor**, no momento em que a closure é criada.
-Alterar `$multaPorDia` depois não muda nada dentro dela. Para capturar por
-referência existe `use (&$x)`, que é raro e quase sempre um sintoma.
+```text
+240
+240
+```
+
+Olhe as duas saídas. `use ($x)` captura **por valor**, no momento em que a
+closure é criada — mudar a variável depois não muda nada lá dentro. Existe
+`use (&$x)`, por referência, que é raro e quase sempre um sintoma.
 
 As **arrow functions** encurtam o caso comum:
 
-```php
-$calcular = fn(int $dias): int => $dias * $multaPorDia;
+```php title="arrow.php" numbered
+<?php
+
+$multa_por_dia = 80;
+
+$calcular = fn(int $dias): int => $dias * $multa_por_dia;
+
+echo $calcular(3), "\n";
 ```
 
-Uma expressão só, sem `use` — a arrow function captura automaticamente o que
-precisa, sempre por valor. É a forma que aparece no resto do livro, e a
-única que cabe confortavelmente dentro de `array_map`.
+```text
+240
+```
 
-## Callables: comportamento como argumento
+Uma expressão só, sem chaves, sem `return`, sem `use` — a arrow function
+captura automaticamente o que precisa, sempre por valor. É a forma que cabe
+confortavelmente dentro de outra chamada, e é aí que ela ganha o dia.
+
+## O laço que virou expressão
+
+Lembra do acumulador do capítulo @cap:repeticoes? Quando o laço só
+transforma uma coleção em outra, existe uma forma mais curta de dizer isso:
+
+```php title="map_filter.php" numbered
+<?php
+
+$atrasados = [
+    ['titulo' => 'O Cortiço', 'dias' => 9],
+    ['titulo' => 'Vidas', 'dias' => 2],
+    ['titulo' => 'Sertão', 'dias' => 41],
+];
+
+$criticos = array_filter(
+    $atrasados,
+    fn(array $e): bool => $e['dias'] > 30
+);
+
+$multas = array_map(
+    fn(array $e): int => multaEmCentavos($e['dias']),
+    $atrasados
+);
+
+print_r(array_column($criticos, 'titulo'));
+print_r($multas);
+```
+
+```text
+Array
+(
+    [0] => Sertão
+)
+Array
+(
+    [0] => 720
+    [1] => 160
+    [2] => 2000
+)
+```
+
+`array_filter` recebe a coleção e uma função que responde sim ou não para
+cada item; devolve os que passaram. `array_map` recebe uma função e a
+coleção — nessa ordem, que é invertida em relação à outra, porque foi assim
+que aconteceu em 1999 — e devolve o resultado de aplicar a função a cada
+item.
+
+:::pitfall
+`array_filter` **preserva as chaves originais**. No exemplo, o item que
+sobrou estava na posição 2 e continuaria na posição 2 — foi só a impressão
+que veio depois de `array_column`, que renumera.
+
+É exatamente o defeito que deixou o aplicativo da Casa Amarela com a tela
+vazia no capítulo @cap:arrays. Antes de mandar um resultado de
+`array_filter` para fora do PHP, `array_values`.
+:::
+
+A régua para escolher entre laço e expressão é simples: se o código
+**transforma** uma coleção em outra, `array_map` e `array_filter` dizem isso
+melhor. Se ele **faz coisas** — grava, envia, imprime, registra —, o
+`foreach` é mais claro.
+
+## Comportamento como argumento
+
+O que torna `array_map` possível é que uma função pode receber outra função:
 
 ```php title="callable.php" numbered
 <?php
@@ -405,177 +622,247 @@ function aplicarEm(array $itens, callable $operacao): array
 
 $centavos = [50, 240, 2000];
 
-print_r(aplicarEm($centavos, fn($c) => $c / 100));
+print_r(aplicarEm($centavos, fn(int $c): float => $c / 100));
 ```
 
-Essa função não sabe o que vai ser feito com os itens — ela só sabe que algo
-será. É exatamente o que `array_map` faz, e é o mesmo mecanismo que o
-capítulo @cap:service-container vai usar para montar objetos sem saber quais.
+```text
+Array
+(
+    [0] => 0.5
+    [1] => 2.4
+    [2] => 20
+)
+```
 
-:::art caption="Quadrinho: o pedido pequeno, em quatro quadros."
-Tira editorial em quatro quadros, traço simples, fundo branco, sem cenário
-detalhado. QUADRO 1: um coordenador de projeto sorridente, de crachá, diz
-"É só trocar um número". QUADRO 2: o desenvolvedor, sentado, pergunta "Em
-quantos lugares?". QUADRO 3: o coordenador, ainda sorrindo, responde "Um
-lugar. Acho." — e atrás dele, fora do foco dele, uma pilha de papéis
-desmorona. QUADRO 4: o desenvolvedor olhando para a tela, com sete abas
-abertas, expressão neutra, e a legenda embaixo do quadro: "CAPÍTULO 7 —
-FUNÇÕES". Humor seco, personagens expressivos, poucos elementos.
-:::
+O tipo `callable` diz "aqui entra algo que pode ser chamado". A função
+`aplicarEm` não sabe o que será feito com os itens — só sabe que algo será.
+Ela é, de propósito, uma cópia caseira do `array_map`, e escrevê-la uma vez
+é o que faz o `array_map` deixar de parecer mágica.
 
 :::summary
-- Regra duplicada não dá erro; ela só aparece quando a regra muda.
-- O nome da função é um verbo ou uma pergunta, e diz a unidade do valor.
-- Argumento nomeado elimina o `true` solto na chamada.
-- Prometa um tipo de retorno só; ausência é `?Tipo`, erro é exceção.
-- Escopo de função em PHP é fechado — e `global` é um sintoma, não uma
-  solução.
-- Tudo que entra por parâmetro, tudo que sai por retorno: é o que torna a
-  função testável.
-- `fn() =>` é a forma curta; `use ($x)` captura por valor.
+- Extraia uma função quando a resposta a "de quantos lugares preciso
+	lembrar?" for maior que um.
+- `return` devolve o valor e encerra a função na hora.
+- Tipos em parâmetro e retorno recusam o erro na porta, com mensagem útil.
+- Cláusula de guarda trata o caso ruim e sai, mantendo o caminho principal
+	na margem.
+- Nomeie o argumento sempre que ele for um `true` ou `false` solto.
+- Prometa um tipo só; `?array` é honesto, três tipos diferentes não são.
+- O escopo de função é fechado: o que entra, entra por parâmetro.
+- `global` cria dependência invisível e impede conferir a função sozinha.
+- Função pura pode ser provada num arquivo, sem framework nenhum.
+- Closure captura por valor com `use`; arrow function captura sozinha.
+- `array_map` e `array_filter` para transformar; `foreach` para fazer
+	coisas.
 :::
 
 :::checkpoint
-Você extrai uma regra repetida para uma função, escolhe entre parâmetro e
-retorno em vez de estado global, e consegue escrever um teste de quatro
-linhas que prova a regra.
+Você extrai uma regra para função com tipos declarados, escreve guardas em
+vez de aninhar, explica por que `global` é sintoma, e monta um arquivo de
+conferência que prova a regra nas bordas.
 :::
 
 :::exercise level=1
-Escreva `diasDeAtraso(string $devolverAte, string $hoje): int`, que devolva
-zero quando ainda estiver no prazo.
+Escreva uma função que receba o número de dias de empréstimo e devolva a
+data de devolução formatada, usando 14 dias como valor padrão. Chame-a de
+três formas: sem argumento, com argumento posicional e com argumento
+nomeado.
 
 :::answer
 ```php
 <?php
 
-function diasDeAtraso(string $devolverAte, string $hoje): int
+function prazoEmDias(int $dias = 14): string
 {
-    $limite = new DateTimeImmutable($devolverAte);
-    $agora = new DateTimeImmutable($hoje);
-
-    if ($agora <= $limite) {
-        return 0;
-    }
-
-    return (int) $limite->diff($agora)->days;
+    return "Devolver em {$dias} dias";
 }
+
+echo prazoEmDias(), "\n";
+echo prazoEmDias(7), "\n";
+echo prazoEmDias(dias: 21), "\n";
 ```
-Receber a data de hoje **como parâmetro**, em vez de chamar `new
-DateTimeImmutable()` lá dentro, é o que permite testar a função em qualquer
-dia do ano sem mexer no relógio da máquina. É a aplicação direta da regra do
-capítulo — e o capítulo @cap:enums-datas-e-valores volta a ela.
+
+```text
+Devolver em 14 dias
+Devolver em 7 dias
+Devolver em 21 dias
+```
+
+Com um parâmetro só, o argumento nomeado não ganha nada. Ele começa a valer
+a partir do terceiro parâmetro, e vale muito quando algum deles é booleano.
 :::
 
 :::exercise level=2
-Escreva uma função que receba a lista de empréstimos e uma closure de
-critério, e devolva só os que passam. Depois use-a para filtrar os atrasados
-há mais de trinta dias.
+A função abaixo está fazendo duas coisas. Separe-a em duas e explique o que
+você ganhou.
+
+```php
+function processarDevolucao(array $emprestimo): string
+{
+    $dias = $emprestimo['dias_de_atraso'];
+    $multa = 0;
+
+    if ($dias > 0) {
+        $multa = min($dias * 80, 2000);
+    }
+
+    return 'R$ ' . number_format($multa / 100, 2, ',', '.');
+}
+```
 
 :::answer
 ```php
 <?php
 
-function filtrar(array $itens, callable $criterio): array
+function multaEmCentavos(int $dias): int
 {
-    return array_values(array_filter($itens, $criterio));
+    if ($dias <= 0) {
+        return 0;
+    }
+
+    return min($dias * 80, 2000);
 }
 
-$criticos = filtrar(
-    $emprestimos,
-    fn(array $e): bool => $e['dias'] > 30
-);
+function emReais(int $centavos): string
+{
+    return 'R$ ' . number_format($centavos / 100, 2, ',', '.');
+}
+
+echo emReais(multaEmCentavos(9)), "\n";
 ```
-O `array_values` no retorno não é detalhe: `array_filter` **preserva as
-chaves originais**, então filtrar os itens 0, 3 e 7 devolve um array com
-essas chaves — e o que parecia uma lista deixa de ser uma lista. O capítulo
-@cap:arrays explica por que isso importa na hora de virar JSON.
+
+```text
+R$ 7,20
+```
+
+Três ganhos concretos.
+
+**O cálculo virou conferível.** `multaEmCentavos(25)` devolve `2000`, um
+número que dá para comparar. A versão original devolvia `"R$ 20,00"`, e
+conferir uma regra de negócio comparando texto formatado é como medir
+temperatura pela cor da parede.
+
+**A formatação virou reutilizável.** `emReais()` serve para multa, para
+doação, para qualquer valor. Na versão original, ela estava presa à multa.
+
+**As duas mudam por motivos diferentes.** O valor da diária muda por decisão
+da diretoria; o formato do texto muda se um dia a biblioteca emitir
+comprovante em outro idioma. Quando duas coisas mudam por motivos
+diferentes, elas não deveriam estar na mesma função.
 :::
 
 :::exercise level=3
-A função abaixo está em produção na Casa Amarela há dois anos. Ela funciona.
-Liste quatro problemas e proponha a assinatura que você usaria no lugar.
+O trecho abaixo é do Sistema e calcula o total de multas do mês. Ele tem
+três defeitos: um que impede a função de ser conferida, um que a impede de
+ser reutilizada, e um que faz o resultado ficar errado em centavos. Aponte
+os três e reescreva.
 
 ```php
-function processa($id) {
-    global $conexao, $config;
-    $r = mysqli_query($conexao, "SELECT * FROM emprestimo
-         WHERE id = $id");
-    $e = mysqli_fetch_assoc($r);
-    if (!$e) return false;
-    $dias = (time() - strtotime($e['devolver_ate'])) / 86400;
+$total = 0;
+
+function acumular($emprestimo)
+{
+    global $total;
+
+    $dias = $emprestimo['dias'];
+
     if ($dias > 0) {
-        mysqli_query($conexao, "UPDATE emprestimo SET multa =
-            " . ($dias * $config['multa']) . " WHERE id = $id");
-        mail($e['email'], 'Multa', 'Você tem multa');
+        $total += $dias * 0.80;
     }
-    return true;
 }
+
+foreach ($emprestimos as $e) {
+    acumular($e);
+}
+
+echo "Total: R$ " . $total;
 ```
 
 :::answer
-**1. Nome sem significado.** `processa` não diz o que faz. E o que ela faz
-são três coisas: calcula multa, grava e envia e-mail. Um nome honesto para
-isso não existe — o que é justamente o sinal de que são três funções.
+**Defeito 1 — `global`.** A função depende de uma variável que não está na
+assinatura dela. Não dá para chamá-la num arquivo de conferência sem
+recriar o ambiente inteiro, e duas chamadas seguidas interferem uma na
+outra.
 
-**2. Duas dependências invisíveis.** `global $conexao, $config` não aparecem
-na assinatura. Quem lê `processa(812)` não tem como saber que a função
-precisa de banco configurado e de um array global existindo.
+**Defeito 2 — ela não devolve nada.** Uma função que só produz efeito
+colateral não pode ser reaproveitada em nenhum outro contexto. Nem no
+relatório, nem no comprovante, nem em lugar nenhum.
 
-**3. Injeção de SQL.** `WHERE id = $id` concatena o parâmetro direto na
-consulta. Se `$id` vier de uma requisição, qualquer pessoa executa o que
-quiser no banco. É o assunto do capítulo @cap:banco-de-dados-e-sql, e é a
-falha mais grave da lista.
-
-**4. Retorno mentiroso.** Devolve `true`/`false`, e `false` significa
-"empréstimo não encontrado" — mas `true` significa tanto "calculei a multa e
-avisei" quanto "não havia multa, não fiz nada". Quem chama não consegue
-distinguir.
-
-E há um quinto, que é de desenho e explica os outros: **a função tem três
-responsabilidades e nenhum jeito de testar**. Não dá para verificar o cálculo
-da multa sem banco, e não dá para verificar a gravação sem enviar e-mail de
-verdade para o endereço que estiver na linha.
-
-A assinatura que eu usaria separa as três:
+**Defeito 3 — `0.80` é `float`.** Somar oito mil valores em ponto flutuante
+acumula erro, e o total do sistema vai divergir do total do caixa em
+centavos, sem que ninguém saiba qual dos dois está certo. E falta o teto de
+R$ 20,00, que a ata da diretoria também definiu.
 
 ```php
-function multaEmCentavos(
-    DateTimeImmutable $devolverAte,
-    DateTimeImmutable $hoje,
-    int $porDiaEmCentavos,
-    int $tetoEmCentavos,
-): int;
+<?php
 
-function registrarMulta(
-    Emprestimo $emprestimo,
-    int $centavos,
-): void;
+function multaEmCentavos(int $dias): int
+{
+    if ($dias <= 0) {
+        return 0;
+    }
 
-function notificarMulta(Leitor $leitor, int $centavos): void;
+    return min($dias * 80, 2000);
+}
+
+function totalDeMultasEmCentavos(array $emprestimos): int
+{
+    $total = 0;
+
+    foreach ($emprestimos as $e) {
+        $total = $total + multaEmCentavos($e['dias']);
+    }
+
+    return $total;
+}
+
+$emprestimos = [
+    ['dias' => 9],
+    ['dias' => -2],
+    ['dias' => 90],
+];
+
+$total = totalDeMultasEmCentavos($emprestimos);
+
+echo 'Total: R$ ', number_format($total / 100, 2, ',', '.'), "\n";
 ```
 
-A primeira é pura e testável em quatro linhas. A segunda toca o banco e
-nada mais. A terceira toca e-mail e nada mais — e no capítulo
-@cap:events-jobs-e-filas ela sai da requisição e vai para uma fila.
+```text
+Total: R$ 27,20
+```
 
-Quem orquestra as três é uma quarta função, de quatro linhas, que vira o
-serviço do capítulo @cap:services. Repare que nenhuma das quatro precisa de
-`global`.
+Repare no que a reescrita permite que a versão original não permitia:
+`totalDeMultasEmCentavos([['dias' => 9]])` pode ser chamada num arquivo de
+conferência, com três empréstimos inventados, e comparada com um número
+esperado. Nada precisa estar no ar.
+
+E repare também que a regra do teto ficou num lugar só. Quando a diretoria
+mudar de ideia de novo — e vai mudar —, a busca vai devolver um resultado.
 :::
 
-:::story A piada final
-Terça, 9h15. Seu Juvenal mandou mensagem:
+:::story O oitavo
+Na quarta, Dedé buscou de novo, agora por `0,50`, com vírgula.
 
-> *"A diretoria reconsiderou. Volta pra 0,50."*
+Um resultado. Um arquivo chamado `avisos.php`, que rodava toda madrugada e
+mandava e-mail de cobrança para quem estava atrasado.
 
-Dedé abriu o projeto novo, mudou um número, rodou os testes, subiu.
+— Esse aqui ninguém abre desde 2016 — disse ele.
 
-Levou quarenta segundos.
+Tainá olhou por cima do ombro.
 
-Ele respondeu "feito" e, por hábito, abriu o Sistema antigo numa aba, só
-para conferir. O recibo impresso continuava com 0,80.
+— Como você sabe?
 
-Deixou assim. É o último lugar do mundo que ainda usa aquele arquivo, e o
-Dedé decidiu que a data em que ele for desligado vai ser feriado.
+— Tem um `echo` de depuração comentado no meio, com a data do lado.
+
+Márcia passou atrás dos dois e parou.
+
+— Quanto tempo levou pra consertar?
+
+— Os sete primeiros, quarenta minutos.
+
+— E pra achar o oitavo?
+
+— Três dias.
+
+— Põe os três dias na planilha.
 :::

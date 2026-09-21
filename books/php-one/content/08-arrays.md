@@ -3,47 +3,119 @@ title: "Arrays"
 number: 8
 slug: arrays
 part: p1
-kicker: "A estrutura mais usada do PHP é também a mais mal usada — e uma linha dela já derrubou o aplicativo de alguém."
+kicker: "A estrutura mais usada do PHP é também a mais mal usada — e uma linha dela já derrubou o aplicativo de mil e duzentas pessoas."
 goal: >-
-  Entender o que um array PHP realmente é, escolher entre lista e mapa,
-  dominar as funções que resolvem quase tudo, e reconhecer o momento em que
-  o array virou um objeto disfarçado.
+  Guardar várias coisas numa variável só, escolher entre lista e mapa,
+  entender por que as duas são o mesmo tipo em PHP, e saber quando essa
+  igualdade vira defeito.
 ---
 
-:::story A gente não mudou nada
-Segunda-feira, 8h50. A Tainá abriu o chat da Casa Amarela e havia catorze
-mensagens da Vera, todas antes das oito da manhã.
+Até aqui, cada variável guardou uma coisa: um título, um número de dias, um
+valor em centavos. O acervo da Casa Amarela tem oito mil exemplares, e
+`$exemplar1`, `$exemplar2`, `$exemplar3` para de ser engraçado no quarto.
 
-O aplicativo do leitor não mostrava mais a lista do acervo. Tela vazia, sem
-erro, sem nada.
+## Várias coisas numa variável só
 
-— A gente não mudou nada no fim de semana — disse Dedé.
+```php title="lista.php" numbered
+<?php
 
-Tecnicamente verdade. Na sexta ele tinha acrescentado um filtro para esconder
-os exemplares em restauro. Três linhas. A API continuava respondendo `200`, o
-JSON continuava chegando, o campo continuava com o nome certo.
+$tombos = [812, 907, 344];
 
-Só que na sexta o JSON era assim:
-
-```json
-[{"tombo": 812}, {"tombo": 907}]
+echo $tombos[0], "\n";
+echo $tombos[2], "\n";
+echo count($tombos), "\n";
 ```
 
-E na segunda era assim:
-
-```json
-{"0": {"tombo": 812}, "2": {"tombo": 907}}
+```text
+812
+344
+3
 ```
 
-O aplicativo esperava uma lista. Recebeu um objeto. Não quebrou — só não
-achou nada para percorrer, e desenhou a tela vazia com muita competência.
+Os colchetes criam um **array**. Os valores ficam separados por vírgula, e
+cada um ganha uma posição, contada a partir de **zero** — por isso
+`$tombos[0]` é o primeiro e `$tombos[2]` é o terceiro.
+
+`count()` responde quantos itens existem. Repare que `count($tombos)` é `3`
+e a última posição é `2`: essa diferença de um é a origem de uma quantidade
+impressionante de defeitos, e a forma de nunca mais errar é lembrar que a
+contagem começa em zero e a contagem de itens não.
+
+Para acrescentar no fim, colchetes vazios:
+
+```php title="acrescentar.php" numbered
+<?php
+
+$tombos = [812, 907];
+
+$tombos[] = 344;
+$tombos[] = 501;
+
+print_r($tombos);
+```
+
+```text
+Array
+(
+    [0] => 812
+    [1] => 907
+    [2] => 344
+    [3] => 501
+)
+```
+
+`$tombos[] = 344` quer dizer "coloque na próxima posição livre". Você não
+precisa saber qual é.
+
+E apareceu uma ferramenta nova: `print_r` imprime a estrutura de um array de
+forma legível. O `var_dump` também funciona e mostra os tipos, o que é mais
+informação do que costuma ser útil quando se quer só conferir o conteúdo.
+
+## Chaves com nome
+
+A posição numérica serve quando a ordem é o que importa. Quando o que
+importa é **o que cada valor significa**, a chave vira texto:
+
+```php title="mapa.php" numbered
+<?php
+
+$exemplar = [
+    'tombo' => 812,
+    'titulo' => 'O Cortiço',
+    'status' => 'disponivel',
+];
+
+echo $exemplar['titulo'], "\n";
+
+$exemplar['status'] = 'emprestado';
+
+echo $exemplar['status'], "\n";
+```
+
+```text
+O Cortiço
+emprestado
+```
+
+A seta `=>` liga a chave ao valor. O acesso e a alteração usam a mesma
+sintaxe de colchetes, com o nome da chave no lugar do número.
+
+Isso resolve o problema que a Vera tinha com o formulário de dezoito campos:
+em vez de dezoito variáveis soltas, um exemplar inteiro cabe numa variável
+que se lê em voz alta.
+
+:::key
+Use **chave numérica** quando os itens forem intercambiáveis e a ordem
+importar — uma fila, uma lista de resultados, um histórico.
+
+Use **chave de texto** quando cada posição tiver um significado próprio — um
+registro, uma configuração, um conjunto de opções.
+
+A pergunta que decide: faz sentido perguntar "qual é o terceiro"? Se fizer,
+é lista. Se não fizer, é mapa.
 :::
 
-Três linhas, nenhum erro, e o aplicativo de mil e duzentos leitores parou. A
-cabem numa frase: **em
-PHP, lista e dicionário são o mesmo tipo — e o JSON não perdoa isso.**
-
-## Uma palavra para duas estruturas
+## As duas são a mesma coisa
 
 Em quase toda linguagem existem duas estruturas separadas. Python tem `list`
 e `dict`. JavaScript tem `Array` e `Object`. Java tem `List` e `Map`.
@@ -55,12 +127,7 @@ PHP tem `array`. Um só, para os dois usos.
 
 $tombos = [812, 907, 344];
 
-$exemplar = [
-    'tombo' => 812,
-    'status' => 'disponivel',
-];
-
-var_dump($tombos, $exemplar);
+var_dump($tombos);
 ```
 
 ```text
@@ -69,233 +136,250 @@ array(3) {
   [1]=> int(907)
   [2]=> int(344)
 }
-array(2) {
-  ["tombo"]=> int(812)
-  ["status"]=> string(11) "disponivel"
-}
 ```
 
-Repare no primeiro: as chaves `0`, `1`, `2` existem. Elas sempre existiram —
-você é que não as escreveu. Uma "lista" em PHP é um mapa cujas chaves por
-acaso são os inteiros começando em zero, em ordem.
+Repare nas chaves `0`, `1`, `2`. Elas estão lá — você é que não as escreveu.
+Uma "lista" em PHP é um mapa cujas chaves por acaso são os inteiros
+começando em zero, em ordem, sem buraco.
 
 :::term Array em PHP
 Um **mapa ordenado**: pares chave→valor que mantêm a ordem de inserção. A
-chave é `int` ou `string`. Não existe estrutura de lista separada — o que
-chamamos de lista é uma convenção sobre as chaves, não um tipo diferente.
+chave é `int` ou `string`. Não existe um tipo de lista separado — o que
+chamamos de lista é uma convenção sobre as chaves.
 :::
 
 :::history
-Essa decisão é de 1997, quando o PHP 3 estava sendo escrito por Andi Gutmans
-e Zeev Suraski. Ter uma estrutura só simplificava o interpretador e a vida
-de quem escrevia, numa época em que a maior parte do PHP do mundo processava
+A decisão é de 1997, quando o PHP 3 estava sendo escrito por Andi Gutmans e
+Zeev Suraski. Uma estrutura só simplificava o interpretador e a vida de quem
+escrevia, numa época em que a maior parte do PHP do mundo processava
 formulários — onde tudo chega como pares nome→valor.
 
-Funcionou por vinte anos. O que ninguém previu, em 1997, é que essa mesma
-estrutura seria serializada para um formato, o JSON, que **distingue** os
-dois casos. O defeito da história de abertura tem a idade da linguagem.
+Funcionou por vinte anos. O que ninguém previu foi que essa mesma estrutura
+seria enviada para outros programas num formato que **distingue** os dois
+casos.
 :::
 
-## A lista que virou objeto
+Desde o PHP 8.1 existe uma função que responde qual dos dois você tem na
+mão:
 
-O `json_encode` toma a decisão sozinho, e o critério é rígido:
+```text
+$ php -r 'var_dump(array_is_list([812, 907]));'
+bool(true)
+$ php -r 'var_dump(array_is_list([0 => 812, 2 => 907]));'
+bool(false)
+```
+
+O segundo tem chaves `0` e `2`. Falta o `1`. Para o PHP, continua sendo um
+array como qualquer outro — e é aí que começa a história.
+
+## A gente não mudou nada
+
+:::story A gente não mudou nada
+Segunda-feira, 8h50. Tainá abriu o chat da Casa Amarela e havia catorze
+mensagens da Vera, todas antes das oito da manhã.
+
+O aplicativo do leitor não mostrava mais o acervo. Tela vazia, sem erro, sem
+mensagem, sem nada.
+
+— A gente não mudou nada no fim de semana — disse Dedé.
+
+Tecnicamente verdade. Na sexta ele tinha tirado da lista os exemplares em
+restauro. Uma linha. O servidor continuava respondendo normalmente, os dados
+continuavam chegando, os campos continuavam com os nomes certos.
+
+Só que na sexta o que saía era isto:
+
+```text
+[{"tombo":812},{"tombo":907}]
+```
+
+E na segunda era isto:
+
+```text
+{"0":{"tombo":812},"2":{"tombo":344}}
+```
+
+O aplicativo esperava uma lista. Recebeu outra coisa. Não quebrou — só não
+achou nada para percorrer, e desenhou a tela vazia com muita competência.
+
+Márcia soube às 9h15. A primeira pergunta dela não foi sobre o defeito.
+
+— Tem quanto tempo que está assim?
+
+— Desde sexta, 18h.
+
+— Então foram dois dias e meio. Coloca na ata.
+:::
+
+:::term JSON
+O formato em que dois programas trocam dados pela rede. É texto, e tem
+duas estruturas: **lista**, entre `[ ]`, e **objeto**, entre `{ }` com pares
+nome→valor. As duas coisas que o PHP resolveu chamar de array são, em JSON,
+tipos diferentes — e quem recebe trata cada um de um jeito.
+:::
+
+O PHP converte um array para JSON com `json_encode`, e a decisão de virar
+lista ou objeto é tomada sozinha, por um critério rígido:
 
 ```php title="a_regra.php" numbered
 <?php
 
-echo json_encode([1, 2, 3]), "\n";
-echo json_encode([0 => 1, 1 => 2, 2 => 3]), "\n";
-echo json_encode([0 => 1, 2 => 3]), "\n";
-echo json_encode([1 => 1, 2 => 2]), "\n";
+echo json_encode([812, 907, 344]), "\n";
+echo json_encode([0 => 812, 1 => 907]), "\n";
+echo json_encode([0 => 812, 2 => 344]), "\n";
+echo json_encode(['tombo' => 812]), "\n";
 ```
 
 ```text
-[1,2,3]
-[1,2,3]
-{"0":1,"2":3}
-{"1":1,"2":2}
+[812,907,344]
+[812,907]
+{"0":812,"2":344}
+{"tombo":812}
 ```
 
-A regra: vira array JSON **apenas** se as chaves forem exatamente `0, 1, 2,
-…, n-1`, nessa ordem, sem buraco. Qualquer outra coisa vira objeto.
+Vira lista JSON **apenas** se as chaves forem exatamente `0, 1, 2, …, n-1`,
+nessa ordem, sem buraco. Qualquer outra coisa vira objeto — é a mesma
+pergunta que o `array_is_list` responde.
 
-Existe uma função que responde isso desde o PHP 8.1:
+## O buraco que o `unset` deixa
 
-```text
-$ php -r 'var_dump(array_is_list([1, 2, 3]));'
-bool(true)
-$ php -r 'var_dump(array_is_list([0 => 1, 2 => 3]));'
-bool(false)
-```
-
-## Arrumar o acervo na memória
-
-```php title="funcoes.php" numbered
-<?php
-
-$exemplares = [
-    ['tombo' => 812, 'livro_id' => 3, 'status' => 'disponivel'],
-    ['tombo' => 907, 'livro_id' => 3, 'status' => 'restauro'],
-    ['tombo' => 344, 'livro_id' => 7, 'status' => 'disponivel'],
-];
-
-$tombos = array_column($exemplares, 'tombo');
-
-$porTombo = array_column($exemplares, null, 'tombo');
-
-$livros = array_unique(array_column($exemplares, 'livro_id'));
-
-$livres = array_filter(
-    $exemplares,
-    fn(array $e): bool => $e['status'] === 'disponivel'
-);
-
-$total = count($livres);
-```
-
-| Função | Responde |
-|---|---|
-| `array_column` | "me dê só essa coluna" |
-| `array_column` com 3º argumento | "indexe por essa chave" |
-| `array_filter` | "quais passam nesse critério" |
-| `array_map` | "transforme cada um assim" |
-| `array_unique` | "sem repetição" |
-| `in_array` / `array_key_exists` | "isso está aí?" |
-| `usort` | "ordene por esse critério" |
-
-Tabela: `array_column($lista, null, 'id')` é o idioma mais útil da tabela:
-transforma uma lista num mapa indexado, e mata o N+1 do capítulo
-@cap:repeticoes na memória.
-
-:::practice
-Rode `print_r(array_column($exemplares, null, 'tombo'))` e olhe a saída. O
-array deixou de ter chaves 0, 1, 2 e passou a ter 812, 907, 344. Guarde essa
-imagem: é exatamente essa transformação que permite trocar uma busca linear
-por um acesso direto.
-:::
-
-## Três linhas e uma tela vazia
-
-Aqui está o que o Dedé escreveu na sexta:
+O que o Dedé escreveu na sexta foi isto:
 
 ```php title="o_filtro_da_sexta.php" numbered
 <?php
 
-$exemplares = buscarExemplares($livroId);
+$exemplares = [
+    ['tombo' => 812, 'status' => 'disponivel'],
+    ['tombo' => 907, 'status' => 'restauro'],
+    ['tombo' => 344, 'status' => 'disponivel'],
+];
 
-$exemplares = array_filter(
-    $exemplares,
-    fn(array $e): bool => $e['status'] !== 'restauro'
-);
+unset($exemplares[1]);
 
-echo json_encode(['exemplares' => $exemplares]);
+echo json_encode($exemplares), "\n";
 ```
-
-`array_filter` **preserva as chaves originais**. Se o item do meio foi
-removido, o que sobra tem chaves `0` e `2` — e o `json_encode` olha para
-isso, não encontra a sequência, e produz um objeto.
 
 ```text
-{"exemplares":{"0":{"tombo":812},"2":{"tombo":344}}}
+{"0":{"tombo":812,"status":"disponivel"},
+ "2":{"tombo":344,"status":"disponivel"}}
 ```
 
-O servidor respondeu `200`. O JSON era válido. Nenhum log registrou nada.
+`unset()` remove um item do array. O que ele **não** faz é renumerar os que
+ficaram: a posição `1` simplesmente deixou de existir, e o item que estava
+na `2` continua na `2`.
 
-## O índice que ficou para trás
+O array agora tem chaves `0` e `2`. O `json_encode` olhou, não encontrou a
+sequência e produziu um objeto.
 
-Porque o defeito estava numa **conversão implícita entre duas linguagens**,
-e não dentro de nenhuma das duas.
+Nenhum dos dois lados errou. O PHP fez exatamente o que documenta fazer há
+vinte anos; o aplicativo tratou um objeto como objeto. O defeito aconteceu
+**na fronteira** — e fronteira é onde moram os problemas que ninguém
+consegue reproduzir, porque cada lado, testado sozinho, está certo.
 
-Do lado do PHP, tudo certo: `array_filter` fez exatamente o que documenta
-fazer há vinte anos. Do lado do JavaScript, tudo certo também: ele recebeu um
-objeto e tratou como objeto.
+O conserto tem uma palavra:
 
-O erro aconteceu na fronteira — e fronteiras são onde moram os defeitos que
-ninguém consegue reproduzir, porque cada lado, testado sozinho, está certo.
-
-:::key
-Esse é o padrão mais importante deste capítulo, e ele vale além de PHP:
-**quando o dado atravessa uma fronteira, alguém precisa garantir a forma.**
-No capítulo @cap:api-resources isso vira uma camada dedicada, cujo trabalho
-único é decidir o formato do que sai — exatamente para que nenhuma função
-interna possa mudar o contrato por acidente.
-:::
-
-## Faça o formato ser uma escolha
-
-**O conserto imediato** tem uma palavra:
-
-```php
-$exemplares = array_values(array_filter($exemplares, $criterio));
-```
-
-`array_values` descarta as chaves e renumera a partir de zero. A regra
-prática: **toda vez que o resultado de `array_filter` for virar JSON, ou
-for tratado como lista, passe por `array_values`.**
-
-**O conserto estrutural** é um teste que prende o contrato:
-
-```php title="tests/AcervoTest.php" numbered
+```php title="o_conserto.php" numbered
 <?php
 
-test('exemplares saem como lista, nunca como objeto', function () {
-    $resposta = $this->getJson('/livros/3/exemplares');
+$exemplares = [
+    ['tombo' => 812, 'status' => 'disponivel'],
+    ['tombo' => 907, 'status' => 'restauro'],
+    ['tombo' => 344, 'status' => 'disponivel'],
+];
 
-    expect($resposta->json('exemplares'))->toBeList();
-});
+unset($exemplares[1]);
+
+$exemplares = array_values($exemplares);
+
+echo json_encode($exemplares), "\n";
 ```
 
-Esse teste falha no dia em que alguém acrescentar outro `array_filter` no
-caminho — que é exatamente o que vai acontecer, porque o Dedé não foi
-descuidado. Ele usou uma função normal do jeito documentado.
+```text
+[{"tombo":812,"status":"disponivel"},
+ {"tombo":344,"status":"disponivel"}]
+```
 
-**E o conserto definitivo** é o do capítulo @cap:classes-e-objetos: quando
-`Exemplar` for uma classe e a resposta for montada por um objeto que conhece
-o formato, `array_filter` deixa de ter acesso ao contrato público.
+`array_values()` joga as chaves fora e renumera a partir de zero. O array
+volta a ser uma lista, e o JSON volta a ser uma lista.
+
+:::key
+**Toda vez que um array for sair do PHP como lista — para JSON, para outro
+programa, para uma tela que espera ordem —, garanta as chaves com
+`array_values()`.**
+
+A regra parece exagerada até você lembrar que a linha que quebra o contrato
+raramente é a que você está escrevendo agora. É a que outra pessoa vai
+acrescentar no meio do caminho, em março, com toda a razão do mundo.
+:::
 
 :::note Na sua carreira
 "A gente não mudou nada" é quase sempre falso e quase nunca mentira. A
-pessoa mudou algo que, segundo o modelo mental dela, não podia causar aquilo.
+pessoa mudou algo que, segundo o modelo mental dela, não podia causar
+aquilo.
 
 A habilidade que se desenvolve com o tempo não é lembrar de todos os efeitos
-colaterais — é **estreitar a busca rápido**. Neste caso: o app mudou? Não. A
-API mudou? Sim, na sexta. O que mudou na sexta? Três linhas. O que essas três
-linhas tocam? A forma da resposta.
+colaterais possíveis — é **estreitar a busca rápido**. Neste caso: o
+aplicativo mudou? Não. O servidor mudou? Sim, na sexta. O que mudou na
+sexta? Uma linha. O que essa linha toca? A forma da resposta.
 
-Quatro perguntas, dois minutos. É isso que separa uma investigação de meia
-hora de uma manhã inteira — e é treinável.
+Quatro perguntas, dois minutos. É a diferença entre uma investigação de meia
+hora e uma manhã inteira, e é treinável.
 :::
 
-## Array não é banco de dados
+## Perguntar se está lá
 
-Existe um ponto em que o array para de ser a ferramenta certa, e ele chega
-antes do que as pessoas esperam:
+Três funções parecidas que respondem perguntas diferentes:
 
-```php title="o_limite.php" numbered
+```php title="existe.php" numbered
 <?php
 
-$emprestimos = carregarTodosOsEmprestimos();
+$exemplar = [
+    'tombo' => 812,
+    'observacao' => null,
+];
 
-$doLeitor = array_filter(
-    $emprestimos,
-    fn(array $e): bool => $e['leitor_id'] === 47
-);
+var_dump(isset($exemplar['tombo']));
+var_dump(isset($exemplar['observacao']));
+var_dump(array_key_exists('observacao', $exemplar));
+var_dump(in_array(812, $exemplar));
 ```
 
-Isso traz oito mil registros da memória — ou do banco — para descartar 7.993.
-Funciona com trinta. Com oito mil, é o mesmo erro do capítulo
-@cap:repeticoes, com outra roupa: **o filtro está na camada errada**.
+```text
+bool(true)
+bool(false)
+bool(true)
+bool(true)
+```
 
-| O array é bom para | O banco é melhor para |
-|---|---|
-| dezenas de itens já carregados | milhares de registros |
-| transformar o que você já tem | escolher o que trazer |
-| agrupar para exibir | somar, contar, ordenar em volume |
+A segunda e a terceira linhas são o ponto. A chave `observacao` **existe** no
+array — ela só tem valor `null`. O `isset` responde `false`, porque a
+pergunta dele é "existe e não é nulo?". O `array_key_exists` responde
+`true`, porque a pergunta dele é só "existe?".
 
-Tabela: A pergunta que decide: eu **já tenho** esses dados na mão por outro
-motivo, ou estou carregando tudo só para filtrar?
+É a mesma distinção entre ausência e nulo do capítulo
+@cap:variaveis-e-tipos, agora com uma consequência prática: se o seu código
+decide se deve gravar uma observação com base em `isset`, ele nunca vai
+gravar uma observação em branco de propósito.
 
-## Cópia por valor
+O `in_array` procura pelo **valor**, não pela chave. Existe também
+`array_search`, que devolve a chave em que encontrou.
+
+:::pitfall
+`in_array` sem o terceiro argumento compara com `==`:
+
+```text
+$ php -r 'var_dump(in_array(0, ["a", "b"]));'
+bool(false)
+$ php -r 'var_dump(in_array("1", [1, 2]));'
+bool(true)
+```
+
+O segundo caso é o que morde: o texto `"1"` foi encontrado numa lista de
+números. Use sempre `in_array($x, $lista, true)`, com o terceiro argumento,
+que mudam para comparação estrita.
+:::
+
+## Copiar um array copia mesmo
 
 ```php title="copia.php" numbered
 <?php
@@ -306,238 +390,271 @@ $b = $a;
 $b['tombo'] = 907;
 
 echo $a['tombo'], "\n";
+echo $b['tombo'], "\n";
 ```
 
 ```text
 812
+907
 ```
 
-Em PHP, atribuir um array **copia**. Isso é diferente de objeto, que é
-atribuído por referência, e é diferente de Python e JavaScript, onde a lista
-seria compartilhada.
+Atribuir um array a outra variável **copia** o conteúdo. Mexer na cópia não
+mexe no original.
 
-A cópia é preguiçosa por dentro — o PHP só duplica de verdade quando um dos
-dois muda —, então o custo é menor do que parece. Mas ele existe:
+Isso parece óbvio e não é: em Python e em JavaScript, a mesma sequência
+deixaria as duas variáveis apontando para a mesma lista, e o `812` teria
+virado `907` nas duas. Quem chega de uma dessas linguagens costuma descobrir
+a diferença de um jeito ruim.
 
-:::pitfall
-Passar um array de cem mil itens para uma função que o modifica dispara uma
-cópia inteira na memória. Em laço, isso multiplica. Quando o array é grande e
-a função precisa mesmo alterá-lo, o `&$array` por referência resolve — e
-traz de volta todos os problemas de ação à distância que o capítulo
-@cap:funcoes descreveu. Quase sempre, a resposta melhor é devolver um array
-novo e deixar o antigo ser descartado.
-:::
+O PHP é econômico por dentro — ele só duplica de verdade quando um dos dois
+lados muda —, então o custo é menor do que parece. Mas ele existe, e para um
+array de cem mil itens ele aparece.
 
-## Quatro níveis de profundidade
+## Arrays dentro de arrays
+
+O valor guardado num array pode ser outro array, e é assim que se representa
+uma coleção de registros:
+
+```php title="acervo.php" numbered
+<?php
+
+$acervo = [
+    ['tombo' => 812, 'titulo' => 'O Cortiço'],
+    ['tombo' => 907, 'titulo' => 'Vidas Secas'],
+];
+
+echo $acervo[0]['titulo'], "\n";
+echo count($acervo), "\n";
+```
+
+```text
+O Cortiço
+2
+```
+
+Dois colchetes seguidos: o primeiro escolhe o registro, o segundo escolhe o
+campo. É a estrutura em que a maioria dos dados chega e sai de um sistema
+PHP.
+
+Ela funciona bem em dois níveis, tolera três, e depois disso vira outra
+coisa. Esta linha existe no Sistema:
 
 ```php
 $dados['livro'][3]['exemplares'][0]['emprestimo']['leitor']['nome']
 ```
 
-Essa linha existe no Sistema. Ela funciona. E ela tem quatro problemas que
-nenhuma ferramenta consegue apontar: o editor não sugere nada, um erro de
-digitação em qualquer nível dá aviso e `null`, não há como saber quais
-chaves existem sem rodar, e a estrutura inteira é um contrato que não está
-escrito em lugar nenhum.
+Ela funciona. E tem quatro problemas que nenhuma ferramenta consegue
+apontar: o editor não sugere nada, um erro de digitação em qualquer nível
+devolve `null` com um aviso, não há como saber quais chaves existem sem
+rodar o programa, e a estrutura inteira é um contrato que não está escrito
+em lugar nenhum.
 
 :::key
 Quando o array tem três ou mais níveis e o formato é **conhecido e fixo**,
-ele está pedindo uma classe. O capítulo @cap:classes-e-objetos faz essa
-troca, e o ganho não é estético: é o editor completando `->titulo`, o
-PHPStan acusando `->titluo`, e a estrutura virando documentação executável.
+ele está pedindo para virar outra coisa. Guarde o sintoma; o remédio aparece
+quando a linguagem tiver como aplicá-lo.
 :::
 
-## Desempacotamento e spread
+## Desempacotar e juntar
 
 ```php title="desempacotar.php" numbered
 <?php
 
-[$primeiro, $segundo] = [812, 907];
+$par = [812, 907];
+
+[$primeiro, $segundo] = $par;
+
+echo $primeiro, " e ", $segundo, "\n";
+
+$exemplar = ['tombo' => 344, 'status' => 'disponivel'];
 
 ['tombo' => $t, 'status' => $s] = $exemplar;
 
-foreach ($exemplares as ['tombo' => $tombo]) {
-    echo $tombo, "\n";
-}
-
-$todos = [...$disponiveis, ...$reservados];
+echo $t, " esta ", $s, "\n";
 ```
 
-O desempacotamento por chave, na segunda linha, é o mais útil do conjunto:
-ele extrai só o que interessa e documenta, na própria linha, o que a função
-usa do array.
+```text
+812 e 907
+344 esta disponivel
+```
 
-O `...` junta arrays e, desde o PHP 8.1, funciona também com chaves de
-texto — com a regra de que o último repetido vence.
+O desempacotamento por chave, na segunda forma, é o mais útil do conjunto:
+extrai só os campos que interessam e documenta, na própria linha, o que o
+trecho seguinte usa.
+
+E para juntar dois arrays existem três pontinhos:
+
+```php title="juntar.php" numbered
+<?php
+
+$disponiveis = [812, 907];
+$reservados = [344];
+
+$todos = [...$disponiveis, ...$reservados];
+
+print_r($todos);
+```
+
+```text
+Array
+(
+    [0] => 812
+    [1] => 907
+    [2] => 344
+)
+```
+
+O `...` é chamado de **spread**. Repare que as chaves foram renumeradas
+automaticamente — para listas, ele já entrega o resultado no formato certo.
+Com chaves de texto, ele também funciona desde o PHP 8.1, com a regra de que
+o último repetido vence.
 
 :::summary
-- Array em PHP é um mapa ordenado; lista é uma convenção sobre as chaves.
-- Vira array JSON só com chaves `0..n-1` sem buraco; o resto vira objeto.
-- `array_filter` preserva chaves — use `array_values` antes de serializar.
-- `array_column($lista, null, 'id')` indexa e mata busca linear.
-- Filtrar em PHP o que o banco poderia filtrar é o erro da camada errada.
-- Array é copiado por valor; objeto, não.
-- Três níveis de profundidade é o sinal de que falta uma classe.
+- `[]` cria um array; `$a[] = $x` acrescenta na próxima posição livre.
+- A contagem de posições começa em zero; `count()` devolve a quantidade.
+- Chave numérica para lista, chave de texto para registro.
+- Array em PHP é um mapa ordenado — lista é só uma convenção sobre as
+	chaves.
+- Vira lista em JSON só com chaves `0..n-1` sem buraco; `unset` abre buraco
+	e `array_values` fecha.
+- `isset` diz "existe e não é nulo"; `array_key_exists` diz só "existe".
+- `in_array` compara com `==` a menos que você passe `true` no terceiro
+	argumento.
+- Array é copiado por valor, diferente de Python e JavaScript.
+- Três níveis de profundidade é sintoma de que falta outra estrutura.
 :::
 
 :::checkpoint
-Você escolhe a função de array certa em vez de escrever laço, sabe quando o
-resultado precisa de `array_values`, e reconhece quando o array deixou de
-ser a ferramenta adequada.
+Você cria listas e mapas, acrescenta e remove itens, sabe dizer se um array
+vai virar lista ou objeto em JSON, e consegue explicar por que `isset` e
+`array_key_exists` discordam.
 :::
 
 :::exercise level=1
-Dada a lista de exemplares, produza um array com os tombos dos que estão
-disponíveis, garantindo que ele vire uma lista JSON.
+Monte um array com três exemplares, cada um com tombo, título e status.
+Imprima o título do segundo, a quantidade total, e depois acrescente um
+quarto exemplar e imprima a quantidade de novo.
 
 :::answer
 ```php
 <?php
 
-$tombos = array_values(
-    array_column(
-        array_filter(
-            $exemplares,
-            fn(array $e): bool => $e['status'] === 'disponivel'
-        ),
-        'tombo'
-    )
-);
+$acervo = [
+    ['tombo' => 812, 'titulo' => 'O Cortiço', 'status' => 'livre'],
+    ['tombo' => 907, 'titulo' => 'Vidas', 'status' => 'restauro'],
+    ['tombo' => 344, 'titulo' => 'Sertão', 'status' => 'livre'],
+];
+
+echo $acervo[1]['titulo'], "\n";
+echo count($acervo), "\n";
+
+$acervo[] = [
+    'tombo' => 501,
+    'titulo' => 'Iracema',
+    'status' => 'disponivel',
+];
+
+echo count($acervo), "\n";
 ```
-Três funções aninhadas já está no limite do legível. Em código de produção,
-eu quebraria em duas variáveis com nome — concisão é uma qualidade, mas
-clareza vem antes dela.
+
+```text
+Vidas
+3
+4
+```
+
+O `[1]` é o segundo porque a contagem começa em zero. Essa é a única parte
+do exercício que vale conferir com atenção.
 :::
 
 :::exercise level=2
-Monte um array que mapeie `livro_id` para a quantidade de exemplares
-disponíveis daquele livro.
+Dado o array abaixo, remova o exemplar em restauro e imprima o resultado em
+JSON. Faça duas versões: uma que produz um objeto e uma que produz uma
+lista. Explique o que muda para quem recebe.
+
+```php
+$exemplares = [
+    ['tombo' => 812, 'status' => 'disponivel'],
+    ['tombo' => 907, 'status' => 'restauro'],
+    ['tombo' => 344, 'status' => 'disponivel'],
+];
+```
 
 :::answer
 ```php
-<?php
+unset($exemplares[1]);
 
-$contagem = [];
-
-foreach ($exemplares as $exemplar) {
-    if ($exemplar['status'] !== 'disponivel') {
-        continue;
-    }
-
-    $id = $exemplar['livro_id'];
-    $contagem[$id] = ($contagem[$id] ?? 0) + 1;
-}
+echo json_encode($exemplares), "\n";
+echo json_encode(array_values($exemplares)), "\n";
 ```
-`($contagem[$id] ?? 0) + 1` é o idioma para "some ao que já existe,
-começando do zero na primeira vez". Sem o `??`, a primeira ocorrência de
-cada livro geraria um aviso de índice indefinido — e o resultado continuaria
-certo, o que é a pior combinação possível.
 
-Repare também que esse array **não** é uma lista: as chaves são ids de
-livro. Se ele for para o JSON, vai virar objeto — e aqui isso está correto,
-porque é um mapa mesmo.
-:::
-
-:::exercise level=1
-Escreva uma função que garanta que um array vire lista JSON, e teste com um
-array filtrado e com um mapa de contagens.
-
-:::answer
-```php
-<?php
-
-function comoLista(array $a): array
-{
-    return array_is_list($a) ? $a : array_values($a);
-}
-
-$filtrado = array_filter([1, 2, 3], fn($n) => $n !== 2);
-var_dump(array_is_list($filtrado));
-var_dump(array_is_list(comoLista($filtrado)));
-```
 ```text
-bool(false)
-bool(true)
+{"0":{"tombo":812,"status":"disponivel"},
+ "2":{"tombo":344,"status":"disponivel"}}
+[{"tombo":812,"status":"disponivel"},
+ {"tombo":344,"status":"disponivel"}]
 ```
-Cuidado com o segundo caso do enunciado: aplicar essa função a um **mapa de
-contagens** destrói a informação, porque as chaves eram os dados. A função
-resolve o caso da lista filtrada e é perigosa se aplicada sem pensar — o que
-é um bom lembrete de que utilitário genérico também precisa de critério de
-uso.
+
+Para quem recebe, a diferença é total. Um programa que espera uma lista vai
+percorrer o primeiro resultado e encontrar zero itens, porque um objeto não
+se percorre pelo índice. Não dá erro: dá tela vazia.
+
+E repare que os dados são idênticos nos dois casos. Os mesmos dois
+exemplares, os mesmos campos, os mesmos valores. O que mudou foi só a forma
+— e a forma é metade do contrato.
 :::
 
 :::exercise level=3
-O endpoint abaixo devolve o acervo para o aplicativo. Ele passou por três
-pessoas em dois anos. Aponte os problemas e descreva o que você mudaria —
-inclusive o que mudaria **fora** desta função.
+O trecho abaixo veio do Sistema e decide se deve gravar a observação de uma
+devolução. Ele tem um defeito que só aparece em um caso específico. Encontre
+o caso, explique e corrija.
 
 ```php
-function acervo() {
-    $livros = carregarTodosOsLivros();
-    $saida = [];
-    foreach ($livros as $l) {
-        if ($l['ativo']) {
-            $l['exemplares'] = carregarExemplares($l['id']);
-            $l['disponiveis'] = count(array_filter(
-                $l['exemplares'],
-                fn($e) => $e['status'] === 'disponivel'
-            ));
-            $saida[$l['id']] = $l;
-        }
-    }
-    return json_encode($saida);
+$devolucao = [
+    'tombo' => 812,
+    'observacao' => null,
+];
+
+if (isset($devolucao['observacao'])) {
+    gravarObservacao($devolucao['observacao']);
 }
 ```
 
 :::answer
-**1. N+1.** `carregarExemplares` dentro do laço: uma consulta por livro,
-quatro mil livros. É o capítulo @cap:repeticoes de novo.
+O caso específico é a observação que existe e está **deliberadamente**
+vazia.
 
-**2. Filtro em PHP.** `if ($l['ativo'])` descarta registros que o banco
-nunca deveria ter enviado.
+O `isset` responde `false` para duas situações diferentes: a chave não
+existir, e a chave existir com valor `null`. Aqui ela existe. Alguém, em
+algum lugar, montou esse array com o campo presente — o que normalmente
+significa que o formulário tinha o campo e a pessoa não preencheu.
 
-**3. `$saida[$l['id']]` produz um objeto JSON**, não uma lista — e desta vez
-de propósito, aparentemente. Mas o aplicativo, que espera lista em todo o
-resto da API, recebe um formato diferente **só aqui**. Inconsistência de
-contrato é pior que formato errado: ela obriga quem consome a tratar cada
-endpoint como um caso especial.
+Se a regra de negócio for "grave a observação quando o campo veio no
+formulário, mesmo em branco", o `isset` está errado. Se for "grave só quando
+houver texto", ele está certo por acaso, e vai deixar de estar no dia em que
+alguém mudar o valor padrão de `null` para `''`.
 
-**4. `$l` inteiro vai para a resposta.** Toda coluna nova na tabela `livro`
-— inclusive `custo_de_aquisicao` ou `observacao_interna` — passa a aparecer
-no aplicativo público, sem ninguém decidir isso. É o vazamento que o
-capítulo @cap:api-resources existe para impedir.
+A correção é escolher a pergunta e escrevê-la:
 
-**5. A função faz quatro coisas:** busca, filtra, calcula e serializa. Ela
-devolve `string`, não dados — então quem quiser reusar a lógica para gerar
-um CSV precisa decodificar o próprio JSON.
+```php
+if (array_key_exists('observacao', $devolucao)) {
+    gravarObservacao($devolucao['observacao']);
+}
+```
 
-**O que eu mudaria fora da função** é a parte que a pergunta quer:
+se a regra for sobre o campo ter vindo, ou
 
-O cálculo de `disponiveis` não pertence a PHP. É um `COUNT` com `GROUP BY`
-que o banco faz em milissegundos sobre quatro mil livros — capítulo
-@cap:banco-de-dados-e-sql. A decisão de quais campos saem pertence a uma
-camada de saída — capítulo @cap:api-resources. E a lista completa do acervo
-não deveria existir como endpoint: quatro mil livros numa resposta é uma
-decisão de paginação que ninguém tomou — capítulo
-@cap:paginacao-filtros-e-buscas.
+```php
+if (($devolucao['observacao'] ?? '') !== '') {
+    gravarObservacao($devolucao['observacao']);
+}
+```
 
-Essa é a leitura que vale treinar: metade dos problemas de uma função ruim
-não se resolve **dentro** dela. Reescrever essa função inteira, mantendo o
-endpoint como está, produz um código bonito que continua carregando o acervo
-inteiro na memória a cada abertura do aplicativo.
-:::
+se a regra for sobre haver texto. O `??` cobre o caso de a chave nem existir,
+e a comparação com `''` torna a intenção legível para quem revisar.
 
-:::story A piada final
-Quarta-feira, retrospectiva. Cléber pediu para alguém explicar o incidente
-de segunda "em linguagem de negócio".
-
-Dedé pensou um pouco.
-
-— O aplicativo esperava uma fila e recebeu uma gaveta.
-
-Cléber anotou. No relatório que foi para a diretoria, o incidente ficou
-registrado como: *"divergência de expectativa estrutural entre camadas"*.
-
-Na retrospectiva seguinte, o Dr. Aurélio citou a frase como exemplo de
-comunicação clara.
+O que não dá para fazer é deixar `isset` e torcer para que as duas regras
+nunca divirjam. Elas divergem — foi assim que quatro leitores apareceram no
+relatório da Vera no capítulo @cap:variaveis-e-tipos, pelo mesmo motivo, com
+outro nome.
 :::

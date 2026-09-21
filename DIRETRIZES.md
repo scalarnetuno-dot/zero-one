@@ -73,6 +73,166 @@ Cada capítulo deve ter, no máximo, uma breve orientação inicial sobre
 objetivo e pré-requisitos. O restante deve ser experiência, explicação,
 código e decisão.
 
+### Orçamento de referência cruzada
+
+As duas direções não são o mesmo problema, e a regra é diferente para cada
+uma.
+
+**Para frente: nenhuma.** Referência para frente é dívida — diz "isto
+importa, mas não agora", e o leitor fecha o parágrafo sem entender e sem
+saber quando vai entender. Dez dessas num capítulo não são um mapa; são dez
+buracos numerados.
+
+**Para trás: quando ela recupera alguma coisa.** Uma referência para trás é
+o tecido que liga um projeto contínuo — ela deixa o leitor ver a mesma ideia
+voltando com outra roupa, que é metade do valor de um livro com projeto
+único. Raramente passa de três ou quatro por capítulo, e cada uma precisa
+passar num teste: **se você apagar o número do capítulo, a frase ainda se
+sustenta?** Se sim, ela estava recuperando uma ideia. Se a frase desmonta, a
+referência estava substituindo uma explicação que deveria estar ali.
+
+Se um assunto aparece no código, ele precisa de explicação **aqui**, no
+tamanho que couber. Se não couber, o assunto está no capítulo errado — tire
+o código, não a explicação.
+
+Frases proibidas, sem exceção:
+
+- "isso tem um capítulo próprio";
+- "o capítulo X vai formalizar";
+- "a regra que este livro segue a partir do capítulo X";
+- "vai aparecer bastante no livro";
+- "guarde esta, porque o capítulo X vai cobrar".
+
+### O livro também não comenta a própria lição
+
+Existe uma metalinguagem mais difícil de enxergar que "neste capítulo
+veremos": é o comentário sobre o que acabou de ser ensinado. "As duas falhas
+têm a mesma raiz." "O erro não é escolher uma; é entregar achando que
+entregou a outra." "Descobrir esse par cedo é a diferença entre um sistema
+que cresce e um que precisa ser reescrito."
+
+São frases bonitas *sobre* o ensino, ocupando o lugar de mais ensino. Uma
+por capítulo, no máximo. O resto do espaço pertence à tecnologia que o
+leitor pagou para aprender.
+
+## NADA APARECE SEM SER APRESENTADO
+
+Todo símbolo que aparece num bloco de código já foi explicado, ou é
+explicado na mesma página. Vale para:
+
+- sintaxe da linguagem (`foreach`, `[]=`, `?->`, `fn() =>`);
+- funções de biblioteca (`printf`, `min`, `number_format`, `var_export`);
+- vocabulário de outra tecnologia (`mysql>`, `DESCRIBE`, chave primária,
+	chave estrangeira, índice, `SELECT`);
+- nomes de ferramenta (`composer`, `artisan`, PSR-4, Xdebug).
+
+Um prompt de banco de dados numa página em que o leitor ainda não sabe o que
+é uma tabela não é exemplo: é aviso de que o livro está falando com outra
+pessoa.
+
+Três saídas legítimas, nesta ordem:
+
+1. **Explicar na hora**, em duas a quatro frases, com um `:::term` quando o
+	 nome for novo.
+2. **Trocar o exemplo** por um que use só o que já foi ensinado.
+3. **Mover o assunto** para onde ele possa ser ensinado inteiro.
+
+A quarta saída — mostrar e seguir em frente — é a que produz o leitor que
+copia sem entender.
+
+### Tecnologia de apoio também se ensina
+
+Banco de dados, terminal, Git, HTTP e formato de arquivo não são
+"pré-requisitos do leitor". Se o livro precisa deles, o livro ensina. Um
+volume que usa SQL na página 20 e explica SQL na página 300 não pulou uma
+explicação: pulou trezentas páginas de leitor.
+
+## DENSIDADE E RITMO
+
+O erro mais comum de um livro técnico bom é caber. O autor domina o assunto,
+escreve a versão condensada, e cada frase carrega uma ideia inteira. Sai um
+texto que um especialista lê com prazer e um iniciante lê três vezes sem
+aprender. Denso não é sinônimo de rigoroso: é frequentemente o contrário,
+porque o que foi cortado foi justamente a parte que ensina.
+
+- **Um capítulo, três a cinco assuntos.** Não sete. Se a lista de conceitos
+	passa de cinco, o capítulo é dois.
+- **Todo assunto novo pede o ciclo inteiro:** mostrar, rodar, ver a saída,
+	quebrar, ler a mensagem, consertar, rodar de novo. Apresentar a versão já
+	correta economiza páginas e não ensina nada.
+- **Uma ideia por parágrafo.** Parágrafo que precisa de dois-pontos, um
+	travessão e uma adversativa está carregando três.
+- **Código curto explicado devagar vence código médio explicado rápido.**
+	Seis linhas com quatro parágrafos ensinam; vinte linhas com um parágrafo
+	impressionam.
+
+Ritmo de página: a cada duas telas de texto, o leitor precisa ter **feito**
+alguma coisa — rodado um comando, previsto uma saída, lido um erro.
+
+## OFÍCIO DO HUMOR
+
+Humor não é tempero acrescentado no fim; é uma forma de explicar. Mas tem
+ofício, e ofício tem regra.
+
+**A piada nunca é anunciada.** Nada de "a piada final", "o melhor vem
+agora", "repare no absurdo". Uma cena intitulada *A piada final* já não tem
+piada nenhuma: o leitor foi avisado, e o riso depende de não ter sido.
+
+**A piada nunca é explicada.** Se a cena termina com o narrador dizendo o
+que ela significou, a cena não estava pronta. Corte a última frase — quase
+sempre a penúltima é o fim.
+
+**O riso mora no específico.** "Uma reunião longa" não tem graça. "A reunião
+durou cinquenta minutos e produziu três decisões arquiteturais sobre um
+sistema que ninguém presente conseguia descrever" tem, porque tem número,
+tem consequência e tem gente lá dentro.
+
+**O personagem é competente na direção errada.** O executivo que fala em
+escala não é burro: é ótimo numa coisa que não é esta. O analista que
+responde "ele processa" aprendeu, em oito anos, que resposta precisa gera
+tarefa. Personagem idiota não dá risada; dá vergonha alheia.
+
+**Diálogo ganha de narração.** Duas falas e um silêncio valem um parágrafo
+inteiro de ironia.
+
+**Repetição com variação.** Uma frase, um arquivo ou um número que volta
+três vezes ao longo do livro, mudando um pouco a cada volta, vale mais que
+trinta piadas novas. Plante cedo e cobre depois.
+
+**Ninguém é o bode.** A sátira mira comportamento e incentivo — prazo,
+métrica, medo de admitir que não sabe —, nunca a pessoa, a profissão ou o
+grupo.
+
+### O lugar da cena
+
+A cena entra onde **cria a dúvida** que a explicação vai resolver, não onde
+decora o que já foi explicado. Cena no fim do capítulo repetindo a lição em
+forma de anedota é a definição de humor decorativo.
+
+Quando o capítulo tiver duas cenas, elas fazem coisas diferentes: a primeira
+apresenta o problema; a segunda o **agrava** — escopo novo, prazo menor,
+descoberta pior — e empurra o leitor para o capítulo seguinte.
+
+## O CENÁRIO PRECISA TER CONSEQUÊNCIA
+
+Projeto voluntário, sem prazo, sem dinheiro e sem chefe é confortável de
+escrever e morto de ler. Não há nada em jogo: se atrasar, não acontece nada;
+se quebrar, ninguém liga; se alguém discordar, todo mundo é gentil.
+
+O projeto do livro precisa de quatro coisas:
+
+| Precisa de | Porque sem isso |
+|---|---|
+| prazo com data real | nenhuma decisão técnica tem custo |
+| dinheiro envolvido | ninguém precisa escolher |
+| alguém que cobra | não existe conflito |
+| algo em produção | errar não dói |
+
+Tabela: O domínio pode ser pequeno e simpático — uma biblioteca, uma
+padaria, uma clínica. O **contexto** é que precisa ser uma empresa de
+verdade, com contrato, fatura, reunião de status e alguém explicando por que
+o prazo é esse.
+
 ## ESTRUTURA NARRATIVA
 
 Sempre que fizer sentido, organize o capítulo como:
@@ -406,3 +566,8 @@ Antes de considerar o volume pronto, revise:
 - O projeto final exige decisão, integração e manutenção, não apenas cadastro?
 - Os exemplos tratam os riscos relevantes para a tecnologia?
 - O texto removeu promessas, resumos e explicações que apenas repetem o que já foi dito?
+- Nenhuma cena tem título que anuncia a piada, e nenhuma termina explicando-a?
+- Nenhuma referência aponta para frente, e as de trás sobrevivem ao teste de apagar o número?
+- Todo símbolo que aparece em código foi apresentado antes ou na mesma página?
+- Cada capítulo cobre no máximo cinco assuntos, com o ciclo rodar-quebrar-consertar?
+- O projeto tem prazo, dinheiro, alguém cobrando e algo em produção?
