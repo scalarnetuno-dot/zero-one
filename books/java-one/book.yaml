@@ -30,6 +30,36 @@ cover_palette:
   ink: "#F9DFB3"      # creme do rodapé
   ink_soft: "#C9B693"
 
+# Frases em português desenhadas na arte: a tradução apaga a tinta
+# dessas áreas e reescreve no idioma dela (python -m pipeline cover-i18n).
+cover_text_areas:
+  subtitle:
+    polygon: [[828, 208], [978, 166], [1018, 300], [838, 402]]
+    center: [914, 282]
+    size: [182, 150]
+    angle: 17
+    align: center
+  tagline:
+    polygon: [[122, 358], [286, 334], [294, 422], [128, 452]]
+    center: [202, 395]
+    size: [156, 96]
+    angle: 11
+    align: center
+  quadro:
+    polygon: [[906, 488], [1000, 476], [1012, 588], [910, 606]]
+    center: [958, 543]
+    size: [100, 112]
+    angle: 8
+    align: left
+    leading: 1.55
+  caneca:
+    polygon: [[318, 1174], [410, 1174], [410, 1259], [318, 1259]]
+    center: [364, 1219]
+    size: [84, 80]
+    angle: 0
+    align: center
+    grow: 11
+
 cover_bullets:
   - "Um projeto só, crescendo do capítulo 1 ao 42"
   - "Cada conceito aparece quando o projeto precisa dele"

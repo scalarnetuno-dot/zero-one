@@ -17,6 +17,8 @@ As áreas ficam no book.yaml do original (são da arte, não do idioma):
         size: [236, 118]                # da rotação
         angle: 11.5                     # graus, anti-horário
         align: center
+        grow: 9                         # opcional: quanto engordar a
+                                        # máscara (ímpar, em px)
 
 e as frases no book.yaml da tradução:
 
@@ -41,7 +43,7 @@ FONT = "Kalam-Bold.ttf"
 INK = (24, 21, 19)
 
 
-def _ink_mask(img: Image.Image, polygon: list[list[int]]) -> Image.Image:
+def _ink_mask(img: Image.Image, polygon: list[list[int]], grow: int = 9) -> Image.Image:
     """Tinta escura e sem cor dentro do polígono (o roxo da arte fica)."""
     area = Image.new("L", img.size, 0)
     ImageDraw.Draw(area).polygon([tuple(p) for p in polygon], fill=255)
@@ -57,7 +59,7 @@ def _ink_mask(img: Image.Image, polygon: list[list[int]]) -> Image.Image:
             if lum < 0.62 and (sat < 0.35 or lum < 0.2):
                 mp[x, y] = 255
     # engorda a máscara para levar junto o serrilhado da letra
-    return mask.filter(ImageFilter.MaxFilter(9))
+    return mask.filter(ImageFilter.MaxFilter(grow))
 
 
 def _fill(img: Image.Image, mask: Image.Image, rounds: int = 3) -> Image.Image:
@@ -143,7 +145,7 @@ def translate_cover(slug: str) -> list[Path]:
         lines = texts.get(key)
         if not lines:
             continue
-        mask = _ink_mask(img, area["polygon"])
+        mask = _ink_mask(img, area["polygon"], int(area.get("grow", 9)) | 1)
         if mask.getbbox():
             img = _fill(img, mask)
         _write(img, [str(t) for t in lines], area, font)

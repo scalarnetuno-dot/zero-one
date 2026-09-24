@@ -1,0 +1,17 @@
+# Preview of Java One — English.
+# Chapters come from java-one-en; the light images from ../../assets.
+title: "Java One — Preview"
+edition: "Preview · 1st edition"
+description: >-
+  A preview of Java One: Java from scratch to a complete REST API with
+  Spring Boot, PostgreSQL, JPA, validation, JWT, tests and Docker. This
+  edition has the full table of contents of all 42 chapters and the complete
+  text of a sample of them — the opening, the entrance into Spring, the
+  database and version control — so you can feel the book's rhythm before
+  moving on to the full edition.
+keywords: [preview]
+cover_bullets:
+  - "Free preview — full table of contents, sample chapters unlocked"
+  - "One project, growing from chapter 1 to 42 in the full edition"
+  - "Each concept shows up when the project needs it"
+  - "An API with validation, security, tests and Docker in the full edition"
