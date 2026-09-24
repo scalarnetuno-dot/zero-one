@@ -40,6 +40,9 @@ de cualquier otra persona; Java, Spring y nombres de bibliotecas; montos en
 | Conceito / Faixa | Calificacion / Rango |
 | SkuValido | SkuValido |
 | LoteCoerenteValidator | LoteCoherenteValidator |
+| com.loja (paquete) | com.tienda |
+| Status: ATIVO / INATIVO / ESGOTADO / PROMOCAO | ACTIVO / INACTIVO / AGOTADO / PROMOCION |
+| PaymentMethod.CARTAO | TARJETA |
 | "Teclado mecânico" | "Teclado mecánico" |
 | métodos de prueba `deveX` / `naoDeveX` | `debeX` / `noDebeX` |
 

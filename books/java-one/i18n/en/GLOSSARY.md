@@ -38,6 +38,9 @@ other person's name; Java, Spring and library names; `R$` amounts.
 | Conceito / Faixa | Grade / Range |
 | SkuValido | ValidSku |
 | LoteCoerenteValidator | ConsistentBatchValidator |
+| com.loja (pacote) | com.store |
+| Status: ATIVO / INATIVO / ESGOTADO / PROMOCAO | ACTIVE / INACTIVE / SOLD_OUT / ON_SALE |
+| PaymentMethod.CARTAO | CARD |
 | "Teclado mecânico" | "Mechanical keyboard" |
 | test methods `deveX` / `naoDeveX` | `shouldX` / `shouldNotX` |
 
