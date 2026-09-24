@@ -384,22 +384,15 @@ the folded paper Seu Juvenal had handed over in October. Username, password,
 and in the corner, in a different-colored pen: *"don't touch the old
 folder"*.
 
-The new system was going to a new server. The paper was for the last thing
-that still needed doing on the old hosting: take a final copy of the Sistema
-and replace the home page with a notice pointing to the new address.
+It was for the last thing left to do on the old hosting: take a final copy
+of the Sistema and replace the home page with a notice pointing to the new
+address.
 
 Nonato took the paper, read it, and stood still for a while.
 
-— That handwriting is mine.
-
-— The password? — asked Tainá.
-
-— The "don't touch the old folder". I wrote that in 2011. The old folder was
-the 2009 version, which I left there in case the new one had problems.
-
-— And did it?
-
-— No. But I never had the nerve to delete it.
+— That handwriting is mine. I wrote that in 2011. The old folder was the
+2009 version, which I left there in case the new one had problems. I never
+had the nerve to delete it.
 
 Dedé ran the deploy script. `down`, `migrate`, three caches,
 `queue:restart`, `up`. Four minutes. `/ready` responded `200` with four
@@ -409,11 +402,10 @@ Dedé's phone buzzed. Rejane: *"Congrats on the ownership on this
 go-live!!! Your promotion was approved for the April cycle."* He read it
 twice and put the phone away without replying.
 
-Nonato logged into the old hosting over FTP, downloaded both folders — the
-old one and the 2011 one —, checked the file sizes twice and replaced
-`index.php` with a page containing one sentence and an address.
+Nonato downloaded both folders over FTP, checked the file sizes twice and
+replaced `index.php` with a page containing one sentence and an address.
 
-— Done — he said. — Fifteen years.
+— Done. Fifteen years.
 
 — Half a million loans — said Tainá. — I counted. No collection lost.
 
@@ -421,9 +413,7 @@ Nonato folded the paper again, along the same creases.
 
 — Can I keep this?
 
-Márcia looked at him, then at the paper.
-
-— The password still works.
+— The password still works — said Márcia.
 
 — Then change the password — said Dedé. — After that, he keeps it.
 :::
