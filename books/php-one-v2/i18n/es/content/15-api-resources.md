@@ -366,7 +366,8 @@ public function toArray(Request $request): array
             $this->multa_en_centavos !== null,
             fn () => [
                 'centavos' => $this->multa_en_centavos->centavos,
-                'formateado' => $this->multa_en_centavos->formateado(),
+                'formateado' => $this->multa_en_centavos
+                    ->formateado(),
             ],
         ),
         'ejemplar' => new EjemplarResource(
@@ -402,7 +403,7 @@ escrito, porque un cliente bien escrito ignora lo que no conoce.
 La salida es **agregar al lado, después quitar**:
 
 ```php
-'tema' => $this->tema->nombre,       // se mantiene, marcado para salir
+'tema' => $this->tema->nombre,   // queda, marcado para salir
 'tema_detallado' => new TemaResource($this->tema),
 ```
 
