@@ -81,3 +81,24 @@ original.
 | chave `status` em arrays (disponivel · emprestado · restauro) | clave `status` (disponible · prestado · restauracion) |
 | leitores: nome · documento · cadastro_em · telefone | lectores: nombre · documento · registrado_en · telefono |
 | removido_em | eliminado_en |
+
+## Clases y namespaces (v1, partes 3 a 5)
+
+| pt-BR | es |
+|---|---|
+| Livro · Exemplar · Leitor · Emprestimo · Multa | Libro · Ejemplar · Lector · Prestamo · Multa |
+| propriedades titulo · ano · tombo · estado | titulo · anio · registro · condicion |
+| CasaAmarela\Acervo · \Leitores · \Emprestimos · \Circulacao · \Legado · \Relatorios · \Importacao · \Tempo | CasaAmarela\Acervo · \Lectores · \Prestamos · \Circulacion · \Legado · \Informes · \Importacion · \Tiempo |
+| Emprestavel (interface) | Prestable |
+| Classificacao · prazoEmDias() | Clasificacion · plazoEnDias() |
+| RegistraHistorico | RegistraHistorial |
+| ExemplarIndisponivel · LimiteDeEmprestimosAtingido · LeitorComPendencia | EjemplarNoDisponible · LimiteDePrestamosAlcanzado · LectorConPendiente |
+| StatusExemplar (Bom, Emprestado, Restauro, Extraviado) | EstadoEjemplar (Bueno, Prestado, Restauracion, Extraviado) |
+| StatusEmprestimo (EmAberto, Devolvido, Renovado, EmAtraso) | EstadoPrestamo (Abierto, Devuelto, Renovado, ConAtraso) |
+| Dinheiro (emCentavos, zero, mais, vezes, formatado) | Dinero (enCentavos, cero, mas, por, formateado) |
+| PrazoDeEmprestimo | PlazoDePrestamo |
+| Relogio · RelogioDoSistema · RelogioParado · agora() | Reloj · RelojDelSistema · RelojDetenido · ahora() |
+| Registro (log) · Servicos · funcoes.php | Bitacora · Servicios · funciones.php |
+| importar-doacoes.php · doacoes.csv | importar-donaciones.php · donaciones.csv |
+| .env: APP_FUSO · DB_SENHA · PRAZO_EM_DIAS | APP_ZONA · DB_CONTRASENA · PLAZO_EN_DIAS |
+| Seu Juvenal · Dona Marlene | don Juvenal · doña Marlene |
