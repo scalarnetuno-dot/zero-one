@@ -183,7 +183,7 @@ Lo que cambia es lo que cada uno sabe mostrar.
 
 ```php
 if ($request->expectsJson()) {
-    return response()->json(['error' => 'Ejemplar no disponible'], 409);
+    return response()->json(['error' => 'No disponible'], 409);
 }
 
 return back()->withErrors(['ejemplar' => 'Ejemplar no disponible']);
@@ -204,7 +204,10 @@ Vuelve a la portada de Tainá. El Sistema hacía el equivalente a esto:
 ```php
 $nombre = $_FILES['portada']['name'];
 
-move_uploaded_file($_FILES['portada']['tmp_name'], 'portadas/' . $nombre);
+move_uploaded_file(
+    $_FILES['portada']['tmp_name'],
+    'portadas/' . $nombre,
+);
 ```
 
 Hay tres decisiones equivocadas en dos líneas, y todas tienen la misma
@@ -252,8 +255,10 @@ con una petición.
 Hay un método parecido y peligroso:
 
 ```php
-$request->file('portada')->storeAs('portadas', $request->file('portada')
-    ->getClientOriginalName());
+$request->file('portada')->storeAs(
+    'portadas',
+    $request->file('portada')->getClientOriginalName(),
+);
 ```
 
 `getClientOriginalName()` devuelve exactamente el texto que mandó el

@@ -518,7 +518,7 @@ class PrestamoController extends Controller
         }
 
         if ($ejemplar->condicion !== 'bueno') {
-            return response()->json(['error' => 'no disponible'], 409);
+            return response()->json(['error' => 'ocupado'], 409);
         }
 
         $abiertos = Prestamo::where('lector_id', $lector->id)
