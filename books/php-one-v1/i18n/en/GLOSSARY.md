@@ -164,3 +164,6 @@ Laravel and package names; `R$` amounts and Brazilian dates.
 | config/biblioteca.php | config/library.php |
 | rotas: livros.index · livros.exemplares · emprestimos.store · emprestimos.devolucao | books.index · books.copies · loans.store · loans.return |
 | comandos biblioteca:multas · biblioteca:atrasados | library:fines · library:overdue |
+| PainelController · painel.index · painel.emprestar · painel.devolver · painel.acervo | DeskController · desk.index · desk.lend · desk.return · desk.catalog |
+| scopes emAberto() · comLivroELeitor() · atrasados() | open() · withBookAndReader() · overdue() |
+| StatusExemplar::devolucao() · registrarPorTombo() | CopyStatus::forReturn() · recordByAccession() |
