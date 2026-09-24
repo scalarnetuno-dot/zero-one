@@ -112,3 +112,17 @@ Laravel and package names; `R$` amounts and Brazilian dates.
 | devolucao (variável) | checkin |
 | funcoes.php | functions.php |
 | avisos.php | notices.php |
+
+## Classes
+
+| pt-BR | en |
+|---|---|
+| Livro · Exemplar · Leitor · Emprestimo · Autor · Editora | Book · Copy · Reader · Loan · Author · Publisher |
+| livroDeLinha() · exemplarDeLinha() | bookFromRow() · copyFromRow() |
+| conexao.php · acervo.php · multa.php · recibo.php | connection.php · catalog.php · fine.php · receipt.php |
+| pacote casa-amarela/acervo | casa-amarela/catalog |
+| namespaces CasaAmarela\Acervo · Leitores · Legado · Emprestimos · Recibos · Relatorios | CasaAmarela\Catalog · Readers · Legacy · Loans · Receipts · Reports |
+| LivroNovo · LivroNovo2 · LivroDoSistema | BookNew · BookNew2 · SystemBook |
+| importar.php | import.php |
+| Exemplar: estado() · disponivel() · emprestar() · devolver() · ESTADOS | Copy: status() · isAvailable() · lend() · return() · STATUSES |
+| Multa: centavos · diasDeAtraso · valorFormatado() · perdoar() | Fine: cents · daysLate · formatted() · waive() |
