@@ -167,3 +167,6 @@ Laravel and package names; `R$` amounts and Brazilian dates.
 | PainelController · painel.index · painel.emprestar · painel.devolver · painel.acervo | DeskController · desk.index · desk.lend · desk.return · desk.catalog |
 | scopes emAberto() · comLivroELeitor() · atrasados() | open() · withBookAndReader() · overdue() |
 | StatusExemplar::devolucao() · registrarPorTombo() | CopyStatus::forReturn() · recordByAccession() |
+| AcervoController · AcervoFalsoSeeder · Multa (model) · SituacaoLivro::Desativado | CatalogController · FakeCatalogSeeder · Fine · BookState::Deactivated |
+| erro JSON: tipo · mensagem · campos | error JSON: type · message · fields |
+| colunas: adquirido_em · bloqueado_em · perfil · papel (pivô autor_livro) | acquired_on · blocked_at · role · role (pivot author_book) |
