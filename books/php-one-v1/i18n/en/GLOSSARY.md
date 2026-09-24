@@ -39,7 +39,7 @@ Laravel and package names; `R$` amounts and Brazilian dates.
 | titulo / autor / ano / assunto | title / author / year / subject |
 | status: disponivel · emprestado · restauro · extraviado · danificado · reservado | available · on_loan · in_repair · lost · damaged · reserved |
 | StatusExemplar | CopyStatus |
-| estado (do exemplar) | condition |
+| estado (do exemplar) | status; values good · on_loan · in_repair · damaged · lost |
 | situação | situation / state |
 | infantil · juvenil · literatura | children · young_adult · literature |
 | documento (CPF do leitor) | document (ID number) |
@@ -82,3 +82,33 @@ Laravel and package names; `R$` amounts and Brazilian dates.
 | Biblioteca Comunitária Casa Amarela | Casa Amarela Community Library |
 | Seu Juvenal | Mr. Juvenal |
 | Dr. Aurélio | Dr. Aurélio |
+
+## Database (tables and columns)
+
+| pt-BR | en |
+|---|---|
+| livros · exemplares · leitores · emprestimos · autores · autor_livro | books · copies · readers · loans · authors · author_book |
+| titulo · autor · isbn · assunto · ano | title · author · isbn · subject · year |
+| nome · documento · cadastro_em · telefone | name · document · registered_at · phone |
+| livro_id · exemplar_id · leitor_id · autor_id | book_id · copy_id · reader_id · author_id |
+| tombo · estado (coluna) · status · adquirido_em | accession · status (`condition` is reserved in MySQL) · status · acquired_at |
+| retirado_em · devolver_ate · devolvido_em · multa_em_centavos | borrowed_at · due_on · returned_at · fine_in_cents |
+| uk_livros_isbn · uk_exemplares_tombo · uk_leitores_documento | uk_books_isbn · uk_copies_accession · uk_readers_document |
+| fk_exemplares_livro · idx_emprestimos_leitor | fk_copies_book · idx_loans_reader |
+| banco casa_amarela | database casa_amarela (unchanged) |
+
+## Routes and JSON fields
+
+`/livros` → `/books`, `/emprestimos` → `/loans`, `/leitores` → `/readers`,
+`/exemplares` → `/copies`; JSON keys follow the column names above.
+
+## Recurring code names
+
+| pt-BR | en |
+|---|---|
+| multaEmCentavos() | fineInCents() |
+| emReais() / reais() | inReais() / reais() |
+| chaveDeBusca() | searchKey() |
+| devolucao (variável) | checkin |
+| funcoes.php | functions.php |
+| avisos.php | notices.php |
