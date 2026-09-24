@@ -141,7 +141,7 @@ Tres formas, y vas a usar dos:
    para cuando la explicación no entra en una
 */
 
-echo "Casa Amarela\n"; // un comentario al final de la línea también vale
+echo "Casa Amarela\n"; // al final de la línea también vale
 ```
 
 El `//` es el que se usa. El `#` funciona y aparece en código antiguo. El
