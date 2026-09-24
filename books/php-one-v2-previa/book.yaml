@@ -1,0 +1,34 @@
+# ─── PRÉVIA — PHP One, Volume 2 ──────────────────────────────────────────
+# Mesma estrutura do volume completo (books/php-one-v2): todos os capítulos,
+# com as seções no sumário. Os de preview_chapters vêm inteiros; os demais
+# chegam com `previa: true` no front matter, e o capítulo abre só com o
+# aviso "Capítulo disponível na versão completa".
+#
+# Capítulos liberados nesta prévia: 0, 1, 3, 5, 11, 17 — a abertura, o HTTP
+# cru, o framework escrito à mão, a chegada do Laravel, o Eloquent e a
+# resposta de erro que a API devolve quando alguma coisa dá errado.
+# Para regenerar: make preview BOOK=php-one-v2-previa
+
+title: "PHP One — Prévia"
+edition: "Prévia · 1ª edição"
+
+description: >-
+  Prévia de PHP One, Volume 2: a API da Biblioteca Casa Amarela, do HTTP cru
+  ao deploy. Esta edição traz o sumário completo dos 33 capítulos e o
+  conteúdo integral de uma amostra deles — o HTTP por dentro, o framework de
+  quarenta linhas escrito à mão antes do Laravel, o Eloquent sobre o SQL que
+  você já sabe e os erros padronizados — para você sentir o ritmo do livro
+  antes de seguir para a edição completa.
+
+keywords: [prévia]
+
+cover_bullets:
+  - "Prévia gratuita — sumário completo, amostra de capítulos liberada"
+  - "Um framework de quarenta linhas, escrito à mão, antes do Laravel"
+  - "Eloquent sobre o SQL que você já sabe escrever"
+  - "Autorização, filas, testes e deploy na versão completa"
+
+# O restante do sumário, metadados e assets vem de php-one-v2.
+course_slug: php-one-v2-previa
+preview_source: php-one-v2
+preview_chapters: [0, 1, 3, 5, 11, 17]
