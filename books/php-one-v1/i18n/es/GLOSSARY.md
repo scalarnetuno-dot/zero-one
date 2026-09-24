@@ -60,3 +60,15 @@ Laravel y nombres de paquetes; montos en `R$` y fechas de Brasil.
 | lote | lote |
 | fila | cola |
 | equipe | equipo |
+
+## Archivos del Sistema (legado)
+
+| pt-BR | es |
+|---|---|
+| funcoes.php · funcoes2.php · funcoes2_NOVO.php · funcoes2_NOVO_final.php · funcoes2_NOVO_final_v2.php | funciones.php · funciones2.php · funciones2_NUEVO.php · funciones2_NUEVO_final.php · funciones2_NUEVO_final_v2.php |
+| conexao.php · emprestimo.php · relatorio.php · relatorio_novo_OK.php · teste.php · aviso.php | conexion.php · prestamo.php · informe.php · informe_nuevo_OK.php · prueba.php · aviso.php |
+
+## Registro
+
+Se tutea al lector (tú), español neutro. Diálogos con raya (—), como en el
+original.
