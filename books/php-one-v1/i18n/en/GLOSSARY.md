@@ -126,3 +126,11 @@ Laravel and package names; `R$` amounts and Brazilian dates.
 | importar.php | import.php |
 | Exemplar: estado() · disponivel() · emprestar() · devolver() · ESTADOS | Copy: status() · isAvailable() · lend() · return() · STATUSES |
 | Multa: centavos · diasDeAtraso · valorFormatado() · perdoar() | Fine: cents · daysLate · formatted() · waive() |
+| Circulacao\Emprestavel: identificacao() · disponivel() · prazoEmDias() | Circulation\Lendable: identifier() · isAvailable() · loanDays() |
+| Classificacao: infantil · didatico · referencia · importado · sonoro · emprestavel() | Classification: children · textbook · reference · imported · audio · lendable() |
+| RegistraHistorico · RegistraAuditoria · ItemDeAcervo | RecordsHistory · RecordsAudit · CatalogItem |
+| ExemplarIndisponivel · LimiteDeEmprestimosAtingido · LeitorComPendencia · LinhaInvalida | CopyUnavailable · LoanLimitReached · ReaderHasPendingItems · InvalidRow |
+| StatusExemplar: Bom · Emprestado · Restauro · Extraviado · rotulo() | CopyStatus: Good · OnLoan · InRepair · Lost · label() |
+| StatusEmprestimo: EmAberto · Devolvido · Renovado · EmAtraso | LoanStatus: Open · Returned · Renewed · Overdue |
+| Dinheiro: emCentavos() · zero() · mais() · vezes() · formatado() | Money: inCents() · zero() · plus() · times() · formatted() |
+| PrazoDeEmprestimo: devolverAte · retirada · atrasadoEm() · diasDeAtraso() | LoanPeriod: dueOn · borrowedAt · isLateOn() · daysLate() |
