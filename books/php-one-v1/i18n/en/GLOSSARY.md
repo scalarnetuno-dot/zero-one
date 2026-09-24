@@ -138,3 +138,29 @@ Laravel and package names; `R$` amounts and Brazilian dates.
 | Registro · Servicos (registrar, get) · carregarEnv() | Logger · Services (register, get) · loadEnv() |
 | Importacao\Importador · bin/importar-doacoes.php | Import\Importer · bin/import-donations.php |
 | .env: APP_FUSO · DB_USUARIO · DB_SENHA · PRAZO_EM_DIAS | APP_TIMEZONE · DB_USER · DB_PASSWORD · LOAN_DAYS |
+
+## Volume 2 (Laravel)
+
+| pt-BR | en |
+|---|---|
+| models Livro · Exemplar · Leitor · Emprestimo · Usuario · Assunto · Autor · Reserva | Book · Copy · Reader · Loan · User · Subject · Author · Reservation |
+| tabelas livros · exemplares · leitores · emprestimos · usuarios · assuntos · reservas | books · copies · readers · loans · users · subjects · reservations |
+| LivroController · ExemplarController · LeitorController · EmprestimoController · DevolucaoController · RenovacaoController | BookController · CopyController · ReaderController · LoanController · ReturnController · RenewalController |
+| StoreLivroRequest · UpdateLivroRequest · StoreLeitorRequest · RealizarEmprestimoRequest · ListarLivrosRequest | StoreBookRequest · UpdateBookRequest · StoreReaderRequest · CreateLoanRequest · ListBooksRequest |
+| LivroResource · LeitorResource · EmprestimoResource | BookResource · ReaderResource · LoanResource |
+| LivroPolicy · LeitorPolicy · EmprestimoPolicy | BookPolicy · ReaderPolicy · LoanPolicy |
+| PoliticaDeEmprestimo · RegrasDeCirculacao | LendingPolicy · CirculationRules |
+| EmprestimoService · RegistroDeEmprestimo · RegistroDeDevolucao · CalculadoraDeMultas · ConsultaDeAtrasos | LoanService · LoanRecorder · ReturnRecorder · FineCalculator · OverdueQuery |
+| EmprestimoRepository · EloquentEmprestimoRepository | LoanRepository · EloquentLoanRepository |
+| RegistraRequisicao · MedeTempo · ForcaJson · ExigeVersaoMinima | LogsRequest · MeasuresTime · ForcesJson · RequiresMinimumVersion |
+| EmprestimoRealizado · ExemplarDevolvido · ReservaDisponivel | LoanCreated · CopyReturned · ReservationAvailable |
+| AvisarDevolucaoProxima · AvisarReservaDisponivel · EnviarComprovanteDeEmprestimo | NotifyUpcomingReturn · NotifyReservationAvailable · SendLoanReceipt |
+| LembreteDeDevolucao · DevolucaoAmanha · TermoDeDoacaoAssinado | ReturnReminder · ReturnTomorrow · SignedDonationForm |
+| ImportarLote · GerarRelatorioMensal · MaisEmprestados · EsquecerMaisEmprestados | ImportBatch · GenerateMonthlyReport · MostBorrowed · ForgetMostBorrowed |
+| App\Avisos: EnviadorDeAviso · EnviadorDeWhatsApp · EnviadorNoLog · EnviadorFalso · ClienteDoProvedor · CanalWhatsApp · AvisoServiceProvider | App\Notices: NoticeSender · WhatsAppSender · LogSender · FakeSender · ProviderClient · WhatsAppChannel · NoticeServiceProvider |
+| App\Auth\Papel · ConferidorDeSenha · Autorizacao | App\Auth\Role · PasswordChecker · Authorization |
+| ExcecaoDeDominio · RespostaDeErro · Incidente · SituacaoDoPedido | DomainError · ErrorResponse · Incident · RequestStatus |
+| FiltroDeLivros · DinheiroCast · AssuntoSeeder · LivroFactory | BookFilter · MoneyCast · SubjectSeeder · BookFactory |
+| config/biblioteca.php | config/library.php |
+| rotas: livros.index · livros.exemplares · emprestimos.store · emprestimos.devolucao | books.index · books.copies · loans.store · loans.return |
+| comandos biblioteca:multas · biblioteca:atrasados | library:fines · library:overdue |
