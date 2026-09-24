@@ -87,17 +87,45 @@ def validate_ast(book: Book, theme: Theme) -> list[Issue]:
 
     for name in book.missing:
         out.append(Issue("info", "book.yaml", f"capítulo ainda não escrito: {name}"))
-    for name in book.untranslated:
-        out.append(Issue("warn", name, "sem tradução: sai o original em português"))
-    for name in book.outdated:
-        out.append(Issue("warn", name, "tradução desatualizada: o original em "
-                         "português mudou (source_hash)"))
+    # Pendências de tradução: uma linha por tipo, não uma por capítulo.
+    if book.untranslated:
+        n = len(book.untranslated)
+        out.append(Issue("warn", "i18n", f"{n} capítulo{'s' * (n > 1)} sem tradução "
+                         f"({_chapter_ranges(book.untranslated)}): sai o original "
+                         "em português"))
+    if book.outdated:
+        n = len(book.outdated)
+        out.append(Issue("warn", "i18n", f"{n} tradu{'ções' if n > 1 else 'ção'} "
+                         f"atrás do original ({_chapter_ranges(book.outdated)}): "
+                         "revise e rode `python -m pipeline i18n "
+                         f"{book.meta.slug} --stamp <NN>`"))
 
     for target, where in refs:
         if target.split(":", 1)[-1] and target not in labels:
             out.append(Issue("error", where, f"referência sem alvo: @{target}"))
 
     return out
+
+
+def _chapter_ranges(names: list[str]) -> str:
+    """['15-a', '16-b', '17-c', '20-d'] → '15–17, 20'."""
+    nums: list[int] = []
+    for name in names:
+        head = name.split("-", 1)[0]
+        if not head.isdigit():
+            return ", ".join(names)
+        nums.append(int(head))
+    width = max(len(n.split("-", 1)[0]) for n in names)
+    parts, start = [], None
+    for i, n in enumerate(sorted(nums)):
+        if start is None:
+            start = n
+        nxt = sorted(nums)[i + 1] if i + 1 < len(nums) else None
+        if nxt != n + 1:
+            a, b = f"{start:0{width}d}", f"{n:0{width}d}"
+            parts.append(a if start == n else f"{a}–{b}")
+            start = None
+    return ", ".join(parts)
 
 
 def _check_block(b: Block, ch: Chapter, book: Book, where: str, theme: Theme,

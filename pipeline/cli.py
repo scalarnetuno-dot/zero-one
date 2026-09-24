@@ -112,6 +112,15 @@ def cmd_cover(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_cover_i18n(args: argparse.Namespace) -> int:
+    from .cover_i18n import main as translate
+
+    for slug in args.slug:
+        if translate(slug):
+            return 1
+    return 0
+
+
 def cmd_art(args: argparse.Namespace) -> int:
     """Arte provisória: capa e figuras de exemplo, geradas localmente."""
     from .placeholder import cover_art, figure
@@ -289,6 +298,10 @@ def main(argv: list[str] | None = None) -> int:
                     help="marca os capítulos traduzidos como em dia com o "
                          "original; sem CAP, todos (prefixo, ex.: 08)")
     tr.set_defaults(fn=cmd_i18n)
+
+    ci = sub.add_parser("cover-i18n", help="arte da capa com as frases traduzidas")
+    ci.add_argument("slug", nargs="+", help="tradução (ex.: php-one-v1-en)")
+    ci.set_defaults(fn=cmd_cover_i18n)
 
     pv = sub.add_parser("preview", help="gera os assets leves de uma prévia")
     pv.add_argument("slug")

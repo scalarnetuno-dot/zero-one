@@ -54,3 +54,6 @@ parts:
     archivos grandes, fechas con zona horaria, errores que avisan y un proyecto
     con un lugar para cada cosa. La última parte del volumen 1 es la primera
     puerta del volumen 2.'
+cover_text:                  # frases da arte, reescritas por cover_i18n
+  subtitle: ["Fundamentos", "de PHP"]
+  tagline: ["Menos teoría", "vacía.", "Más código", "que funciona."]

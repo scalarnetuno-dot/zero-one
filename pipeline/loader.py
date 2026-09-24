@@ -93,7 +93,12 @@ def source_hash(path: Path) -> str:
     """
     import hashlib
 
-    return hashlib.sha256(path.read_bytes()).hexdigest()[:12]
+    # Só o texto conta: BOM, CRLF do Windows (git autocrlf) e espaço no fim
+    # da linha não fazem a tradução "envelhecer".
+    text = path.read_bytes().decode("utf-8-sig", errors="replace")
+    lines = [ln.rstrip() for ln in text.replace("\r\n", "\n").replace("\r", "\n").split("\n")]
+    norm = "\n".join(lines).strip("\n") + "\n"
+    return hashlib.sha256(norm.encode("utf-8")).hexdigest()[:12]
 
 
 def content_path(slug: str, name: str) -> tuple[Path, Path]:

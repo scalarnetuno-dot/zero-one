@@ -53,3 +53,6 @@ parts:
     closures, large files, dates with time zones, errors that warn you, and a
     project with a place for everything. The last part of volume 1 is the first
     door into volume 2.'
+cover_text:                  # frases da arte, reescritas por cover_i18n
+  subtitle: ["PHP", "Fundamentals"]
+  tagline: ["Less empty", "theory.", "More code", "that works."]

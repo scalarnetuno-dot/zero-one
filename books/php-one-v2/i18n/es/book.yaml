@@ -67,3 +67,6 @@ parts:
   blurb: 'El día siguiente al deploy. Los pedidos que solo aparecen cuando
     gente de verdad usa el sistema: fotos del celular, correos firmados por
     quien no debía y una cola que crece más rápido de lo que se vacía.'
+cover_text:                  # frases da arte, reescritas por cover_i18n
+  subtitle: ["Acelerando", "con Laravel"]
+  tagline: ["Menos teoría", "vacía.", "Más código", "que funciona."]

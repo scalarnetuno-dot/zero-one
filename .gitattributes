@@ -1,0 +1,5 @@
+*.md text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.py text eol=lf
+*.j2 text eol=lf

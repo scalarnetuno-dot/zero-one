@@ -65,3 +65,6 @@ parts:
   blurb: 'The day after the deploy. The requests that only show up when real
     people use the system: phone photos, e-mail signed by the wrong sender and
     a queue that grows faster than it drains.'
+cover_text:                  # frases da arte, reescritas por cover_i18n
+  subtitle: ["Speeding up", "with Laravel"]
+  tagline: ["Less empty", "theory.", "More code", "that works."]
