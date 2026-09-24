@@ -87,3 +87,4 @@ edges:
 
 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — diretórios, modelo de dados,
 componentes, tokens, fluxo, PDF, EPUB, validações e KDP.
+# zero_one
