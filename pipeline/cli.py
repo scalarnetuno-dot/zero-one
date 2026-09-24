@@ -152,12 +152,12 @@ def cmd_i18n(args: argparse.Namespace) -> int:
     base, lang = split_translation(args.slug)
     if args.new:
         return _i18n_new(base, args.new)
-    if args.stamp:
+    if args.stamp is not None:
         if not lang:
             print("  --stamp pede o slug da tradução, ex.: php-one-v1-en",
                   file=sys.stderr)
             return 1
-        return _i18n_stamp(base, lang, args.chapters)
+        return _i18n_stamp(base, lang, args.stamp)
 
     bases = [base] if args.slug not in ("all", "*") else list_books(translations=False)
     for b in bases:
@@ -285,9 +285,9 @@ def main(argv: list[str] | None = None) -> int:
     tr = sub.add_parser("i18n", help="situação das traduções (português é a fonte)")
     tr.add_argument("slug", help="volume (php-one-v1), tradução (php-one-v1-en) ou all")
     tr.add_argument("--new", metavar="IDIOMA", help="abre books/<slug>/i18n/<idioma>/")
-    tr.add_argument("--stamp", action="store_true",
-                    help="marca os capítulos traduzidos como em dia com o original")
-    tr.add_argument("chapters", nargs="*", help="com --stamp: só estes (prefixo, ex.: 08)")
+    tr.add_argument("--stamp", nargs="*", metavar="CAP",
+                    help="marca os capítulos traduzidos como em dia com o "
+                         "original; sem CAP, todos (prefixo, ex.: 08)")
     tr.set_defaults(fn=cmd_i18n)
 
     pv = sub.add_parser("preview", help="gera os assets leves de uma prévia")
