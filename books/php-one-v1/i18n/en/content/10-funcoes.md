@@ -126,14 +126,14 @@ notes:
 The types are not decoration. With them, this happens:
 
 ```text
-$ php -r 'function f(int $d): int { return $d * 80; } echo f("three");'
+$ php -r 'function f(int $d): int { return $d * 80; } echo f("two");'
 PHP Fatal error: Uncaught TypeError: f(): Argument #1 ($d)
 must be of type int, string given
 ```
 
 The function rejected the wrong argument at the door, with a message that
 says which argument, what type was expected and what arrived. Without the
-`int` declaration, PHP would try to convert `"three"` and produce a
+`int` declaration, PHP would try to convert `"two"` and produce a
 meaningless result, silently.
 
 ## Handle the bad case and leave

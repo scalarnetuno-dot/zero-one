@@ -134,3 +134,7 @@ Laravel and package names; `R$` amounts and Brazilian dates.
 | StatusEmprestimo: EmAberto · Devolvido · Renovado · EmAtraso | LoanStatus: Open · Returned · Renewed · Overdue |
 | Dinheiro: emCentavos() · zero() · mais() · vezes() · formatado() | Money: inCents() · zero() · plus() · times() · formatted() |
 | PrazoDeEmprestimo: devolverAte · retirada · atrasadoEm() · diasDeAtraso() | LoanPeriod: dueOn · borrowedAt · isLateOn() · daysLate() |
+| Relogio: agora() · RelogioDoSistema · RelogioParado | Clock: now() · SystemClock · FrozenClock |
+| Registro · Servicos (registrar, get) · carregarEnv() | Logger · Services (register, get) · loadEnv() |
+| Importacao\Importador · bin/importar-doacoes.php | Import\Importer · bin/import-donations.php |
+| .env: APP_FUSO · DB_USUARIO · DB_SENHA · PRAZO_EM_DIAS | APP_TIMEZONE · DB_USER · DB_PASSWORD · LOAN_DAYS |

@@ -240,7 +240,7 @@ column accepts `NULL`, the database stores null without complaint. If you
 left out `title`, which is `NOT NULL`, it would be another story:
 
 ```sql
-mysql> INSERT INTO books (author, subject) VALUES ('Someone', 'general');
+mysql> INSERT INTO books (author, subject) VALUES ('Anon', 'misc');
 ERROR 1364 (HY000): Field 'title' doesn't have a default value
 ```
 

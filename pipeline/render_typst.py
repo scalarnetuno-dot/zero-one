@@ -62,9 +62,9 @@ class TypstRenderer:
             if isinstance(n, Text):
                 out.append(esc(n.value))
             elif isinstance(n, Strong):
-                out.append(f"*{self.inline(n.children)}*")
+                out.append(f"#strong[{self.inline(n.children)}]")
             elif isinstance(n, Em):
-                out.append(f"_{self.inline(n.children)}_")
+                out.append(f"#emph[{self.inline(n.children)}]")
             elif isinstance(n, Code):
                 out.append(f"#raw({tstr(n.value)})")
             elif isinstance(n, Link):

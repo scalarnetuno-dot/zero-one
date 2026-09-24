@@ -292,7 +292,7 @@ The third invariant is missing, the one about change rather than birth.
     {
         if ($this->status !== 'good') {
             throw new \RuntimeException(
-                "Copy {$this->accession} can't go out: {$this->status}"
+                "Copy {$this->accession} unavailable: {$this->status}"
             );
         }
 
@@ -326,7 +326,7 @@ $copy->lend();
 
 ```text
 Fatal error: Uncaught RuntimeException:
-Copy 2117 can't go out: on_loan
+Copy 2117 unavailable: on_loan
 ```
 
 The three copies lent twice in February's report stop being possible — not

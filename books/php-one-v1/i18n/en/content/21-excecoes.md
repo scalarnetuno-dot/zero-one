@@ -263,7 +263,7 @@ try {
 If nobody handles it, PHP prints both, in the order they happened:
 
 ```text
-Fatal error: Uncaught PDOException: SQLSTATE[HY000]: connection refused
+Fatal error: Uncaught PDOException: SQLSTATE[HY000]: conn. refused
 in /app/lend.php:8
 Stack trace:
 #0 /app/lend.php(14): lend()
