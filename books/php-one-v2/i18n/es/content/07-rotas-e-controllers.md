@@ -150,7 +150,9 @@ El orden de las rutas importa, y el defecto es silencioso.
 
 ```php
 Route::get('libros/{libro}', [LibroController::class, 'show']);
-Route::get('libros/destacados', [LibroController::class, 'destacados']);
+Route::get('libros/destacados', [
+    LibroController::class, 'destacados',
+]);
 ```
 
 La segunda ruta nunca corre. El enrutador prueba en el orden en que se
