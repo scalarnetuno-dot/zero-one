@@ -374,7 +374,10 @@ final class SignedDonationForm extends Mailable implements
     public function attachments(): array
     {
         return [
-            Attachment::fromStorageDisk('local', $this->donation->form)
+            Attachment::fromStorageDisk(
+                'local',
+                $this->donation->form,
+            )
                 ->as('donation-form.pdf')
                 ->withMime('application/pdf'),
         ];
@@ -394,7 +397,7 @@ from — without passing through any public folder.
 ## Testing without sending
 
 ```php title="tests/Feature/ReturnNoticeTest.php" numbered
-test('notifies by e-mail and WhatsApp whoever accepted both', function () {
+test('notifies by e-mail and WhatsApp if both OK', function () {
     Notification::fake();
     $loan = Loan::factory()
         ->dueTomorrow()
@@ -520,8 +523,9 @@ final class ReservationAvailable extends Notification implements
 {
     use Queueable;
 
-    public function __construct(public readonly Reservation $reservation)
-    {
+    public function __construct(
+        public readonly Reservation $reservation,
+    ) {
         $this->afterCommit();
     }
 

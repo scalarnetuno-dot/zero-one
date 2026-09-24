@@ -345,7 +345,7 @@ end of the test. `UploadedFile::fake()->image()` makes a real image, with the
 requested dimensions:
 
 ```php title="tests/Feature/CoverTest.php" numbered
-test('accepts the cover and leaves the work to the queue', function () {
+test('accepts the cover, leaves the work to the queue', function () {
     Storage::fake('local');
     Queue::fake();
     $book = Book::factory()->create();
@@ -466,7 +466,7 @@ The `local` disk: the form has a name, an address and a CPF. It only goes out
 through `DonationFormController`'s route, after the policy.
 
 ```php
-test('an ordinary reader cannot download a donation form', function () {
+test('a reader cannot download a donation form', function () {
     Storage::fake('local');
     $donation = Donation::factory()->create([
         'form' => UploadedFile::fake()

@@ -637,7 +637,10 @@ test('allows at the exact limit of each rule', function (
 And the refusal checks the exact class:
 
 ```php
-test('refuses the request', function (array $change, string $expected) {
+test('refuses the request', function (
+    array $change,
+    string $expected,
+) {
     $policy = new LendingPolicy(new CirculationRules());
 
     try {
