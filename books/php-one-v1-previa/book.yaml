@@ -1,0 +1,32 @@
+# ─── PRÉVIA — PHP One, Volume 1 ──────────────────────────────────────────
+# Mesma estrutura do volume completo (books/php-one-v1): todos os capítulos,
+# com as seções no sumário. Os de preview_chapters vêm inteiros; os demais
+# chegam com `previa: true` no front matter, e o capítulo abre só com o
+# aviso "Capítulo disponível na versão completa".
+#
+# Capítulos liberados nesta prévia: 0, 1, 2, 5, 13, 17 — a abertura, a
+# pegadinha mais famosa do PHP, a entrada no banco e a primeira classe.
+# Para regenerar: make preview BOOK=php-one-v1-previa
+
+title: "PHP One — Prévia"
+edition: "Prévia · 1ª edição"
+
+description: >-
+  Prévia de PHP One, Volume 1: PHP moderno do zero, antes de qualquer
+  framework. Esta edição traz o sumário completo dos 29 capítulos e o
+  conteúdo integral de uma amostra deles — a abertura, a conversão
+  automática de tipos, o SQL escrito à mão e a primeira classe — para você
+  sentir o ritmo do livro antes de seguir para a edição completa.
+
+keywords: [prévia]
+
+cover_bullets:
+  - "Prévia gratuita — sumário completo, amostra de capítulos liberada"
+  - "Um sistema real de 2009, modernizado capítulo a capítulo"
+  - "SQL escrito à mão antes de qualquer ORM"
+  - "Tipos, exceções, enums e Composer na versão completa"
+
+# O restante do sumário, metadados e assets vem de php-one-v1.
+course_slug: php-one-v1-previa
+preview_source: php-one-v1
+preview_chapters: [0, 1, 2, 5, 13, 17]

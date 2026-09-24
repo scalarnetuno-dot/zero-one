@@ -1,0 +1,100 @@
+# ─── VOLUME 4 ────────────────────────────────────────────────────────────────
+title: "JavaScript One"
+subtitle: "Do primeiro console.log ao painel em produção"
+author: "Thiago Nogueira"
+volume: 4
+accent: amber
+language: pt-BR
+year: 2026
+edition: "1ª edição"
+isbn: ""
+
+description: >-
+  JavaScript do zero até um painel no ar: tipos, funções, assincronia, DOM,
+  testes, Git e deploy. Um projeto só, o painel da Borba Entregas, do
+  arquivo que ninguém mexe até a lista que a operação confere de manhã.
+
+keywords: [JavaScript, Node.js, DOM, async, npm, testes, Git, frontend]
+
+cover_bullets:
+  - "Um projeto só: o painel da Borba, do arquivo legado à manhã em que pode ir ao ar"
+  - "Cada conceito aparece quando o código em produção dá problema"
+  - "Erros de verdade, lidos linha por linha"
+  - "A tela, o servidor e o repositório, no mesmo livro"
+  - "Sem promessa de 'aprenda em 24 horas' e sem framework antes da dor"
+
+course_slug: javascript-one
+
+# ─── PARTES ──────────────────────────────────────────────────────────────────
+parts:
+  - id: p1
+    title: "O que já está no ar"
+    blurb: >-
+      De onde a linguagem veio, por que o painel é JavaScript, e o primeiro
+      programa rodando na máquina de quem acabou de receber o acesso.
+  - id: p2
+    title: "A linguagem que o painel já fala"
+    blurb: >-
+      Tipos, contas, decisões e listas. O lugar em que um valor trocado
+      muda o caminhão que sai.
+  - id: p3
+    title: "Funções, nomes e dados tortos"
+    blurb: >-
+      A função de 187 linhas, o nome que vaza do bloco, e a entrega que
+      cada sistema descreve de um jeito.
+  - id: p4
+    title: "O tempo, que não espera"
+    blurb: >-
+      Callback, promessa, async/await e closure. O programa deixa de ser
+      uma lista de passos e passa a ser várias coisas no meio do caminho.
+  - id: p5
+    title: "A tela"
+    blurb: >-
+      O DOM, o bug que só aparece com a janela estreita, e as duas partes
+      da interface que acreditam em coisas diferentes.
+  - id: p6
+    title: "O repositório"
+    blurb: >-
+      Módulos, a terceira biblioteca de HTTP, e o caso que o Paulo achou
+      porque jurou que ia procurar.
+  - id: p7
+    title: "O outro lado e o custo"
+    blurb: >-
+      O contrato com o servidor, e a decisão inocente que começa a custar
+      caro quando a lista cresce.
+  - id: p8
+    title: "Sair da máquina"
+    blurb: >-
+      O commit que alguém precisa ler daqui a seis meses, a sexta às
+      16h52, e a manhã em que o papel e o painel dizem a mesma coisa.
+
+# ─── CAPÍTULOS ───────────────────────────────────────────────────────────────
+# Arquivo listado e ainda não escrito vira aviso, não erro de carga.
+chapters:
+  - 00-antes-de-comecar.md
+  - 01-o-javascript-que-voce-ouviu-falar.md
+  - 02-o-que-vamos-construir.md
+  - 03-primeiro-programa.md
+  - 04-variaveis-e-tipos.md
+  - 05-operadores.md
+  - 06-condicionais.md
+  - 07-repeticoes.md
+  - 08-funcoes.md
+  - 09-escopo.md
+  - 10-arrays-e-objetos.md
+  - 11-desestruturacao-e-spread.md
+  - 12-callbacks.md
+  - 13-promises.md
+  - 14-async-await.md
+  - 15-closures.md
+  - 16-dom-e-eventos.md
+  - 17-debugging.md
+  - 18-estado.md
+  - 19-modulos.md
+  - 20-npm.md
+  - 21-testes.md
+  - 22-apis.md
+  - 23-performance.md
+  - 24-git.md
+  - 25-deploy.md
+  - 26-projeto-final.md

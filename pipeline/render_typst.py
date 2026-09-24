@@ -10,6 +10,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from .collection_page import COLLECTION_DIR, other_cover_name
 from .diagrams import DiagramLayout, build as build_diagram
 from .loader import asset_dir
 from .parser import parse_inline
@@ -46,7 +47,10 @@ class TypstRenderer:
         self.pages = pages_estimate
         self.text_w = theme.text_width_mm(pages_estimate)
         self.numbered_chapter = True
-        self.chapter_numbers = {ch.slug: ch.number for ch in book.chapters}
+        self.chapter_numbers = {
+            **{slug: book.outline_ref(slug) for slug in book.outline},
+            **{ch.slug: ch.number for ch in book.chapters},
+        }
         self.answers: list[tuple[Chapter, Exercise]] = []
         self.art: list[Art] = []
         self.terms: list[Term] = []
@@ -74,7 +78,7 @@ class TypstRenderer:
         kind, _, target = n.target.partition(":")
         if kind == "cap":
             number = self.chapter_numbers.get(target)
-            return str(number) if number else esc(target)
+            return esc(str(number)) if number else esc(target)
         return f"@{label_of(n.target)}"
 
     # ─── blocos ──────────────────────────────────────────────────────────
@@ -328,11 +332,37 @@ class TypstRenderer:
         if ch.goal:
             args.append(f"goal: [{self.inline(parse_inline(ch.goal))}]")
         head.append(f"#chapter({', '.join(args)})[{esc(ch.title)}]")
+        if ch.locked:
+            head.append(self.locked(ch))
+            return "\n".join(head)
         head.append(self.blocks(ch.blocks))
         for b in ch.walk():
             if isinstance(b, Exercise) and b.answer:
                 self.answers.append((ch, b))
         return "\n".join(head)
+
+    def locked(self, ch: Chapter) -> str:
+        """Prévia: as seções seguem no sumário, o texto dá lugar ao aviso."""
+        sections = ", ".join(
+            f"({b.level}, [{self.inline(b.children or [Text(b.title)])}])"
+            for b in ch.blocks if isinstance(b, Heading))
+        sections += "," if sections else ""
+        return (f"#locked-chapter(message: {tstr(self.theme.s('locked'))}, "
+                f"sections: ({sections}))\n")
+
+    def collection_page(self) -> str:
+        """Última página: os demais volumes da coleção, com capa."""
+        if not self.book.others:
+            return ""
+        books = ", ".join(
+            f"(cover: {tstr(COLLECTION_DIR + '/' + other_cover_name(b))}, "
+            f"title: {tstr(b.title)}, subtitle: {tstr(b.subtitle)})"
+            for b in self.book.others)
+        url = str(self.theme.collection.get("collection", {}).get("publisher_url", "") or "")
+        visit = (f", url: {tstr(url)}, link-text: {tstr(self.theme.s('visit_publisher'))}"
+                 if url else "")
+        return (f"\n#collection-page(title: {tstr(self.theme.s('others'))}, "
+                f"books: ({books},){visit})\n")
 
     def part_page(self, part: Part) -> str:
         chapters = ", ".join(
@@ -383,6 +413,7 @@ class TypstRenderer:
             parts.append(self.chapter(ch))
 
         parts.append(self.back_matter())
+        parts.append(self.collection_page())
         # marcador lido pelo build para saber o número final de páginas
         parts.append(
             "\n#context [#metadata(counter(page).final().first()) <pagecount>]\n")

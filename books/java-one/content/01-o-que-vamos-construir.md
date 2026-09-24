@@ -81,18 +81,6 @@ Carlos, que tinha três semanas de empresa e zero linha de Java escrita,
 levantou a mão devagar. Ninguém viu.
 :::
 
-:::art caption="A primeira reunião: quatro letras no quadro e um prazo no ar."
-src="a-primeira-reuniao-quatro-letras-no-quadro-e-um-prazo-no-ar.png"
-Charge editorial minimalista: sala de reunião corporativa com um quadro
-branco onde está escrito apenas "API" e "CRUD", ambos sublinhados duas
-vezes. Um gerente de camisa social aponta para o quadro com entusiasmo
-exagerado. Uma desenvolvedora sênior, sentada, apoia o queixo na mão com
-expressão cética. Ao lado, uma product owner segura um caderno com post-its
-transbordando. No canto, um desenvolvedor jovem levanta a mão timidamente e
-ninguém olha para ele. Composição limpa, poucos elementos, fundo branco,
-humor visual sutil, estética de revista de tecnologia, sem estética infantil.
-:::
-
 ## CRUD: quatro verbos e nada mais
 
 A maior parte de qualquer sistema é guardar coisa, mostrar coisa, mudar

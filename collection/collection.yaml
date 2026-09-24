@@ -9,6 +9,7 @@ collection:
   author_default: "Thiago Nogueira"
   language_default: "pt-BR"
   site: "knowpill.com"
+  publisher_url: "https://pensarbem.com.br"
 
 # Rótulos de texto do sistema (por idioma).
 # Traduzir um volume = escolher o idioma aqui + traduzir o conteúdo.
@@ -48,6 +49,9 @@ strings:
     in_this_part: "Nesta parte"
     continues: "continua"
     of: "de"
+    locked: "Capítulo disponível na versão completa"
+    others: "Conheça as demais obras dessa coleção"
+    visit_publisher: "Visite a editora Pensar Bem"
   en:
     chapter: "Chapter"
     part: "Part"
@@ -83,6 +87,9 @@ strings:
     in_this_part: "In this part"
     continues: "continues"
     of: "of"
+    locked: "Chapter available in the full edition"
+    others: "Discover the other books in this collection"
+    visit_publisher: "Visit Pensar Bem, the publisher"
 
 # Cores de identificação disponíveis. Um volume escolhe UMA pelo nome.
 # Sempre accent: nunca dominam a página.

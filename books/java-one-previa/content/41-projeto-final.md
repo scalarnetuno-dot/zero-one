@@ -2,42 +2,25 @@
 title: "Projeto final"
 number: 41
 part: p10
+kicker: "Agora sem mastigar. Você recebe os requisitos e constrói a loja inteira."
+epigraph: "Eu não sabia o que estava fazendo, então fiz. E aí eu soube."
+epigraph_by: "Ditado de programador, atribuído a todo mundo"
+goal: >-
+  Construir sozinho, do zero, a API completa da loja — com as decisões de
+  modelagem, arquitetura, segurança e teste tomadas por você.
+previa: true
 ---
-
-Este capítulo faz parte da edição completa de Java One.
-
-A prévia apresenta o sumário completo para mostrar o caminho do livro. O conteúdo integral deste capítulo está disponível na edição completa.
 
 ## Os requisitos
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## O modelo
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
 
 ## O contrato da API
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## O pedido, que é a parte nova
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
 
 ## A ordem sugerida
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## O que conta como pronto
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## Três armadilhas que este projeto tem de propósito
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
-:::summary
-
-Na edição completa, este capítulo desenvolve este assunto com exemplos, código e exercícios.
-
-:::

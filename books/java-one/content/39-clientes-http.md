@@ -162,17 +162,6 @@ O arquivo continua lá. Já foi usado por sete pessoas que nunca conversaram
 com o Carlos.
 :::
 
-:::art caption="A requisição que resolve o problema não pode morar em uma conta pessoal."
-src="a-requisicao-que-resolve-o-problema-nao-pode-morar-em-uma-conta-pessoal.png"
-Charge editorial minimalista: notebook com a tela rachada em cima de uma
-bancada de oficina, com uma etiqueta de conserto pendurada. Ao lado, três
-desenvolvedores de empresas diferentes olham para celulares mostrando
-requisições ligeiramente diferentes entre si. Ao fundo, uma pasta de
-repositório aberta com um único arquivo dentro, brilhando discretamente.
-Fundo branco, poucos elementos, humor visual seco, estética editorial de
-tecnologia.
-:::
-
 :::summary
 - `curl` é universal; `jq` transforma a resposta em algo automatizável.
 - Arquivo `.http` fica no repositório, ao lado do código que ele exercita.

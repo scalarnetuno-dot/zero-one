@@ -16,6 +16,7 @@ import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .collection_page import COLLECTION_DIR, other_cover_name, write_thumbnails
 from .diagrams import DiagramLayout, build as build_diagram
 from .loader import asset_dir
 from .model import (
@@ -212,6 +213,9 @@ class HtmlRenderer:
             if ch is not None:
                 return (f'<a href="ch-{e(ch.slug)}.xhtml">'
                         f'{e(str(ch.number))}</a>')
+            # prévia: capítulo fora dela — o número, sem link
+            if target in self.book.outline:
+                return e(self.book.outline_ref(target))
             return e(target)
         return (f'<a href="#{e(n.target.replace(":", "-"))}">'
                 f'{e(n.target.split(":")[-1])}</a>')
@@ -413,7 +417,26 @@ class HtmlRenderer:
             head.append(f'<aside class="goal"><span class="label">'
                         f'Ao fim deste capítulo</span><p>{e(ch.goal)}</p></aside>')
         head.append("</section>")
+        if ch.locked:
+            # prévia: o capítulo abre e mostra só o aviso da edição completa
+            head.append(f'<section class="locked"><p>{e(self.theme.s("locked"))}'
+                        "</p></section>")
+            return "\n".join(head)
         return "\n".join(head) + "\n" + self.blocks(ch.blocks)
+
+    def collection_page(self) -> str:
+        items = "".join(
+            f'<div class="other"><img src="{COLLECTION_DIR}/{other_cover_name(b)}" '
+            f'alt="{e(b.title)}"/><p class="t">{e(b.title)}</p>'
+            + (f'<p class="s">{e(b.subtitle)}</p>' if b.subtitle else "")
+            + "</div>"
+            for b in self.book.others)
+        url = str(self.theme.collection.get("collection", {}).get("publisher_url", "") or "")
+        visit = (f'<p class="visit"><a href="{e(url)}">{e(self.theme.s("visit_publisher"))}'
+                 f' →</a><br/><a href="{e(url)}">{e(re.sub(r"^https?://", "", url))}</a></p>'
+                 if url else "")
+        return (f'<section class="collection"><h1>{e(self.theme.s("others"))}</h1>'
+                f'<div class="others">{items}</div>{visit}</section>')
 
     def part_page(self, part: Part, chapters: list[Chapter]) -> str:
         items = "".join(
@@ -507,6 +530,15 @@ def write_epub(book: Book, theme: Theme, out: Path,
         spine.append(name)
         nav_items.append((name, ch.title))
 
+    others: list[Path] = []
+    if book.others:
+        others = write_thumbnails(book, out / COLLECTION_DIR)
+        files["colecao.xhtml"] = PAGE.format(
+            lang=lang, title=e(theme.s("others")), kind="backmatter",
+            body=r.collection_page())
+        spine.append("colecao.xhtml")
+        nav_items.append(("colecao.xhtml", theme.s("others")))
+
     files["style.css"] = theme.render("epub/style.css.j2")
 
     nav_list = "\n".join(f'      <li><a href="{n}">{e(t)}</a></li>'
@@ -552,6 +584,10 @@ def write_epub(book: Book, theme: Theme, out: Path,
                 manifest.append(f'    <item id="a_{p.stem}" href="assets/{p.name}" '
                                 f'media-type="{mime}"/>')
 
+    for p in others:
+        manifest.append(f'    <item id="o_{p.stem.replace("-", "_")}" '
+                        f'href="{COLLECTION_DIR}/{p.name}" media-type="image/jpeg"/>')
+
     spine_xml = "\n".join(f'    <itemref idref="{n.replace(".", "_")}"/>' for n in spine)
     opf = f"""<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="bookid"
@@ -593,6 +629,8 @@ def write_epub(book: Book, theme: Theme, out: Path,
             z.writestr(f"OEBPS/{rel}", png, zipfile.ZIP_DEFLATED)
         for p in asset_files:
             z.write(p, f"OEBPS/assets/{p.name}", zipfile.ZIP_DEFLATED)
+        for p in others:
+            z.write(p, f"OEBPS/{COLLECTION_DIR}/{p.name}", zipfile.ZIP_DEFLATED)
         if cover_png and cover_png.exists():
             z.write(cover_png, "OEBPS/cover.png", zipfile.ZIP_DEFLATED)
     return path

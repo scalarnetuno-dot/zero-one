@@ -128,17 +128,6 @@ quadro uma frase que virou regra da equipe:
 O estagiário não errou. O estagiário fez exatamente o que a classe permitia.
 :::
 
-:::art caption="`public` não é conveniência: é uma permissão que você concede para sempre."
-src="public-nao-e-conveniencia-e-uma-permissao-que-voce-concede-para-sempre.png"
-Charge editorial minimalista: etiqueta de preço de loja pendurada em um
-monitor, com três valores riscados em sequência e um quarto valor absurdo
-escrito embaixo. Ao lado, um estagiário de expressão inocente segurando um
-laptop com um script rodando. Atrás, uma desenvolvedora sênior com a mão
-sobre uma grande chave geral de energia, prestes a desligá-la. Fundo branco,
-poucos elementos, humor seco, composição limpa, estética editorial de
-tecnologia.
-:::
-
 ## Os quatro níveis de acesso
 
 | Modificador | Enxerga |

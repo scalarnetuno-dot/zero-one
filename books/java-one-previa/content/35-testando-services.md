@@ -2,34 +2,19 @@
 title: "Testando services"
 number: 35
 part: p8
+kicker: "Para testar a regra, o banco precisa sair do caminho — e alguém precisa fingir ser ele."
+goal: >-
+  Isolar o serviço com Mockito, verificar chamadas com `verify`, e reconhecer
+  quando um mock deixou de ajudar e passou a testar a si mesmo.
+previa: true
 ---
-
-Este capítulo faz parte da edição completa de Java One.
-
-A prévia apresenta o sumário completo para mostrar o caminho do livro. O conteúdo integral deste capítulo está disponível na edição completa.
 
 ## O mock
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## Verificando o que foi chamado
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
 
 ## O vocabulário mínimo do Mockito
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## Quando o mock passa a atrapalhar
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## A alternativa: o dublê escrito à mão
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
-:::summary
-
-Na edição completa, este capítulo desenvolve este assunto com exemplos, código e exercícios.
-
-:::

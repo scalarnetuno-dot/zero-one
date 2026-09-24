@@ -2,38 +2,21 @@
 title: "Relacionamentos JPA"
 number: 29
 part: p6
+kicker: "Duas tabelas que se conhecem viram duas classes que se apontam — e é aí que o JPA fica poderoso e perigoso na mesma medida."
+goal: >-
+  Mapear `@ManyToOne`, `@OneToMany` e `@ManyToMany`, escolher o lado dono da
+  relação e evitar as três armadilhas clássicas do mapeamento bidirecional.
+previa: true
 ---
-
-Este capítulo faz parte da edição completa de Java One.
-
-A prévia apresenta o sumário completo para mostrar o caminho do livro. O conteúdo integral deste capítulo está disponível na edição completa.
 
 ## A relação mais comum: `@ManyToOne`
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## O outro lado: `@OneToMany`
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
 
 ## Bidirecional cobra disciplina
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## `@OneToMany` com dono próprio: os itens do pedido
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
 
 ## `@ManyToMany`: quando os dois lados são muitos
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## O modelo do projeto, completo
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
-:::summary
-
-Na edição completa, este capítulo desenvolve este assunto com exemplos, código e exercícios.
-
-:::

@@ -234,15 +234,6 @@ Ela existia. Alguém a tinha alterado no mesmo commit, para `.value("R$
 349,90")`, porque "o teste estava quebrando".
 :::
 
-:::art caption="Ajustar o teste para ele parar de reclamar é desligar o alarme de incêndio."
-src="ajustar-o-teste-para-ele-parar-de-reclamar-e-desligar-o-alarme-de-incendio.png"
-Charge editorial minimalista: alarme de incêndio de parede sendo desligado
-por uma mão com uma chave de fenda, enquanto ao fundo, por uma janela, sobe
-uma pequena coluna de fumaça. No primeiro plano, uma tela de celular
-mostrando "Total: NaN". Fundo branco, poucos elementos, humor visual seco,
-estética editorial de tecnologia.
-:::
-
 :::summary
 - `@WebMvcTest` sobe só a camada web e testa o contrato HTTP.
 - Verifique status, cabeçalho e campos do JSON — inclusive os que **não**

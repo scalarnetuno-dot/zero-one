@@ -253,16 +253,6 @@ quando um teste de quatro linhas teria impedido trinta e uma pessoas de
 poderem apagar o catálogo.
 :::
 
-:::art caption="O tempo que o teste custa é sempre menor que o tempo que ele evita."
-src="o-tempo-que-o-teste-custa-e-sempre-menor-que-o-tempo-que-ele-evita.png"
-Charge editorial minimalista: balança de dois pratos. No prato esquerdo, uma
-pequena pilha de folhas rotulada "escrever testes". No prato direito, uma
-montanha enorme de papéis de chamado, um telefone tocando e um pequeno
-incêndio. A balança pende dramaticamente para a direita. Ao lado, um gerente
-de camisa social observa a balança com uma planilha na mão. Fundo branco,
-poucos elementos, humor visual seco, estética editorial de tecnologia.
-:::
-
 :::summary
 - Teste protege o futuro, não o presente: ele avisa quando alguém quebra a
   regra.

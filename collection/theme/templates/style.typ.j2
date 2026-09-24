@@ -742,6 +742,58 @@
   #outline(title: none, depth: depth, indent: 0pt)
 ]
 
+// CAPÍTULO FECHADO (prévia) — as seções entram no sumário e nos marcadores,
+// sem ocupar espaço; a página mostra só o aviso da edição completa.
+#let locked-chapter(message: "", sections: ()) = {
+  for s in sections {
+    place(top + left, hide(heading(level: s.at(0), s.at(1))))
+  }
+  v(1fr)
+  align(center)[
+    #hrule(color: accent, thickness: medium, width: 22mm)
+    #v(8mm)
+    #block(width: 86%)[
+      #set par(justify: false, first-line-indent: 0pt, leading: 0.5em)
+      #text(font: sans, size: 24pt, weight: w-display, fill: ink,
+            tracking: {{ tk.type.tracking.display }}, hyphenate: false)[#message]
+    ]
+    #v(8mm)
+    #hrule(color: accent, thickness: medium, width: 22mm)
+  ]
+  v(1.4fr)
+}
+
+// DEMAIS OBRAS — a última página: as capas dos outros volumes, em grade.
+#let collection-page(title: "", books: (), url: none, link-text: none) = page(header: none, footer: none)[
+  #set par(first-line-indent: 0pt, justify: false, leading: 0.5em)
+  #set text(hyphenate: false)
+  #block(below: 9mm)[
+    #text(font: sans, size: 18pt, weight: w-display, fill: ink)[#title]
+    #v(2mm)
+    #hrule(color: accent, thickness: medium, width: 16mm)
+  ]
+  #grid(
+    columns: (1fr, 1fr), column-gutter: 8mm, row-gutter: 8mm,
+    ..books.map(b => block(breakable: false)[
+      #box(stroke: hairline + rule-color)[#image(b.cover, height: 58mm)]
+      #v(2.5mm)
+      #text(font: sans, size: 10pt, weight: w-strong, fill: ink)[#b.title]
+      #if b.subtitle != "" [
+        #v(1mm)
+        #text(font: serif, size: 8.6pt, style: "italic", fill: ink-soft)[#b.subtitle]
+      ]
+    ]),
+  )
+  #if url != none [
+    #v(1fr)
+    #hrule(color: rule-color)
+    #v(4mm)
+    #link(url)[#text(font: sans, size: 11pt, weight: w-strong)[#link-text →]]
+    #v(1mm)
+    #link(url)[#text(font: sans, size: 8.6pt)[#url.replace(regex("^https?://"), "")]]
+  ]
+]
+
 // ════════════════════════════════════════════════════════════════════════════
 // DOCUMENTO
 // ════════════════════════════════════════════════════════════════════════════

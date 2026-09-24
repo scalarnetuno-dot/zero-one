@@ -230,17 +230,6 @@ Marina viu o comentário do outro lado da sala e não disse nada. Só sorriu
 para a tela, do jeito de quem reconhece a própria frase voltando.
 :::
 
-:::art caption="O ciclo se fecha quando você vira a pessoa que faz a pergunta."
-src="o-ciclo-se-fecha-quando-voce-vira-a-pessoa-que-faz-a-pergunta.png"
-Charge editorial minimalista: dois desenvolvedores frente a frente diante de
-um monitor com um pull request aberto. O da esquerda, mais jovem, com
-expressão de quem está prestes a explicar algo complicado. O da direita, hoje
-o revisor, com a mesma caneca e a mesma postura paciente que a desenvolvedora
-sênior tinha no começo do livro. Ao fundo, desfocada, a silhueta dela
-observando de longe com um leve sorriso. Fundo branco, poucos elementos,
-humor sutil e afetuoso, estética editorial de tecnologia.
-:::
-
 :::summary
 - Dez requisitos, cinco regras de negócio e nove rotas descrevem o sistema.
 - Construa em fatias completas: entidade, serviço, controlador, teste.

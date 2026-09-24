@@ -162,17 +162,6 @@ verdade, a gente separa. Modelar o futuro que talvez não venha custa mais que
 mudar depois.
 :::
 
-:::art caption="Toda reunião de modelagem tem uma frase que chega aos noventa minutos."
-src="toda-reuniao-de-modelagem-tem-uma-frase-que-chega-aos-noventa-minutos.png"
-Charge editorial minimalista: quadro branco com um diagrama de entidades
-limpo e bem organizado à esquerda, e à direita a mesma área tomada por
-rabiscos, setas cruzadas e uma caixa com uma interrogação gigante. Uma
-product owner levanta o dedo indicador com expressão de quem acabou de
-lembrar de algo. Uma desenvolvedora sênior, marcador na mão, olha para o
-relógio na parede marcando uma hora e trinta de reunião. Fundo branco,
-poucos elementos, humor visual seco, estética editorial de tecnologia.
-:::
-
 ## Três perguntas que evitam refatoração
 
 Antes de escrever a primeira linha de SQL, responda:

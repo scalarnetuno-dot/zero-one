@@ -2,38 +2,21 @@
 title: "Enums e records"
 number: 12
 part: p2
+kicker: "Dois recursos que apagam código: um para o conjunto fechado, outro para o dado puro."
+goal: >-
+  Substituir constantes de texto por `enum`, escrever um `record` em uma linha
+  e explicar por que os dois deixam o compilador trabalhar mais.
+previa: true
 ---
-
-Este capítulo faz parte da edição completa de Java One.
-
-A prévia apresenta o sumário completo para mostrar o caminho do livro. O conteúdo integral deste capítulo está disponível na edição completa.
 
 ## O problema do `String` como categoria
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## `enum`: o conjunto fechado
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
 
 ## Enum com dados e comportamento
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## `record`: o dado puro
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
 
 ## Quando usar record e quando usar classe
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## Os dois juntos, como o projeto vai usar
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
-:::summary
-
-Na edição completa, este capítulo desenvolve este assunto com exemplos, código e exercícios.
-
-:::

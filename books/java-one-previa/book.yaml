@@ -1,7 +1,8 @@
 # ─── PRÉVIA — Java One ────────────────────────────────────────────────────
-# Mesmo sumário do volume completo (books/java-one). Só o conteúdo dos
-# capítulos fora de preview_chapters são substituídos por um aviso de
-# "disponível na edição completa".
+# Mesma estrutura do volume completo (books/java-one): todos os capítulos,
+# com as seções no sumário. Os de preview_chapters vêm inteiros; os demais
+# chegam com `previa: true` no front matter, e o capítulo abre só com o
+# aviso "Capítulo disponível na versão completa".
 #
 # Capítulos liberados nesta prévia: 0, 1, 2, 15, 20, 40.
 # Para regenerar: make preview BOOK=java-one-previa

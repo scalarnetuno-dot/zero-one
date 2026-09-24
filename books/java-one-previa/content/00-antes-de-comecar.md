@@ -84,7 +84,7 @@ quem traz café — inclusive na véspera da entrega.
 minutos de uso, bugs que a equipe não reproduz em duas semanas.
 :::
 
-:::art caption="O time da Aurora Comércio no primeiro dia do projeto." src="o-time-da-aurora-comercio-no-primeiro-dia-do-projeto.png"
+:::art caption="O time da Aurora Comércio no primeiro dia do projeto." src="o-time-da-aurora-comercio-no-primeiro-dia-do-projeto.jpg"
 Ilustração editorial minimalista em traço limpo: cinco personagens de corpo
 inteiro lado a lado, como um retrato de elenco, sobre fundo branco. Carlos,
 jovem desenvolvedor segurando um notebook novo demais e uma expressão de

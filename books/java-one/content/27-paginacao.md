@@ -127,16 +127,6 @@ lá desde o começo.
 Foi a melhor pergunta que ele fez no trimestre.
 :::
 
-:::art caption="Listagem sem paginação é uma negação de serviço que você mesmo escreveu."
-src="listagem-sem-paginacao-e-uma-negacao-de-servico-que-voce-mesmo-escreveu.png"
-Charge editorial minimalista: cano fino saindo de um servidor e, tentando
-passar por ele, uma avalanche de caixas de produto empilhadas que se acumulam
-e transbordam pelo chão. Ao lado, um celular exibindo apenas uma ampulheta.
-Ao fundo, uma desenvolvedora de pijama digitando em um notebook, com um
-relógio de parede marcando 00h19. Fundo branco, poucos elementos, humor
-visual seco, estética editorial de tecnologia.
-:::
-
 ## O custo escondido do `OFFSET`
 
 :::diagram type="flowchart" caption="O banco descarta tudo que vem antes do OFFSET — e cobra por isso."

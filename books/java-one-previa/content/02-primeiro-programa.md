@@ -118,16 +118,6 @@ Roberto assentiu devagar, do jeito de quem não entendeu mas vai repetir a
 informação na próxima reunião como se tivesse entendido.
 :::
 
-:::art caption="O silêncio do javac é a coisa mais parecida com um elogio que um compilador oferece."
-src="o-silencio-do-javac-e-a-coisa-mais-parecida-com-um-elogio-que-um-compilador-oferece.png"
-Ilustração editorial minimalista: desenvolvedor jovem girando na cadeira com
-os braços erguidos em comemoração exagerada diante de um monitor onde se lê
-apenas uma linha de texto minúscula. Atrás dele, um gerente de camisa social
-parado com uma xícara de café, sobrancelha erguida, expressão de dúvida
-educada. Escritório open space desenhado com pouquíssimos elementos. Humor
-seco, composição limpa, fundo branco, estética de revista de tecnologia.
-:::
-
 ## Argumentos: o programa recebendo o mundo
 
 `String[] args` não é enfeite. Troque o corpo do `main`:

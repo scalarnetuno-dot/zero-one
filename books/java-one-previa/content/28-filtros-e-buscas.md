@@ -2,42 +2,24 @@
 title: "Filtros e buscas"
 number: 28
 part: p5
+kicker: "Filtrar no banco é uma consulta. Filtrar em memória é trazer tudo e jogar quase tudo fora."
+goal: >-
+  Escrever filtros combináveis com Specification, entender por que `LIKE
+  '%termo%'` ignora o índice e decidir entre *query method*, `@Query` e busca
+  dinâmica.
+previa: true
 ---
-
-Este capítulo faz parte da edição completa de Java One.
-
-A prévia apresenta o sumário completo para mostrar o caminho do livro. O conteúdo integral deste capítulo está disponível na edição completa.
 
 ## O jeito errado, que funciona por seis meses
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## Filtro simples: o nome do método resolve
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
 
 ## A explosão combinatória dos filtros opcionais
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## Specification: o filtro como objeto
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
 
 ## Por que `LIKE '%termo%'` é lento
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## Acento: o detalhe que ninguém lembra
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## Qual das três formas usar
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
-:::summary
-
-Na edição completa, este capítulo desenvolve este assunto com exemplos, código e exercícios.
-
-:::

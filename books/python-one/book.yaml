@@ -11,8 +11,9 @@ isbn: ""
 
 description: >-
   Python do zero até uma API REST completa: FastAPI, PostgreSQL, SQLAlchemy,
-  validação, JWT, testes e Docker. Um único projeto cresce capítulo a
-  capítulo — nada de exemplos soltos, nada de teoria antes da hora.
+  validação, JWT, testes e Docker. O catálogo de uma cooperativa, de um
+  notebook que ninguém desliga até um programa que outra empresa consegue
+  chamar.
 
 keywords: [Python, FastAPI, API REST, SQLAlchemy, PostgreSQL, JWT, CRUD, backend, Pydantic]
 
@@ -20,7 +21,7 @@ cover_image: capa.png
 cover_full: true
 
 cover_bullets:
-  - "Um projeto só, crescendo do capítulo 1 ao 42"
+  - "Um projeto só: a cooperativa, do notebook até a API no ar"
   - "Cada conceito aparece quando o projeto precisa dele"
   - "Erros de verdade, lidos linha por linha"
   - "API com validação, segurança, testes e Docker"
@@ -33,8 +34,8 @@ parts:
   - id: p1
     title: "Começando do zero"
     blurb: >-
-      Você escreve Python antes de entender Python. A linguagem entra pela
-      porta da prática: rodar, errar, ler o erro, consertar.
+      De onde a linguagem veio, por que a indentação é sintaxe, e o primeiro
+      programa que roda fora da máquina do galpão.
   - id: p2
     title: "O Python que você realmente precisa"
     blurb: >-
@@ -84,48 +85,49 @@ parts:
 # ─── CAPÍTULOS ───────────────────────────────────────────────────────────────
 chapters:
   - 00-antes-de-comecar.md
-  - 01-o-que-vamos-construir.md
-  - 02-primeiro-programa.md
-  - 03-variaveis-e-tipos.md
-  - 04-operadores.md
-  - 05-condicionais.md
-  - 06-repeticoes.md
-  - 07-funcoes.md
-  - 08-estruturas-de-dados.md
-  - 09-modulos-e-ambiente.md
-  - 10-classes-e-objetos.md
-  - 11-encapsulamento.md
-  - 12-heranca-e-protocolos.md
-  - 13-excecoes.md
-  - 14-tipagem-e-dataclasses.md
-  - 15-o-que-e-fastapi.md
-  - 16-primeiro-projeto-fastapi.md
-  - 17-primeira-api.md
-  - 18-modelando-com-pydantic.md
-  - 19-banco-de-dados.md
-  - 20-sqlalchemy.md
-  - 21-repository.md
-  - 22-service.md
-  - 23-o-crud-completo.md
-  - 24-schemas.md
-  - 25-validacao.md
-  - 26-tratamento-de-erros.md
-  - 27-paginacao.md
-  - 28-filtros-e-buscas.md
-  - 29-relacionamentos.md
-  - 30-migrations.md
-  - 31-dependency-injection.md
-  - 32-async.md
-  - 33-autenticacao.md
-  - 34-jwt.md
-  - 35-usuarios-e-permissoes.md
-  - 36-testando-python.md
-  - 37-testando-services.md
-  - 38-testando-a-api.md
-  - 39-testando-o-banco.md
-  - 40-openapi.md
-  - 41-git.md
-  - 42-projeto-final.md
+  - 01-o-python-que-voce-ouviu-falar.md
+  - 02-o-que-vamos-construir.md
+  - 03-primeiro-programa.md
+  - 04-variaveis-e-tipos.md
+  - 05-operadores.md
+  - 06-condicionais.md
+  - 07-repeticoes.md
+  - 08-funcoes.md
+  - 09-estruturas-de-dados.md
+  - 10-modulos-e-ambiente.md
+  - 11-classes-e-objetos.md
+  - 12-encapsulamento.md
+  - 13-heranca-e-protocolos.md
+  - 14-excecoes.md
+  - 15-tipagem-e-dataclasses.md
+  - 16-o-que-e-fastapi.md
+  - 17-primeiro-projeto-fastapi.md
+  - 18-primeira-api.md
+  - 19-modelando-com-pydantic.md
+  - 20-banco-de-dados.md
+  - 21-sqlalchemy.md
+  - 22-repository.md
+  - 23-service.md
+  - 24-o-crud-completo.md
+  - 25-schemas.md
+  - 26-validacao.md
+  - 27-tratamento-de-erros.md
+  - 28-paginacao.md
+  - 29-filtros-e-buscas.md
+  - 30-relacionamentos.md
+  - 31-migrations.md
+  - 32-dependency-injection.md
+  - 33-async.md
+  - 34-autenticacao.md
+  - 35-jwt.md
+  - 36-usuarios-e-permissoes.md
+  - 37-testando-python.md
+  - 38-testando-services.md
+  - 39-testando-a-api.md
+  - 40-testando-o-banco.md
+  - 41-openapi.md
+  - 42-git.md
+  - 43-projeto-final.md
 
 # Ajuste fino de tokens SÓ deste volume. Use com parcimônia: o valor da
 # coleção é a consistência.

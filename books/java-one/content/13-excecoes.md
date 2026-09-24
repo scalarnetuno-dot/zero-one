@@ -68,17 +68,6 @@ mundo tinha aprendido, sem combinar, a preencher tudo. Seu Antônio não tinha
 aprendido nada disso. Ele só usava o sistema como ele foi escrito.
 :::
 
-:::art caption="`null` é o que sobra quando alguém não preencheu o que era opcional."
-src="null-e-o-que-sobra-quando-alguem-nao-preencheu-o-que-era-opcional.png"
-Charge editorial minimalista: senhor de óculos segurando um celular, tirando
-foto torta da tela de um computador; na tela, uma mensagem de erro gigante
-com a palavra "NULL" em destaque. Ao lado, um desenvolvedor jovem segurando a
-cabeça diante de três monitores idênticos, todos mostrando o mesmo formulário
-preenchido corretamente. Entre eles, um campo de formulário vazio desenhado
-com contorno tracejado e uma pequena etiqueta "opcional". Fundo branco,
-poucos elementos, humor visual seco, estética de revista de tecnologia.
-:::
-
 ## `try`, `catch`, `finally`
 
 ```java title="A forma completa" numbered

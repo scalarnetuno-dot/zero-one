@@ -157,17 +157,6 @@ Marina respondeu que sim. Ele foi embora satisfeito. O laço continuava
 errado, mas isso era assunto do Carlos.
 :::
 
-:::art caption="Um laço que nunca termina tem o mesmo efeito de uma reunião que nunca termina."
-src="um-laco-que-nunca-termina-tem-o-mesmo-efeito-de-uma-reuniao-que-nunca-termina.png"
-Charge editorial minimalista: relógio de parede com os ponteiros girando em
-círculo desenhados como uma seta circular fechada, ocupando o centro da
-composição. Abaixo, um servidor de rack com uma pequena chama de calor saindo
-do topo. À direita, uma desenvolvedora de pijama e notebook na mesa de jantar
-de casa, expressão cansada, xícara ao lado. À esquerda, uma porta de saída do
-escritório se fechando, com a silhueta de alguém indo embora feliz. Fundo
-branco, poucos elementos, humor seco, estética editorial de tecnologia.
-:::
-
 ## Acumular um resultado
 
 ```java title="Soma.java" numbered

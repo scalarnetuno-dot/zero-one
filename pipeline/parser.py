@@ -143,8 +143,12 @@ def parse_chapter(path: Path, default_number: int = 0) -> Chapter:
         part=str(meta.get("part", "")),
         matter=str(meta.get("matter", "body")),  # type: ignore[arg-type]
         numbered=bool(meta.get("numbered", meta.get("matter", "body") == "body")),
+        locked=bool(meta.get("previa", False)),
     )
     chapter.blocks = _blocks(lines, path)
+    if chapter.locked:
+        # capítulo fechado: só os títulos de seção, que seguem no sumário
+        chapter.blocks = [b for b in chapter.blocks if isinstance(b, Heading)]
 
     n = 0
     for b in chapter.walk():

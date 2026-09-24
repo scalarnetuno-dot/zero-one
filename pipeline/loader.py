@@ -11,7 +11,7 @@ from typing import Any
 
 import yaml
 
-from .model import Art, Book, BookMeta, Chapter, Figure, Part
+from .model import Art, Book, BookMeta, Chapter, Figure, OtherBook, Part
 from .parser import parse_chapter
 from .theme import COLLECTION, ROOT
 
@@ -59,7 +59,8 @@ def load_book(slug: str) -> Book:
     )
 
     content = d / "content"
-    listed = cfg.get("chapters")
+    listed = preview_chapter_list(cfg) if cfg.get("preview_source") else None
+    listed = listed or cfg.get("chapters")
     if listed:
         files = [content / f for f in listed]
     else:
@@ -100,7 +101,106 @@ def load_book(slug: str) -> Book:
 
     book = Book(meta=meta, chapters=chapters, parts=parts, root=d)
     book.missing = missing
+    if cfg.get("preview_source"):
+        book.outline = source_outline(cfg)
+    book.others = other_books(slug)
+    # Volumes irmãos: `@cap:` para um capítulo do outro volume vale, e vira
+    # o número dele. A numeração dos volumes é contínua.
+    for other in cfg.get("companions", []) or []:
+        label = str(load_config(str(other)).get("volume_label", "") or "")
+        for slug, number in book_outline(str(other)).items():
+            if slug not in book.outline:
+                book.outline[slug] = number
+                if label:
+                    book.outline_labels[slug] = label
     return book
+
+
+def book_outline(slug: str) -> dict[str, int]:
+    """slug → número de cada capítulo numerado de outro livro da coleção."""
+    return source_outline({**load_config(slug), "preview_source": slug})
+
+
+def other_books(slug: str) -> list[OtherBook]:
+    """Os demais volumes da coleção que já têm capa, para a última página.
+
+    Ficam de fora o próprio livro, o volume de que ele é prévia, as
+    prévias e o modelo.
+    """
+    cfg = load_config(slug)
+    skip = {slug, str(cfg.get("preview_source", "") or "")}
+    found: list[tuple[int, OtherBook]] = []
+    for other in list_books():
+        if other in skip or other.endswith("-previa"):
+            continue
+        ocfg = load_config(other)
+        if ocfg.get("preview_source"):
+            continue
+        cover = book_dir(other) / "assets" / Path(
+            str(ocfg.get("cover_image", "") or "capa.png")).name
+        if not cover.exists() or not _is_cover(cover):
+            continue
+        found.append((int(ocfg.get("volume", 0) or 0), OtherBook(
+            slug=other, title=str(ocfg.get("title", other)),
+            subtitle=str(ocfg.get("subtitle", "") or ""), cover=cover)))
+    return [b for _, b in sorted(found, key=lambda x: (x[0], x[1].slug))]
+
+
+def _is_cover(path: Path) -> bool:
+    """Capa de verdade é retrato; a arte provisória da pipeline é quadrada."""
+    from PIL import Image
+
+    with Image.open(path) as img:
+        return img.height > img.width
+
+
+# ─── prévia ─────────────────────────────────────────────────────────────
+# Uma prévia tem a mesma estrutura do volume completo: todos os capítulos,
+# com as seções no sumário. Os que não estão liberados chegam com
+# `previa: true` e imprimem só o aviso da edição completa.
+
+
+def preview_allowed(cfg: dict[str, Any]) -> list[str]:
+    """Capítulos do volume fonte liberados na prévia, na ordem do sumário."""
+    names = [str(n) for n in cfg.get("chapters", []) or []]
+    wanted = [str(v) for v in cfg.get("preview_chapters", []) or []]
+    allowed: list[str] = []
+    for name in names:
+        for value in wanted:
+            prefix = f"{int(value):02d}-" if value.isdigit() else None
+            if name == value or (prefix and name.startswith(prefix)):
+                allowed.append(name)
+                break
+    return allowed
+
+
+def preview_chapter_list(cfg: dict[str, Any]) -> list[str]:
+    """Arquivos da prévia: todos os capítulos do volume, na mesma ordem."""
+    return [str(n) for n in cfg.get("chapters", []) or []]
+
+
+def source_outline(cfg: dict[str, Any]) -> dict[str, int]:
+    """slug → número de cada capítulo numerado do volume fonte."""
+    from .parser import slugify
+
+    source = book_dir(str(cfg["preview_source"])) / "content"
+    outline: dict[str, int] = {}
+    for name in cfg.get("chapters", []) or []:
+        meta = chapter_front_matter(source / str(name))
+        if meta.get("number") is None:
+            continue
+        slug = str(meta.get("slug", slugify(str(meta.get("title", name)))))
+        outline[slug] = int(meta["number"])
+    return outline
+
+
+def chapter_front_matter(path: Path) -> dict[str, Any]:
+    """Só o front matter de um capítulo, sem ler o corpo."""
+    text = path.read_text(encoding="utf-8")
+    if not text.startswith("---"):
+        return {}
+    _, front, _ = text.split("---", 2)
+    return yaml.safe_load(front) or {}
 
 
 def load_config(slug: str) -> dict[str, Any]:
@@ -117,8 +217,15 @@ def load_config(slug: str) -> dict[str, Any]:
 
 
 def asset_dir(book: Book) -> Path:
-    """Retorna a pasta de assets própria ou herdada do volume fonte."""
+    """Retorna a pasta de assets própria ou herdada do volume fonte.
+
+    Uma prévia gerada tem assets próprios — só as imagens dos capítulos
+    liberados, em versão leve. Sem eles, herda os do volume fonte.
+    """
+    own = book.root / "assets"
     source_slug = str(book.meta.extra.get("preview_source", "") or "")
+    if source_slug and own.exists() and any(own.iterdir()):
+        return own
     if source_slug:
         source = book_dir(source_slug) / "assets"
         if source.exists():

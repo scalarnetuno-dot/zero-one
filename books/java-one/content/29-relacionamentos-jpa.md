@@ -224,16 +224,6 @@ cujo pai era ela mesma. O banco aceitou: a chave estrangeira estava
 satisfeita. A tela entrou em laço infinito.
 :::
 
-:::art caption="Uma relação de uma entidade com ela mesma aceita ciclos que o banco não proíbe."
-src="uma-relacao-de-uma-entidade-com-ela-mesma-aceita-ciclos-que-o-banco-nao-proibe.png"
-Charge editorial minimalista: diagrama de árvore de categorias desenhado com
-caixas e setas, ramificando em vários níveis; em um dos ramos, uma seta sai
-de uma caixa e volta para ela mesma, formando um círculo fechado destacado em
-vermelho. Ao lado, um desenvolvedor jovem olha para a tela onde uma barra de
-carregamento gira infinitamente. Fundo branco, poucos elementos, humor visual
-seco, estética editorial de tecnologia.
-:::
-
 :::summary
 - `@ManyToOne` é o lado dono: onde mora a chave estrangeira.
 - `@OneToMany` precisa de `mappedBy`, senão vira tabela de junção.

@@ -222,16 +222,6 @@ No commit daquela tarde, Carlos escreveu a mensagem mais longa da vida dele.
 Marina aprovou sem comentários.
 :::
 
-:::art caption="Funciona na minha máquina quase sempre significa: existe só na minha máquina."
-src="funciona-na-minha-maquina-quase-sempre-significa-existe-so-na-minha-maquina.png"
-Charge editorial minimalista: dois computadores idênticos lado a lado. O da
-esquerda, rotulado "minha máquina", tem três pequenas peças coloridas
-encaixadas por fora, presas com fita adesiva. O da direita, rotulado
-"homologação", tem os três encaixes vazios. Um desenvolvedor jovem aponta
-orgulhoso para o da esquerda. Fundo branco, poucos elementos, humor visual
-seco, estética editorial de tecnologia.
-:::
-
 :::summary
 - `status`, `add`, `commit`, `push` resolvem o dia; o resto é para quando
   algo dá errado.

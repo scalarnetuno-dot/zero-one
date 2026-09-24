@@ -306,3 +306,27 @@ a { color: var(--accent); text-decoration: none; }
 }
 .copyright { font-size: .8rem; color: var(--ink-soft); }
 .copyright p { text-indent: 0; }
+
+/* ── prévia: capítulo fechado ───────────────────────────────────────── */
+.locked { text-align: center; margin: 4em 0; padding: 1.4em 0;
+  border-top: 2px solid var(--accent); border-bottom: 2px solid var(--accent); }
+.locked p {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif;
+  font-size: 1.6rem; font-weight: 700; line-height: 1.25; text-indent: 0; margin: 0;
+}
+
+/* ── demais obras da coleção ────────────────────────────────────────── */
+.collection { page-break-before: always; }
+.collection h1 { font-size: 1.5rem; margin-bottom: 1.2em; }
+.other { display: inline-block; width: 46%; vertical-align: top;
+  margin: 0 2% 1.6em 0; }
+.other img { width: 70%; border: 1px solid var(--rule); }
+.other p { text-indent: 0; margin: .3em 0 0; }
+.other .t {
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif; font-weight: 600;
+}
+.other .s { font-style: italic; font-size: .85em; color: var(--ink-soft); }
+.collection .visit {
+  text-indent: 0; margin-top: 2em; padding-top: 1em; border-top: 1px solid var(--rule);
+  font-family: "{{ tk.type.sans }}", system-ui, sans-serif; font-weight: 600;
+}

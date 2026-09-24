@@ -185,16 +185,6 @@ segundos para quarenta milissegundos. O fornecedor continuou ligando por
 mais duas semanas.
 :::
 
-:::art caption="Antes de trocar o banco, leia o log."
-src="antes-de-trocar-o-banco-leia-o-log.png"
-Charge editorial minimalista: desenvolvedora sênior de pé ao lado de um
-monitor dividido ao meio; à esquerda, uma coluna interminável de linhas
-idênticas de SQL descendo pela tela e escorrendo pelo chão como uma fita; à
-direita, uma única linha curta. Ao lado, um gerente segura um folheto
-colorido de fornecedor com um gráfico de foguete. Fundo branco, poucos
-elementos, humor visual seco, estética editorial de tecnologia.
-:::
-
 ## Transação: onde ela começa e onde termina
 
 ```java title="Duas operações, uma transação" numbered

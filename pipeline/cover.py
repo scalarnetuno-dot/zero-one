@@ -15,7 +15,7 @@ from pathlib import Path
 
 import typst
 
-from .loader import asset_dir, book_dir, load_book, theme_overrides
+from .loader import asset_dir, book_dir, load_book, load_config, theme_overrides
 from .model import Book
 from .theme import FONTS, Theme, _mm, load_theme
 
@@ -37,7 +37,11 @@ def find_cover_art(slug: str, book: Book | None = None) -> Path | None:
     named = book.meta.extra.get("cover_image")
     if named:
         p = asset_dir(book) / Path(str(named)).name
-        return p if p.exists() else None
+        if p.exists():
+            return p
+        # prévia leve: a arte da capa vira JPEG, com o mesmo nome
+        jpg = p.with_suffix(".jpg")
+        return jpg if jpg.exists() else None
     for name in COVER_ART_NAMES:
         p = asset_dir(book) / name
         if p.exists():
@@ -111,7 +115,9 @@ def build_front(slug: str, out: Path, png: bool = True) -> tuple[Path, Path | No
     compiler.compile(output=pdf)
     img = None
     if png:
-        data = compiler.compile(format="png", ppi=300)
+        # A capa do EPUB de uma prévia não precisa de resolução de gráfica.
+        preview = bool(load_config(slug).get("preview_source"))
+        data = compiler.compile(format="png", ppi=110 if preview else 300)
         img = out / f"{slug}-capa.png"
         img.write_bytes(data[0] if isinstance(data, list) else data)
     return pdf, img

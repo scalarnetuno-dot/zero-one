@@ -155,18 +155,6 @@ por `.equals`, com aquela sensação específica de estar consertando um erro
 que o compilador tinha deixado passar de propósito.
 :::
 
-:::art caption="O teste passava porque o texto e o literal eram, por acidente, o mesmo objeto."
-src="o-teste-passava-porque-o-texto-e-o-literal-eram-por-acidente-o-mesmo-objeto.png"
-Charge editorial minimalista: dois balões de texto idênticos com a palavra
-"PROMO10", ligados por uma seta com um grande sinal de igual duplo riscado
-em vermelho. De um lado, um desenvolvedor jovem de expressão confusa diante
-do monitor; do outro, um senhor de óculos segurando um papel com o cupom
-escrito à mão, digitando em um celular. Entre os dois, uma lupa gigante
-mostrando que as duas palavras, apesar de idênticas, estão em caixas
-separadas. Composição limpa, poucos elementos, fundo branco, humor sutil,
-estética editorial de tecnologia.
-:::
-
 ## Lógicos
 
 ```java title="Três operadores e uma otimização importante" numbered

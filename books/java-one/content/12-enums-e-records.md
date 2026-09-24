@@ -88,16 +88,6 @@ planilha. Marina sugeriu outra coisa:
 que só tem três valores possíveis.
 :::
 
-:::art caption="Texto aceita tudo, inclusive o que está errado."
-src="texto-aceita-tudo-inclusive-o-que-esta-errado.png"
-Charge editorial minimalista: campo de formulário gigante com a palavra
-"ATVIO" digitada dentro, e um carimbo verde de "ACEITO" ao lado. Ao fundo,
-uma prateleira de loja com quatrocentos produtos cobertos por um pano cinza,
-invisíveis para os clientes. Na frente, um senhor de óculos com um fone de
-ouvido na mão, expressão de quem procura algo que sumiu. Fundo branco, poucos
-elementos, humor seco, composição limpa, estética editorial de tecnologia.
-:::
-
 ## Enum com dados e comportamento
 
 Aqui está o que quase ninguém ensina: um enum é uma classe completa.

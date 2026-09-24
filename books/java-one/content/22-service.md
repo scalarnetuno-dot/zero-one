@@ -178,18 +178,6 @@ Carlos passou o resto do dia entendendo o que é um proxy. Foi a tarde mais
 útil daquele mês.
 :::
 
-:::art caption="A anotação não altera o método: ela altera quem chama o método."
-src="a-anotacao-nao-altera-o-metodo-ela-altera-quem-chama-o-metodo.png"
-Charge editorial minimalista: dois bonecos geométricos representando objetos.
-Um deles está dentro de uma bolha transparente rotulada "PROXY"; uma seta
-vinda de fora atravessa a bolha e é interceptada por ela, ganhando um pequeno
-carimbo. Outra seta, que nasce dentro do próprio boneco e volta para ele
-mesmo, passa por dentro sem tocar a bolha e sem carimbo. Ao lado, um
-desenvolvedor jovem observa com expressão de quem acabou de entender algo.
-Fundo branco, poucos elementos, composição limpa, estética editorial de
-tecnologia.
-:::
-
 ## As exceções de negócio
 
 ```java title="ProductNotFoundException.java" numbered

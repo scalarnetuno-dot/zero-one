@@ -191,17 +191,6 @@ Na quinta, Roberto testou "tecladdo", com dois dês, não achou nada, e voltou
 a mencionar o Google.
 :::
 
-:::art caption="Toda busca começa com uma comparação injusta."
-src="toda-busca-comeca-com-uma-comparacao-injusta.png"
-Charge editorial minimalista: gerente de camisa social apontando para um
-monitor onde se lê apenas a palavra "tecladdo" em um campo de busca vazio.
-Ao lado, sobre a mesa, uma miniatura de data center gigantesco com o rótulo
-"a concorrência", desproporcional em relação a um único servidor pequeno
-rotulado "a gente". Uma desenvolvedora sênior observa a cena com expressão
-paciente. Fundo branco, poucos elementos, humor visual seco, estética de
-revista de tecnologia.
-:::
-
 ## Por que `LIKE '%termo%'` é lento
 
 ```sql

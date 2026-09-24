@@ -2,34 +2,19 @@
 title: "Métodos"
 number: 7
 part: p2
+kicker: "Dar nome a um trecho de código é a forma mais barata de documentação que existe."
+goal: >-
+  Extrair um método com parâmetros e retorno, entender o que é escopo e
+  reconhecer quando uma sobrecarga ajuda e quando ela confunde.
+previa: true
 ---
-
-Este capítulo faz parte da edição completa de Java One.
-
-A prévia apresenta o sumário completo para mostrar o caminho do livro. O conteúdo integral deste capítulo está disponível na edição completa.
 
 ## Da repetição ao método
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## `void` e `return`
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
 
 ## Escopo: onde um nome existe
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## Sobrecarga: mesmo nome, assinaturas diferentes
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## Métodos que documentam regras
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
-:::summary
-
-Na edição completa, este capítulo desenvolve este assunto com exemplos, código e exercícios.
-
-:::

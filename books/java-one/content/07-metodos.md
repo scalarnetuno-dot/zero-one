@@ -90,16 +90,6 @@ Marina apareceu com a caneca e fez a pergunta que não era sobre imposto:
 — Dez. — Carlos pensou um pouco. — Dez que eu achei.
 :::
 
-:::art caption="Uma regra que mora em dez lugares muda em nove."
-src="uma-regra-que-mora-em-dez-lugares-muda-em-nove.png"
-Charge editorial minimalista: desenvolvedor jovem diante de um monitor com
-dez janelas de busca abertas, todas mostrando a mesma linha de código
-repetida. Ao lado, uma desenvolvedora sênior aponta com o dedo para uma única
-caixa desenhada com o rótulo "comImposto()", enquanto as dez janelas se
-dissolvem em setas convergindo para essa caixa. Fundo branco, poucos
-elementos, composição limpa, humor sutil, estética editorial de tecnologia.
-:::
-
 ## Escopo: onde um nome existe
 
 ```java title="Cada chave abre um mundo" numbered

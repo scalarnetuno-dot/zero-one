@@ -2,38 +2,21 @@
 title: "DTOs"
 number: 24
 part: p4
+kicker: "O cliente não precisa saber como a sua tabela é desenhada. E você não quer que ele dependa disso."
+goal: >-
+  Separar entidade de contrato com records de entrada e saída, converter entre
+  os dois e listar três problemas concretos que a exposição direta causa.
+previa: true
 ---
-
-Este capítulo faz parte da edição completa de Java One.
-
-A prévia apresenta o sumário completo para mostrar o caminho do livro. O conteúdo integral deste capítulo está disponível na edição completa.
 
 ## Três problemas concretos
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## Dois records, dois contratos
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
 
 ## A conversão
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## O controlador final da Parte 4
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
 
 ## Ajustando o JSON sem tocar na entidade
 
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
 ## Quando o DTO não vale a pena
-
-Este tópico é desenvolvido na edição completa, com exemplos, código e exercícios.
-
-:::summary
-
-Na edição completa, este capítulo desenvolve este assunto com exemplos, código e exercícios.
-
-:::

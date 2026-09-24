@@ -1,0 +1,108 @@
+# ─── PHP One — Volume 1 · Fundamentos do PHP ───
+# PHP One foi fatiado em dois livros, cada um com numeração própria de
+# capítulos e partes. `companions` deixa `@cap:` apontar para um capítulo
+# do outro volume: vira "11 do volume 1", sem link (volume_label).
+# O livro inteiro, num só, continua em books/php-one.
+
+title: PHP One
+subtitle: Volume 1 · Fundamentos do PHP
+author: Thiago Nogueira
+volume: 3
+accent: purple
+language: pt-BR
+year: 2026
+edition: 1ª edição
+isbn: ''
+description: 'PHP moderno do zero, antes de qualquer framework: tipos, arrays,
+  funções, strings, SQL escrito à mão, PDO, Composer, orientação a objetos, exceções,
+  tipagem estrita, enums, closures, arquivos, datas e erros. O primeiro volume de PHP One — o chão sobre o qual
+  o Laravel do volume 2 é construído.'
+keywords:
+- PHP
+- PHP 8.3
+- fundamentos
+- orientação a objetos
+- Composer
+- PDO
+- SQL
+- MySQL
+- PHPStan
+cover_image: capa.png
+cover_full: true
+cover_bullets:
+- 'PHP moderno: strict types, enums, readonly, match'
+- SQL escrito à mão antes de qualquer ORM
+- Composer, namespaces e autoload sem mistério
+- Exceções de domínio e tipagem estrita, com PHPStan
+- 'A linguagem antes do framework: o volume 2 constrói em cima'
+course_slug: php-one-v1
+volume_label: volume 1
+companions:
+- php-one-v2
+
+# ─── PARTES ─────────────────────────────────────────────────────────────
+parts:
+- id: p1
+  title: PHP do zero
+  blurb: A linguagem antes de qualquer framework. Rodar, errar, ler a mensagem,
+    consertar — e descobrir cedo os dois ou três lugares em que o PHP resolve
+    sozinho o que você não pediu.
+  number: 1
+- id: p2
+  title: O dado precisa morar em algum lugar
+  blurb: Banco de dados no meio da linguagem, não no fim do livro. Arquivo, concorrência,
+    SQL escrito à mão, JOIN, índice e PDO — para que o Eloquent, no volume 2,
+    tenha algo a que ser comparado.
+  number: 2
+- id: p3
+  title: Do script ao projeto
+  blurb: O momento em que um arquivo vira trinta. Composer, autoload, namespaces
+    e as primeiras classes — a fronteira entre escrever PHP e manter um projeto
+    PHP.
+  number: 3
+- id: p4
+  title: O PHP que o Laravel exige
+  blurb: 'Interfaces, exceções, tipagem estrita e enums. Nenhum recurso aparece
+    por ser novo: cada um está aqui porque o framework vai pedir por ele no volume
+    2.'
+  number: 4
+- id: p5
+  title: Antes da web
+  blurb: 'O que falta entre a linguagem e o framework: referências, closures,
+    arquivos grandes, datas com fuso, erros que avisam e um projeto com lugar
+    para cada coisa. A última parte do volume 1 é a primeira porta do volume
+    2.'
+  number: 5
+
+# ─── CAPÍTULOS ──────────────────────────────────────────────────────────
+chapters:
+- 00-antes-de-comecar.md
+- 01-o-php-que-voce-ouviu-falar.md
+- 02-o-que-vamos-construir.md
+- 03-primeiro-programa.md
+- 04-variaveis-e-tipos.md
+- 05-conversao-automatica.md
+- 06-operadores.md
+- 07-condicionais.md
+- 08-arrays.md
+- 09-repeticoes.md
+- 10-funcoes.md
+- 11-strings.md
+- 12-do-arquivo-ao-banco.md
+- 13-sql-do-zero.md
+- 14-duas-tabelas-conversando.md
+- 15-pdo.md
+- 16-do-include-ao-composer.md
+- 17-classes-e-objetos.md
+- 18-namespaces-e-autoload.md
+- 19-encapsulamento.md
+- 20-heranca-interfaces-e-traits.md
+- 21-excecoes.md
+- 22-tipagem-estrita.md
+- 23-enums-datas-e-valores.md
+- 24-escopo-e-referencias.md
+- 25-funcoes-anonimas-e-closures.md
+- 26-manipulacao-de-arquivos.md
+- 27-datas-e-horarios.md
+- 28-erros-e-debug.md
+- 29-como-organizar-um-projeto-php.md

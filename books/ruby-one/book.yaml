@@ -1,0 +1,92 @@
+# ─── VOLUME 5 ────────────────────────────────────────────────────────────────
+title: "Ruby One"
+subtitle: "Do primeiro puts ao contrato em produção"
+author: "Thiago Nogueira"
+volume: 5
+accent: red
+language: pt-BR
+year: 2026
+edition: "1ª edição"
+isbn: ""
+
+description: >-
+  Ruby do zero até o módulo de contratos no ar: objetos, blocos, classes,
+  Rails, Active Record, testes e deploy. Um projeto só, o Nortea Hub, a
+  partir do sistema que o pátio já usa de manhã.
+
+keywords: [Ruby, Rails, Active Record, Bundler, testes, API, backend]
+
+cover_bullets:
+  - "Um projeto só: o contrato da Nortea, do sistema que já está no ar ao módulo novo"
+  - "Ruby primeiro. O Rails entra quando o arquivo dele está na mesa"
+  - "Erros de verdade, lidos linha por linha"
+  - "Legado, convenção e o teste que criava um contrato impossível"
+  - "Sem promessa de 'aprenda em 24 horas' e sem framework antes da dor"
+
+course_slug: ruby-one
+
+# ─── PARTES ──────────────────────────────────────────────────────────────────
+parts:
+  - id: p1
+    title: "O que já está no ar"
+    blurb: >-
+      De onde vieram o Ruby e o Rails, o que o dia 3 de junho cobra do
+      contrato, e o primeiro programa na máquina de quem acabou de receber
+      o acesso.
+  - id: p2
+    title: "A linguagem que o contrato já fala"
+    blurb: >-
+      Objeto, método, decisão, símbolo, lista e bloco. O pedaço do Ruby
+      que o arquivo de produção já usa sem avisar.
+  - id: p3
+    title: "Classes, módulos e falhas"
+    blurb: >-
+      O contrato vira um objeto com nome. O módulo mistura comportamento.
+      A exceção diz o que falhou, em vez de seguir calada.
+  - id: p4
+    title: "Entrando no Rails"
+    blurb: >-
+      O framework que já está em produção desde 2016. Modelo, tabela,
+      associação, validação e o callback duplicado.
+  - id: p5
+    title: "Do pedido à tela"
+    blurb: >-
+      A rota, o controller de trinta e sete commits, a view e o console
+      que a Marta achou que não alterava nada.
+  - id: p6
+    title: "Provar, integrar, publicar"
+    blurb: >-
+      O teste que criava um contrato impossível, o trabalho que não cabe
+      no pedido, a API da Serra Azul e a manhã em que o pátio confere.
+# ─── CAPÍTULOS ───────────────────────────────────────────────────────────────
+chapters:
+  - 00-antes-de-comecar.md
+  - 01-fevereiro-de-1993.md
+  - 02-o-que-vamos-construir.md
+  - 03-primeiro-programa.md
+  - 04-objetos-e-tipos.md
+  - 05-metodos.md
+  - 06-condicionais.md
+  - 07-strings-e-simbolos.md
+  - 08-arrays-e-hashes.md
+  - 09-blocos-e-enumerables.md
+  - 10-classes.md
+  - 11-modulos.md
+  - 12-excecoes.md
+  - 13-gems-e-bundler.md
+  - 14-o-que-e-o-rails.md
+  - 15-modelos.md
+  - 16-migrations.md
+  - 17-associacoes.md
+  - 18-validacoes.md
+  - 19-callbacks.md
+  - 20-rotas.md
+  - 21-controllers.md
+  - 22-views.md
+  - 23-console.md
+  - 24-testes.md
+  - 25-jobs.md
+  - 26-apis.md
+  - 27-autenticacao.md
+  - 28-deploy.md
+  - 29-projeto-final.md

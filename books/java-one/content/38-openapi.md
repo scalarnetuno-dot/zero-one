@@ -195,17 +195,6 @@ Roberto perguntou se não era arriscado apagar a documentação.
 sobre o sistema que trinta pessoas acreditavam ser documentação.
 :::
 
-:::art caption="Documentação que não nasce do código começa a mentir no dia seguinte."
-src="documentacao-que-nao-nasce-do-codigo-comeca-a-mentir-no-dia-seguinte.png"
-Charge editorial minimalista: dois documentos lado a lado. À esquerda, um
-calhamaço de papel impresso, amarelado, com a capa "API v3 FINAL revisado 2"
-e teias de aranha nos cantos. À direita, uma tela limpa de navegador mostrando
-uma lista de endpoints com um botão verde. Entre os dois, uma seta de mão
-única. Ao lado, um desenvolvedor de outra empresa segura o calhamaço com
-expressão confusa. Fundo branco, poucos elementos, humor visual seco,
-estética editorial de tecnologia.
-:::
-
 :::summary
 - O springdoc gera a especificação OpenAPI a partir do código e das
   anotações de validação.

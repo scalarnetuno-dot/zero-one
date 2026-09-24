@@ -1,0 +1,125 @@
+# ─── PHP One — Volume 2 · Laravel e a web ───
+# PHP One foi fatiado em dois livros, cada um com numeração própria de
+# capítulos e partes. `companions` deixa `@cap:` apontar para um capítulo
+# do outro volume: vira "11 do volume 1", sem link (volume_label).
+# O livro inteiro, num só, continua em books/php-one.
+
+title: PHP One
+subtitle: Volume 2 · Acelerando com Laravel
+author: Thiago Nogueira
+volume: 3
+accent: purple
+language: pt-BR
+year: 2026
+edition: 1ª edição
+isbn: ''
+description: 'A API da Biblioteca Casa Amarela, do HTTP cru ao deploy: REST, um
+  framework de quarenta linhas escrito à mão, Laravel, Eloquent, validação, API
+  Resources, erros padronizados, service container, Sanctum, Policies, filas,
+  cache, testes, documentação, deploy — e a vida depois dele: upload,
+  e-mail, notificações e filas em produção. O segundo volume de PHP One.'
+keywords:
+- PHP
+- Laravel
+- API REST
+- Eloquent
+- Sanctum
+- Pest
+- PHPUnit
+- HTTP
+- deploy
+cover_image: capa.png
+cover_full: true
+cover_bullets:
+- Um framework de quarenta linhas, escrito à mão, antes do Laravel
+- Eloquent sobre o SQL que você já sabe escrever
+- API com validação, autorização, filas, testes e documentação
+- Erros padronizados, cache medido e deploy sem plantão
+- 'Continua o volume 1, com numeração própria de capítulos'
+course_slug: php-one-v2
+volume_label: volume 2
+companions:
+- php-one-v1
+
+# ─── PARTES ─────────────────────────────────────────────────────────────
+parts:
+- id: p1
+  title: A web por baixo do framework
+  blurb: HTTP, REST e um framework de quarenta linhas escrito à mão. Depois deste
+    trecho, nenhuma parte do Laravel vai parecer mágica — vai parecer trabalho
+    que alguém já fez.
+  number: 1
+- id: p2
+  title: Dentro do Laravel
+  blurb: Estrutura, configuração, rotas, controllers e respostas. O framework
+    chegando depois do problema, que é a única ordem em que ele faz sentido.
+  number: 2
+- id: p3
+  title: Eloquent sobre o SQL que você já sabe
+  blurb: O ORM entra depois do SQL. Cada método tem uma consulta correspondente
+    que você consegue escrever à mão — e é isso que separa usar o Eloquent de
+    depender dele.
+  number: 3
+- id: p4
+  title: A API de verdade
+  blurb: 'O que separa um CRUD de exercício de uma API que outra pessoa consome:
+    validação, formato de saída, paginação, filtros e erro honesto.'
+  number: 4
+- id: p5
+  title: Arquitetura e segurança
+  blurb: 'Onde a regra de negócio mora, quantas camadas o seu projeto realmente
+    precisa, e as duas perguntas que toda requisição responde: quem é você e o
+    que você pode.'
+  number: 5
+- id: p6
+  title: Depois da resposta
+  blurb: Eventos, filas, cache e log. O trabalho que não cabe dentro da requisição
+    — e o que você vai querer ter medido quando algo quebrar.
+  number: 6
+- id: p7
+  title: Provar e publicar
+  blurb: Testes que dizem o que estão tentando provar, documentação que nasce
+    do código, e o caminho até o dia do deploy sem plantão de madrugada.
+  number: 7
+- id: p8
+  title: O sistema no ar
+  blurb: 'O dia seguinte ao deploy. Os pedidos que só aparecem quando gente de
+    verdade usa o sistema: foto de celular, e-mail que sai assinado por quem
+    não devia e fila que cresce mais rápido do que esvazia.'
+  number: 8
+
+# ─── CAPÍTULOS ──────────────────────────────────────────────────────────
+chapters:
+- 00-antes-de-comecar.md
+- 01-o-que-e-http.md
+- 02-o-que-e-uma-api-rest.md
+- 03-um-framework-de-quarenta-linhas.md
+- 04-o-que-e-o-laravel.md
+- 05-primeiro-projeto-laravel.md
+- 06-configuracao-ambiente-e-artisan.md
+- 07-rotas-e-controllers.md
+- 08-requests-e-responses.md
+- 09-blade.md
+- 10-migrations-seeders-e-factories.md
+- 11-eloquent.md
+- 12-relacionamentos.md
+- 13-o-crud-completo.md
+- 14-validation-e-form-requests.md
+- 15-api-resources.md
+- 16-paginacao-filtros-e-buscas.md
+- 17-erros-padronizados.md
+- 18-service-container.md
+- 19-services.md
+- 20-middleware.md
+- 21-autenticacao.md
+- 22-autorizacao.md
+- 23-events-jobs-e-filas.md
+- 24-cache-logs-e-medicao.md
+- 25-testes.md
+- 26-testes-de-feature-http-e-banco.md
+- 27-documentacao-da-api.md
+- 28-git-ci-e-deploy.md
+- 29-upload-de-arquivos.md
+- 30-mail-e-notificacoes.md
+- 31-queues-na-pratica.md
+- 32-encerramento.md

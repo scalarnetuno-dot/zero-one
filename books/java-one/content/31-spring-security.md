@@ -245,15 +245,6 @@ O endpoint ficou desligado por dois dias, na unha, com uma linha comentada.
 Foi o que deu tempo de fazer até a segurança entrar de verdade.
 :::
 
-:::art caption="Uma API sem autenticação não é privada: é apenas desconhecida."
-src="uma-api-sem-autenticacao-nao-e-privada-e-apenas-desconhecida.png"
-Charge editorial minimalista: porta de casa aberta com uma pequena placa
-escrita "API", sem maçaneta e sem fechadura; ao lado, um capacho onde se lê
-"ninguém sabe que estamos aqui". Um jovem de mochila nas costas, do lado de
-fora, olha para dentro com curiosidade e um celular na mão. Fundo branco,
-poucos elementos, humor visual seco, estética editorial de tecnologia.
-:::
-
 :::summary
 - Autenticação identifica (`401`); autorização permite (`403`).
 - O Spring Security fecha tudo por padrão: você libera explicitamente.

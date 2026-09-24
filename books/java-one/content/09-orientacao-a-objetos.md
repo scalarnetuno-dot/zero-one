@@ -114,17 +114,6 @@ Naquela tarde, a loja passou a vender um teclado com o preço de um cabo HDMI.
 Seu Antônio comprou quatro.
 :::
 
-:::art caption="Quatro listas paralelas são três oportunidades de desalinhar."
-src="quatro-listas-paralelas-sao-tres-oportunidades-de-desalinhar.png"
-Charge editorial minimalista: quatro trilhos de trem paralelos desenhados na
-horizontal, cada um com etiquetas ("nomes", "precos", "estoques", "ativos").
-Em um dos trilhos falta um vagão, e por causa disso os vagões seguintes estão
-todos deslocados uma posição em relação aos outros trilhos. Ao lado, um
-senhor de óculos sorri segurando quatro teclados e uma nota fiscal de valor
-muito baixo. Fundo branco, poucos elementos, humor visual seco, estética de
-revista de tecnologia.
-:::
-
 ## `static` finalmente explicado
 
 Agora a palavra do capítulo 2 faz sentido. Um membro `static` pertence à

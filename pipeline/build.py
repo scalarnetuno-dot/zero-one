@@ -16,6 +16,7 @@ from pathlib import Path
 
 import typst
 
+from .collection_page import COLLECTION_DIR, write_thumbnails
 from .cover import build_front, find_cover_art, merge_with_cover
 from .diagram_png import render_all as render_diagram_png
 from .loader import asset_dir, book_dir, load_book, theme_overrides
@@ -169,6 +170,8 @@ def _build_pdf(book: Book, theme: Theme, out: Path,
         shutil.copytree(assets_src, assets_dst)
     else:
         assets_dst.mkdir(exist_ok=True)
+    shutil.rmtree(src / COLLECTION_DIR, ignore_errors=True)
+    write_thumbnails(book, src / COLLECTION_DIR)
 
     (src / "editorial.tmTheme").write_text(theme.tm_theme(), encoding="utf-8")
 

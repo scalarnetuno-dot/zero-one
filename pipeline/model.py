@@ -234,6 +234,9 @@ class Chapter:
     part: str = ""
     matter: Literal["front", "body", "back"] = "body"
     numbered: bool = True
+    # `previa: true` no front matter: o capítulo fica no sumário, com as
+    # seções, mas o conteúdo não é impresso — só o aviso da edição completa.
+    locked: bool = False
 
     def walk(self) -> Iterator[Block]:
         yield from _walk(self.blocks)
@@ -270,12 +273,34 @@ class BookMeta:
 
 
 @dataclass
+class OtherBook:
+    """Outro volume da coleção, para a página final de indicação."""
+    slug: str
+    title: str
+    subtitle: str
+    cover: Path
+
+
+@dataclass
 class Book:
     meta: BookMeta
     chapters: list[Chapter] = field(default_factory=list)
     parts: list[Part] = field(default_factory=list)
     root: Path = Path(".")
     missing: list[str] = field(default_factory=list)  # listados, ainda não escritos
+    # Prévia: slug → número de todo capítulo do volume completo. Deixa
+    # `@cap:` apontar para um capítulo que ficou fora da prévia.
+    outline: dict[str, int] = field(default_factory=dict)
+    # Volume irmão: slug → "volume 1". O número vira "11 do volume 1".
+    outline_labels: dict[str, str] = field(default_factory=dict)
+    # Os demais volumes da coleção, com capa: a última página do livro.
+    others: list[OtherBook] = field(default_factory=list)
+
+    def outline_ref(self, slug: str) -> str:
+        """Como citar um capítulo que não está neste livro."""
+        label = self.outline_labels.get(slug)
+        number = self.outline[slug]
+        return f"{number} do {label}" if label else str(number)
 
     @property
     def body(self) -> list[Chapter]:

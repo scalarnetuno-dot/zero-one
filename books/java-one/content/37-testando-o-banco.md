@@ -221,16 +221,6 @@ contra o PostgreSQL de verdade falhou imediatamente — e essa falha foi a
 coisa mais útil que aconteceu naquela semana.
 :::
 
-:::art caption="Um teste verde em outro banco é uma opinião sobre outro sistema."
-src="um-teste-verde-em-outro-banco-e-uma-opiniao-sobre-outro-sistema.png"
-Charge editorial minimalista: dois palcos de teatro lado a lado, muito
-parecidos mas não idênticos; no da esquerda, rotulado "H2", um ator ensaia
-tranquilo diante de cadeiras vazias; no da direita, rotulado "PRODUÇÃO", o
-mesmo ator tropeça em um degrau que não existia no outro palco, diante de uma
-plateia cheia. Fundo branco, poucos elementos, humor visual seco, estética
-editorial de tecnologia.
-:::
-
 :::summary
 - `@DataJpaTest` sobe só a camada de dados e desfaz cada teste.
 - Monte o cenário com `TestEntityManager`, não com o repositório testado.

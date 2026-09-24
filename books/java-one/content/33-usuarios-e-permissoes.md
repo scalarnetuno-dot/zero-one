@@ -198,17 +198,6 @@ passou a verificar que um `USER` recebe `403` no `DELETE`.
 O teste é o capítulo 36. Foi o que impediu isso de voltar a acontecer.
 :::
 
-:::art caption="O valor padrão de um campo é uma decisão que ninguém lembra de ter tomado."
-src="o-valor-padrao-de-um-campo-e-uma-decisao-que-ninguem-lembra-de-ter-tomado.png"
-Charge editorial minimalista: crachás corporativos pendurados em uma fileira
-de ganchos, todos idênticos e todos com a palavra "ADMIN" impressa em
-destaque — inclusive os de estagiário, do time de marketing e um marcado como
-"visitante". Ao lado, uma desenvolvedora sênior segura um único crachá
-diferente, escrito "USER", com expressão de quem acabou de perceber algo.
-Fundo branco, poucos elementos, humor visual seco, estética editorial de
-tecnologia.
-:::
-
 :::summary
 - Regra por rota desenha o mapa; `@PreAuthorize` protege o método; o serviço
   decide o que depende do dado.

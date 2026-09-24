@@ -43,6 +43,9 @@ def validate_ast(book: Book, theme: Theme) -> list[Issue]:
     # erro de build, não uma frase errada impressa.
     for ch in book.chapters:
         labels.add(f"cap:{ch.slug}")
+    # Numa prévia, o capítulo que ficou de fora continua sendo alvo válido.
+    for slug in book.outline:
+        labels.add(f"cap:{slug}")
 
     for ch in book.chapters:
         where = f"{ch.source.name if ch.source else ch.slug}"
@@ -51,6 +54,9 @@ def validate_ast(book: Book, theme: Theme) -> list[Issue]:
         if ch.slug in seen_slugs:
             out.append(Issue("error", where, f"slug repetido de '{seen_slugs[ch.slug]}'"))
         seen_slugs[ch.slug] = where
+        # capítulo fechado da prévia: só títulos, de propósito
+        if ch.locked:
+            continue
 
         blocks = list(ch.blocks)
         words = sum(len(plain(b.children).split()) for b in ch.walk()
