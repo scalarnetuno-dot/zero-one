@@ -72,3 +72,12 @@ Laravel y nombres de paquetes; montos en `R$` y fechas de Brasil.
 
 Se tutea al lector (tú), español neutro. Diálogos con raya (—), como en el
 original.
+
+## Columnas del esquema (v1)
+
+| pt-BR | es |
+|---|---|
+| exemplares.estado: bom · emprestado · restauro · danificado · extraviado | ejemplares.condicion: bueno · prestado · restauracion · danado · extraviado |
+| chave `status` em arrays (disponivel · emprestado · restauro) | clave `status` (disponible · prestado · restauracion) |
+| leitores: nome · documento · cadastro_em · telefone | lectores: nombre · documento · registrado_en · telefono |
+| removido_em | eliminado_en |
