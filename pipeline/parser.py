@@ -126,9 +126,13 @@ class ParseError(Exception):
     pass
 
 
-def parse_chapter(path: Path, default_number: int = 0) -> Chapter:
+def parse_chapter(path: Path, default_number: int = 0,
+                  overrides: dict[str, Any] | None = None) -> Chapter:
+    """Lê um capítulo. `overrides` sobrepõe o front matter — a tradução
+    herda número, slug e parte do original; a prévia marca `previa`."""
     raw = path.read_text(encoding="utf-8")
     meta, body = _front_matter(raw)
+    meta.update(overrides or {})
     lines = body.splitlines()
 
     chapter = Chapter(

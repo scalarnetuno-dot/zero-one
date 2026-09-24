@@ -1,0 +1,67 @@
+# php-one-v2 — English translation.
+# Official source: ../../book.yaml, in Portuguese. Only translated fields
+# live here; everything else (chapters, color, volume) is inherited.
+language: en-US
+title: PHP One
+subtitle: Volume 2 · Speeding Up with Laravel
+edition: 1st edition
+description: 'The Casa Amarela Library API, from raw HTTP to deploy: REST, a
+  forty-line framework written by hand, Laravel, Eloquent, validation, API
+  Resources, standardized errors, the service container, Sanctum, Policies,
+  queues, caching, tests, documentation, deploy — and life after it: uploads,
+  e-mail, notifications and queues in production. The second volume of PHP One.'
+keywords:
+- PHP
+- Laravel
+- REST API
+- Eloquent
+- Sanctum
+- Pest
+- PHPUnit
+- HTTP
+- deploy
+cover_bullets:
+- A forty-line framework, written by hand, before Laravel
+- Eloquent on top of the SQL you already know how to write
+- An API with validation, authorization, queues, tests and docs
+- Standardized errors, measured caching and a deploy with no on-call night
+- 'Continues volume 1, with its own chapter numbering'
+volume_label: volume 2
+parts:
+- id: p1
+  title: The web beneath the framework
+  blurb: HTTP, REST and a forty-line framework written by hand. After this
+    stretch, no part of Laravel will look like magic — it will look like work
+    someone already did.
+- id: p2
+  title: Inside Laravel
+  blurb: Structure, configuration, routes, controllers and responses. The
+    framework arriving after the problem, which is the only order in which it
+    makes sense.
+- id: p3
+  title: Eloquent on top of the SQL you already know
+  blurb: The ORM comes after SQL. Every method has a matching query you can
+    write by hand — and that is what separates using Eloquent from depending on
+    it.
+- id: p4
+  title: The real API
+  blurb: 'What separates a textbook CRUD from an API someone else consumes:
+    validation, output format, pagination, filters and honest errors.'
+- id: p5
+  title: Architecture and security
+  blurb: 'Where the business rule lives, how many layers your project really
+    needs, and the two questions every request answers: who are you and what
+    are you allowed to do.'
+- id: p6
+  title: After the response
+  blurb: Events, queues, caching and logs. The work that does not fit inside the
+    request — and what you will want to have measured when something breaks.
+- id: p7
+  title: Prove it and ship it
+  blurb: Tests that say what they are trying to prove, documentation that is
+    born from the code, and the road to deploy day without a night on call.
+- id: p8
+  title: The system in production
+  blurb: 'The day after the deploy. The requests that only show up when real
+    people use the system: phone photos, e-mail signed by the wrong sender and
+    a queue that grows faster than it drains.'

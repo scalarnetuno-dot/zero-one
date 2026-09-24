@@ -139,7 +139,7 @@
       block(width: 52mm, height: 32mm, fill: white, inset: 3mm, radius: 0pt)[
         #set align(center + horizon)
         #text(size: 6.5pt, fill: rgb("#9A9A9A"))[
-          {% if isbn %}ISBN {{ isbn }}{% else %}código de barras{% endif %}
+          {% if isbn %}ISBN {{ isbn }}{% else %}{{ barcode }}{% endif %}
         ]
       ]
     )

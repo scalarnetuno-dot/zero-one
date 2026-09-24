@@ -1,0 +1,55 @@
+# php-one-v1 — English translation.
+# Official source: ../../book.yaml, in Portuguese. Only translated fields
+# live here; everything else (chapters, color, volume) is inherited.
+language: en-US
+title: PHP One
+subtitle: Volume 1 · PHP Fundamentals
+edition: 1st edition
+description: 'Modern PHP from scratch, before any framework: types, arrays,
+  functions, strings, hand-written SQL, PDO, Composer, object orientation,
+  exceptions, strict typing, enums, closures, files, dates and errors. The first
+  volume of PHP One — the ground on which volume 2''s Laravel is built.'
+keywords:
+- PHP
+- PHP 8.3
+- fundamentals
+- object-oriented programming
+- Composer
+- PDO
+- SQL
+- MySQL
+- PHPStan
+cover_bullets:
+- 'Modern PHP: strict types, enums, readonly, match'
+- SQL written by hand before any ORM
+- Composer, namespaces and autoload without the mystery
+- Domain exceptions and strict typing, with PHPStan
+- 'The language before the framework: volume 2 builds on it'
+volume_label: volume 1
+parts:
+- id: p1
+  title: PHP from scratch
+  blurb: The language before any framework. Run, fail, read the message, fix it
+    — and find out early the two or three places where PHP quietly decides
+    something you never asked for.
+- id: p2
+  title: Data needs somewhere to live
+  blurb: Databases in the middle of the language, not at the end of the book.
+    Files, concurrency, hand-written SQL, JOIN, indexes and PDO — so that
+    Eloquent, in volume 2, has something to be compared with.
+- id: p3
+  title: From script to project
+  blurb: The moment one file becomes thirty. Composer, autoload, namespaces and
+    the first classes — the border between writing PHP and maintaining a PHP
+    project.
+- id: p4
+  title: The PHP that Laravel demands
+  blurb: 'Interfaces, exceptions, strict typing and enums. No feature is here
+    because it is new: each one is here because the framework will ask for it
+    in volume 2.'
+- id: p5
+  title: Before the web
+  blurb: 'What sits between the language and the framework: references,
+    closures, large files, dates with time zones, errors that warn you, and a
+    project with a place for everything. The last part of volume 1 is the first
+    door into volume 2.'

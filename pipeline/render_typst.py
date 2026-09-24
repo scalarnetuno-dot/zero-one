@@ -12,7 +12,7 @@ from pathlib import Path
 
 from .collection_page import COLLECTION_DIR, other_cover_name
 from .diagrams import DiagramLayout, build as build_diagram
-from .loader import asset_dir
+from .loader import asset_path
 from .parser import parse_inline
 from .model import (
     Anatomy, Block, Book, Callout, Chapter, Code, CodeBlock, Compare, Diagram,
@@ -207,7 +207,7 @@ class TypstRenderer:
         try:
             from PIL import Image
 
-            caminho = asset_dir(self.book) / Path(src).name
+            caminho = asset_path(self.book, src)
             with Image.open(caminho) as im:
                 proporcao = im.height / im.width
         except Exception:
@@ -384,7 +384,7 @@ class TypstRenderer:
             f"  author: {tstr(m.author)},\n"
             f"  keywords: ({', '.join(tstr(k) for k in m.keywords)}{',' if m.keywords else ''}),\n"
             f"  lang: {tstr(m.language.split('-')[0])},\n"
-            f"  region: {tstr(m.language.split('-')[-1])},\n"
+            f"  region: {tstr(m.language.split('-')[-1]) if '-' in m.language else 'none'},\n"
             f"  gutter-extra: {th.gutter_extra(self.pages)},\n"
             ")\n"
         )

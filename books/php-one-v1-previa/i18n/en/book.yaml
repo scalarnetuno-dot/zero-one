@@ -1,0 +1,16 @@
+# Preview of PHP One, Volume 1 — English.
+# Chapters come from php-one-v1-en; the light images from ../../assets.
+title: "PHP One — Preview"
+edition: "Preview · 1st edition"
+description: >-
+  A preview of PHP One, Volume 1: modern PHP from scratch, before any
+  framework. This edition has the full table of contents of all 29 chapters
+  and the complete text of a sample of them — the opening, automatic type
+  conversion, hand-written SQL and the first class — so you can feel the
+  book's rhythm before moving on to the full edition.
+keywords: [preview]
+cover_bullets:
+  - "Free preview — full table of contents, sample chapters unlocked"
+  - "A real system from 2009, modernized chapter by chapter"
+  - "SQL written by hand before any ORM"
+  - "Types, exceptions, enums and Composer in the full edition"

@@ -4,6 +4,8 @@
 #   make list              lista os volumes
 #   make check BOOK=java-one
 #   make preview BOOK=java-one  gera java-one-previa
+#   make i18n                    situação das traduções (pt-BR é a fonte)
+#   make book  BOOK=php-one-v1-en   um volume traduzido
 #   make book  BOOK=java-one     PDF + EPUB
 #   make cover BOOK=java-one     capa da KDP (depois do build)
 #   make kdp   BOOK=java-one     miolo + capa, prontos para subir
@@ -14,7 +16,7 @@ PYTHON ?= python
 BOOK   ?= java-one
 
 .DEFAULT_GOAL := help
-.PHONY: help setup list check preview book cover kdp all clean fonts
+.PHONY: help setup list check preview book cover kdp all clean fonts i18n
 
 help:
 	@$(PYTHON) -c "print(open('Makefile', encoding='utf-8').read().split('\n\n')[0])"
@@ -34,6 +36,9 @@ check:
 preview:
 	$(PYTHON) -m pipeline preview $(BOOK)
 	$(PYTHON) -m pipeline build $(BOOK)-previa
+
+i18n:
+	$(PYTHON) -m pipeline i18n all
 
 book:
 	$(PYTHON) -m pipeline build $(BOOK)

@@ -1,0 +1,16 @@
+# Vista previa de PHP One, Volumen 1 — español.
+# Los capítulos vienen de php-one-v1-es; las imágenes ligeras, de ../../assets.
+title: "PHP One — Vista previa"
+edition: "Vista previa · 1.ª edición"
+description: >-
+  Vista previa de PHP One, Volumen 1: PHP moderno desde cero, antes de
+  cualquier framework. Esta edición trae el índice completo de los 29
+  capítulos y el contenido íntegro de una muestra — la apertura, la
+  conversión automática de tipos, el SQL escrito a mano y la primera clase —
+  para que sientas el ritmo del libro antes de pasar a la edición completa.
+keywords: [vista previa]
+cover_bullets:
+  - "Vista previa gratuita — índice completo, capítulos de muestra liberados"
+  - "Un sistema real de 2009, modernizado capítulo a capítulo"
+  - "SQL escrito a mano antes de cualquier ORM"
+  - "Tipos, excepciones, enums y Composer en la edición completa"

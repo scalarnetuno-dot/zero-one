@@ -17,7 +17,7 @@ from .model import (
     Exercise, Figure, Heading, Http, ListBlock, Paragraph, Ref, Story, Summary,
     Table, Text, Tree, plain,
 )
-from .loader import asset_dir
+from .loader import asset_path
 from .theme import Theme, _mm
 
 Level = Literal["error", "warn", "info"]
@@ -87,6 +87,11 @@ def validate_ast(book: Book, theme: Theme) -> list[Issue]:
 
     for name in book.missing:
         out.append(Issue("info", "book.yaml", f"capítulo ainda não escrito: {name}"))
+    for name in book.untranslated:
+        out.append(Issue("warn", name, "sem tradução: sai o original em português"))
+    for name in book.outdated:
+        out.append(Issue("warn", name, "tradução desatualizada: o original em "
+                         "português mudou (source_hash)"))
 
     for target, where in refs:
         if target.split(":", 1)[-1] and target not in labels:
@@ -122,7 +127,7 @@ def _check_block(b: Block, ch: Chapter, book: Book, where: str, theme: Theme,
             labels.add(f"lst:{b.id}")
 
     elif isinstance(b, Figure):
-        path = (ch.source.parent.parent / b.src) if ch.source else Path(b.src)
+        path = asset_path(book, b.src) if ch.source else Path(b.src)
         if not path.exists():
             out.append(Issue("error", where, f"imagem ausente: {b.src}"))
         else:
@@ -213,7 +218,7 @@ def _check_block(b: Block, ch: Chapter, book: Book, where: str, theme: Theme,
 
     elif isinstance(b, Art):
         if b.src:
-            path = (asset_dir(book) / Path(b.src).name
+            path = (asset_path(book, b.src)
                 if ch.source else Path(b.src))
             if not path.exists():
                 out.append(Issue("error", where, f"arte ausente: {b.src}"))
