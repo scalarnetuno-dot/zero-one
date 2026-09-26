@@ -294,12 +294,13 @@ class TypstRenderer:
         return "\n".join(out) + "\n"
 
     def table(self, b: Table) -> str:
-        # a coluna de conteúdo mais largo estica; as outras se ajustam
-        widths = [max((len(plain(r[i])) for r in b.rows), default=0)
+        # Frações proporcionais evitam que colunas auto esmaguem as vizinhas.
+        widths = [max([len(plain(b.header[i]))]
+                      + [len(plain(r[i])) for r in b.rows])
                   for i in range(len(b.header))]
-        elastic = widths.index(max(widths)) if widths else 0
-        cols = ", ".join("1fr" if i == elastic else "auto"
-                         for i in range(len(b.header)))
+        smallest = min(widths, default=1) or 1
+        weights = [min(3, max(1, round(width / smallest))) for width in widths]
+        cols = ", ".join(f"{weight}fr" for weight in weights)
         cols += "," if len(b.header) == 1 else ""
         aligns = ", ".join(b.align[i] if i < len(b.align) else "left"
                            for i in range(len(b.header)))
