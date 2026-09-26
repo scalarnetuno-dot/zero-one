@@ -1,0 +1,75 @@
+# java-one — English translation.
+# Official source: ../../book.yaml, in Portuguese. Only translated fields
+# live here; everything else (chapters, colors, volume) is inherited.
+language: en-US
+title: "Java One"
+subtitle: "From the first println to a REST API in production"
+edition: "1st edition"
+description: >-
+  Java from scratch to a complete REST API: Spring Boot, PostgreSQL, JPA,
+  validation, JWT, tests and Docker. A single project grows chapter by
+  chapter — no loose examples, no theory before it is needed.
+keywords: [Java, Spring Boot, REST API, JPA, PostgreSQL, JWT, CRUD, backend]
+cover_bullets:
+  - "One project, growing from chapter 1 to 42"
+  - "Each concept shows up when the project needs it"
+  - "Real errors, read line by line"
+  - "An API with validation, security, tests and Docker"
+  - "No mandatory IDE and no magic XML"
+parts:
+  - id: p1
+    title: "Starting from zero"
+    blurb: >-
+      You write Java before you understand Java. The language comes in
+      through practice: compile, fail, read the error, fix it.
+  - id: p2
+    title: "The Java you actually need"
+    blurb: >-
+      Not the whole language — the part of it that holds up an API.
+      Methods, collections, objects, exceptions and streams, in the exact
+      dose.
+  - id: p3
+    title: "Into Spring Boot"
+    blurb: >-
+      The framework that writes the plumbing for you. And the price of it:
+      understanding who is calling your code.
+  - id: p4
+    title: "Building the CRUD"
+    blurb: >-
+      The backbone of the book. Entity, database, repository, service,
+      controller and DTO — in that order, one layer at a time.
+  - id: p5
+    title: "A real API"
+    blurb: >-
+      What separates a practice CRUD from an API someone else uses:
+      validation, honest errors, pagination and search.
+  - id: p6
+    title: "Relationships"
+    blurb: >-
+      When tables know each other, JPA becomes powerful and dangerous in
+      equal measure. Here is the map of the potholes.
+  - id: p7
+    title: "Security"
+    blurb: >-
+      Authentication, authorization and a token that says who you are
+      without the server having to remember.
+  - id: p8
+    title: "Tests"
+    blurb: >-
+      The safety net that lets you change code without fear. Unit,
+      integration and a real database inside the test.
+  - id: p9
+    title: "Documentation and tools"
+    blurb: >-
+      An API nobody knows how to use does not exist. And a project without
+      history has no way back.
+  - id: p10
+    title: "Final project"
+    blurb: >-
+      No more spoon-feeding. You get the requirements and build the whole
+      store — and then put it online.
+cover_text:                  # frases da arte, reescritas por cover_i18n
+  subtitle: ["From zero", "to CRUD", "with", "Spring Boot"]
+  tagline: ["We had a", "change", "of scope."]
+  quadro: ["IDEA", "CODE", "RESULT"]
+  caneca: ["COFFEE", "COMPILES", "IT ALL"]

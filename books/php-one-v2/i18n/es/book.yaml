@@ -1,0 +1,72 @@
+# php-one-v2 — traducción al español.
+# Fuente oficial: ../../book.yaml, en portugués. Aquí solo van los campos
+# traducidos; el resto (capítulos, color, volumen) se hereda.
+language: es
+title: PHP One
+subtitle: Volumen 2 · Acelerando con Laravel
+edition: 1.ª edición
+description: 'La API de la Biblioteca Casa Amarela, del HTTP crudo al deploy:
+  REST, un framework de cuarenta líneas escrito a mano, Laravel, Eloquent,
+  validación, API Resources, errores estandarizados, service container,
+  Sanctum, Policies, colas, caché, pruebas, documentación, deploy — y la vida
+  después: subida de archivos, correo, notificaciones y colas en producción. El
+  segundo volumen de PHP One.'
+keywords:
+- PHP
+- Laravel
+- API REST
+- Eloquent
+- Sanctum
+- Pest
+- PHPUnit
+- HTTP
+- deploy
+cover_bullets:
+- Un framework de cuarenta líneas, escrito a mano, antes de Laravel
+- Eloquent sobre el SQL que ya sabes escribir
+- API con validación, autorización, colas, pruebas y documentación
+- Errores estandarizados, caché medida y deploy sin guardia nocturna
+- 'Continúa el volumen 1, con numeración propia de capítulos'
+volume_label: volumen 2
+parts:
+- id: p1
+  title: La web debajo del framework
+  blurb: HTTP, REST y un framework de cuarenta líneas escrito a mano. Después de
+    este tramo, ninguna parte de Laravel va a parecer magia — va a parecer
+    trabajo que alguien ya hizo.
+- id: p2
+  title: Dentro de Laravel
+  blurb: Estructura, configuración, rutas, controllers y respuestas. El
+    framework llegando después del problema, que es el único orden en el que
+    tiene sentido.
+- id: p3
+  title: Eloquent sobre el SQL que ya sabes
+  blurb: El ORM llega después del SQL. Cada método tiene una consulta
+    correspondiente que puedes escribir a mano — y eso es lo que separa usar
+    Eloquent de depender de él.
+- id: p4
+  title: La API de verdad
+  blurb: 'Lo que separa un CRUD de ejercicio de una API que otra persona
+    consume: validación, formato de salida, paginación, filtros y errores
+    honestos.'
+- id: p5
+  title: Arquitectura y seguridad
+  blurb: 'Dónde vive la regla de negocio, cuántas capas necesita realmente tu
+    proyecto, y las dos preguntas que responde toda solicitud: quién eres y qué
+    puedes hacer.'
+- id: p6
+  title: Después de la respuesta
+  blurb: Eventos, colas, caché y logs. El trabajo que no cabe dentro de la
+    solicitud — y lo que vas a querer haber medido cuando algo se rompa.
+- id: p7
+  title: Probar y publicar
+  blurb: Pruebas que dicen lo que intentan demostrar, documentación que nace
+    del código, y el camino hasta el día del deploy sin guardia de madrugada.
+- id: p8
+  title: El sistema en producción
+  blurb: 'El día siguiente al deploy. Los pedidos que solo aparecen cuando
+    gente de verdad usa el sistema: fotos del celular, correos firmados por
+    quien no debía y una cola que crece más rápido de lo que se vacía.'
+cover_text:                  # frases da arte, reescritas por cover_i18n
+  subtitle: ["Acelerando", "con Laravel"]
+  tagline: ["Menos teoría", "vacía.", "Más código", "que funciona."]

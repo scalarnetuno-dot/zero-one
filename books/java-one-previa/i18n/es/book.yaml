@@ -1,0 +1,17 @@
+# Vista previa de Java One — español.
+# Los capítulos vienen de java-one-es; las imágenes livianas, de ../../assets.
+title: "Java One — Vista previa"
+edition: "Vista previa · 1.ª edición"
+description: >-
+  Vista previa de Java One: Java desde cero hasta una API REST completa con
+  Spring Boot, PostgreSQL, JPA, validación, JWT, pruebas y Docker. Esta
+  edición trae el índice completo de los 42 capítulos y el contenido íntegro
+  de una muestra de ellos —el comienzo, la entrada en Spring, la base de
+  datos y el control de versiones— para que sientas el ritmo del libro antes
+  de pasar a la edición completa.
+keywords: [vista previa]
+cover_bullets:
+  - "Vista previa gratuita: índice completo, muestra de capítulos liberada"
+  - "Un solo proyecto, creciendo del capítulo 1 al 42 en la edición completa"
+  - "Cada concepto aparece cuando el proyecto lo necesita"
+  - "Una API con validación, seguridad, pruebas y Docker en la edición completa"

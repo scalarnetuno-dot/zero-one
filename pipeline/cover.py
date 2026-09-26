@@ -15,7 +15,7 @@ from pathlib import Path
 
 import typst
 
-from .loader import asset_dir, book_dir, load_book, load_config, theme_overrides
+from .loader import cover_art_path, load_book, load_config, theme_overrides
 from .model import Book
 from .theme import FONTS, Theme, _mm, load_theme
 
@@ -32,21 +32,9 @@ def spine_width(pages: int, paper: str = "white") -> float:
 
 def find_cover_art(slug: str, book: Book | None = None) -> Path | None:
     """A arte da capa do volume: `cover_image:` no book.yaml ou assets/capa.png."""
-    book = book or load_book(slug)
-    d = book.root
-    named = book.meta.extra.get("cover_image")
-    if named:
-        p = asset_dir(book) / Path(str(named)).name
-        if p.exists():
-            return p
-        # prévia leve: a arte da capa vira JPEG, com o mesmo nome
-        jpg = p.with_suffix(".jpg")
-        return jpg if jpg.exists() else None
-    for name in COVER_ART_NAMES:
-        p = asset_dir(book) / name
-        if p.exists():
-            return p
-    return None
+    # prévia leve: a arte da capa vira JPEG, com o mesmo nome; tradução
+    # só usa arte do próprio idioma (ver loader.cover_art_path)
+    return cover_art_path(slug)
 
 
 def _sources(slug: str, mode: str, pages: int, out: Path,
@@ -99,6 +87,7 @@ def _sources(slug: str, mode: str, pages: int, out: Path,
         collection_name=coll.get("name", ""),
         isbn=m.isbn,
         lang=m.language.split("-")[0],
+        barcode=theme.s("barcode"),
     )
     suffix = "capa-kdp" if mode == "wrap" else "capa"
     src = src_dir / f"{slug}-{suffix}.typ"

@@ -1,0 +1,59 @@
+# php-one-v1 — traducción al español.
+# Fuente oficial: ../../book.yaml, en portugués. Aquí solo van los campos
+# traducidos; el resto (capítulos, color, volumen) se hereda.
+language: es
+title: PHP One
+subtitle: Volumen 1 · Fundamentos de PHP
+edition: 1.ª edición
+description: 'PHP moderno desde cero, antes de cualquier framework: tipos,
+  arrays, funciones, strings, SQL escrito a mano, PDO, Composer, orientación a
+  objetos, excepciones, tipado estricto, enums, closures, archivos, fechas y
+  errores. El primer volumen de PHP One — el suelo sobre el que se construye el
+  Laravel del volumen 2.'
+keywords:
+- PHP
+- PHP 8.3
+- fundamentos
+- orientación a objetos
+- Composer
+- PDO
+- SQL
+- MySQL
+- PHPStan
+cover_bullets:
+- 'PHP moderno: strict types, enums, readonly, match'
+- SQL escrito a mano antes de cualquier ORM
+- Composer, namespaces y autoload sin misterio
+- Excepciones de dominio y tipado estricto, con PHPStan
+- 'El lenguaje antes del framework: el volumen 2 construye encima'
+volume_label: volumen 1
+parts:
+- id: p1
+  title: PHP desde cero
+  blurb: El lenguaje antes de cualquier framework. Ejecutar, equivocarse, leer
+    el mensaje, corregir — y descubrir pronto los dos o tres lugares en los que
+    PHP resuelve solo lo que nadie le pidió.
+- id: p2
+  title: El dato necesita vivir en algún lugar
+  blurb: La base de datos en medio del lenguaje, no al final del libro. Archivo,
+    concurrencia, SQL escrito a mano, JOIN, índices y PDO — para que Eloquent,
+    en el volumen 2, tenga algo con qué compararse.
+- id: p3
+  title: Del script al proyecto
+  blurb: El momento en que un archivo se convierte en treinta. Composer,
+    autoload, namespaces y las primeras clases — la frontera entre escribir PHP
+    y mantener un proyecto PHP.
+- id: p4
+  title: El PHP que Laravel exige
+  blurb: 'Interfaces, excepciones, tipado estricto y enums. Ningún recurso
+    aparece por ser nuevo: cada uno está aquí porque el framework lo va a pedir
+    en el volumen 2.'
+- id: p5
+  title: Antes de la web
+  blurb: 'Lo que falta entre el lenguaje y el framework: referencias, closures,
+    archivos grandes, fechas con zona horaria, errores que avisan y un proyecto
+    con un lugar para cada cosa. La última parte del volumen 1 es la primera
+    puerta del volumen 2.'
+cover_text:                  # frases da arte, reescritas por cover_i18n
+  subtitle: ["Fundamentos", "de PHP"]
+  tagline: ["Menos teoría", "vacía.", "Más código", "que funciona."]

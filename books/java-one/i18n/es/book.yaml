@@ -1,0 +1,73 @@
+# java-one — traducción al español.
+# Fuente oficial: ../../book.yaml, en portugués. Aquí solo van los campos
+# traducidos; el resto (capítulos, colores, volumen) se hereda.
+language: es
+title: "Java One"
+subtitle: "Del primer println a una API REST en producción"
+edition: "1.ª edición"
+description: >-
+  Java desde cero hasta una API REST completa: Spring Boot, PostgreSQL, JPA,
+  validación, JWT, pruebas y Docker. Un único proyecto crece capítulo a
+  capítulo: nada de ejemplos sueltos, nada de teoría antes de tiempo.
+keywords: [Java, Spring Boot, API REST, JPA, PostgreSQL, JWT, CRUD, backend]
+cover_bullets:
+  - "Un solo proyecto, creciendo del capítulo 1 al 42"
+  - "Cada concepto aparece cuando el proyecto lo necesita"
+  - "Errores de verdad, leídos línea por línea"
+  - "Una API con validación, seguridad, pruebas y Docker"
+  - "Sin IDE obligatorio y sin XML mágico"
+parts:
+  - id: p1
+    title: "Empezando desde cero"
+    blurb: >-
+      Escribes Java antes de entender Java. El lenguaje entra por la puerta
+      de la práctica: compilar, fallar, leer el error, arreglarlo.
+  - id: p2
+    title: "El Java que de verdad necesitas"
+    blurb: >-
+      No el lenguaje entero: la parte que sostiene una API. Métodos,
+      colecciones, objetos, excepciones y streams, en la dosis justa.
+  - id: p3
+    title: "Entrando en Spring Boot"
+    blurb: >-
+      El framework que escribe la plomería por ti. Y su precio: entender
+      quién está llamando a tu código.
+  - id: p4
+    title: "Construyendo el CRUD"
+    blurb: >-
+      La columna vertebral del libro. Entidad, base de datos, repositorio,
+      servicio, controlador y DTO, en ese orden, una capa a la vez.
+  - id: p5
+    title: "Una API de verdad"
+    blurb: >-
+      Lo que separa un CRUD de ejercicio de una API que otra persona usa:
+      validación, errores honestos, paginación y búsqueda.
+  - id: p6
+    title: "Relaciones"
+    blurb: >-
+      Cuando las tablas se conocen, JPA se vuelve poderoso y peligroso en
+      la misma medida. Aquí está el mapa de los baches.
+  - id: p7
+    title: "Seguridad"
+    blurb: >-
+      Autenticación, autorización y un token que dice quién eres sin que el
+      servidor tenga que recordarlo.
+  - id: p8
+    title: "Pruebas"
+    blurb: >-
+      La red que permite tocar el código sin miedo. Unitarias, de
+      integración y una base de datos de verdad dentro de la prueba.
+  - id: p9
+    title: "Documentación y herramientas"
+    blurb: >-
+      Una API que nadie sabe usar no existe. Y un proyecto sin historial no
+      tiene vuelta atrás.
+  - id: p10
+    title: "Proyecto final"
+    blurb: >-
+      Ahora sin masticar. Recibes los requisitos y construyes la tienda
+      entera, y después la pones en línea.
+cover_text:                  # frases del arte, reescritas por cover_i18n
+  subtitle: ["De cero", "al CRUD", "con", "Spring Boot"]
+  tagline: ["Tuvimos", "un cambio", "de alcance."]
+  caneca: ["EL CAFÉ", "LO COMPILA", "TODO"]

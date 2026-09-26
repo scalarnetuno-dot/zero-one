@@ -11,6 +11,7 @@ Famílias:
     IBM Plex Serif  → corpo do texto
     IBM Plex Sans   → títulos, rótulos, números
     IBM Plex Mono   → código
+    Kalam           → frases manuscritas das capas traduzidas (cover_i18n)
 
 Só arquivos ESTÁTICOS: o Typst lê apenas a instância padrão de fontes
 variáveis, e a coleção precisa de Light/Medium/SemiBold/Bold de verdade.
@@ -41,6 +42,8 @@ SOURCES += [(f"{PLEX}/plex-sans/fonts/complete/ttf/IBMPlexSans-{s}.ttf",
              f"IBMPlexSans-{s}.ttf") for s in SANS_STYLES]
 SOURCES += [(f"{GF}/ibmplexmono/IBMPlexMono-{s}.ttf", f"IBMPlexMono-{s}.ttf")
             for s in MONO_STYLES]
+# Kalam → só para reescrever as frases da arte nas capas traduzidas
+SOURCES += [(f"{GF}/kalam/Kalam-Bold.ttf", "Kalam-Bold.ttf")]
 
 LICENSES = [
     (f"{GF}/ibmplexserif/OFL.txt", "licenses/IBMPlex-OFL.txt"),

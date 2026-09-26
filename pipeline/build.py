@@ -19,7 +19,7 @@ import typst
 from .collection_page import COLLECTION_DIR, write_thumbnails
 from .cover import build_front, find_cover_art, merge_with_cover
 from .diagram_png import render_all as render_diagram_png
-from .loader import asset_dir, book_dir, load_book, theme_overrides
+from .loader import asset_dirs, load_book, theme_overrides
 from .model import Art, Book
 from .render_epub import write_epub
 from .render_typst import render as render_typst
@@ -163,13 +163,13 @@ def _build_pdf(book: Book, theme: Theme, out: Path,
     src = out / "typst"
     src.mkdir(parents=True, exist_ok=True)
 
-    assets_src = asset_dir(book)
+    # da pasta mais geral para a mais específica: a tradução sobrescreve
     assets_dst = src / "assets"
-    if assets_src.exists():
-        shutil.rmtree(assets_dst, ignore_errors=True)
-        shutil.copytree(assets_src, assets_dst)
-    else:
-        assets_dst.mkdir(exist_ok=True)
+    shutil.rmtree(assets_dst, ignore_errors=True)
+    assets_dst.mkdir(parents=True)
+    for assets_src in reversed(asset_dirs(book)):
+        if assets_src.exists():
+            shutil.copytree(assets_src, assets_dst, dirs_exist_ok=True)
     shutil.rmtree(src / COLLECTION_DIR, ignore_errors=True)
     write_thumbnails(book, src / COLLECTION_DIR)
 

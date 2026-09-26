@@ -18,7 +18,7 @@ from pathlib import Path
 
 from .collection_page import COLLECTION_DIR, other_cover_name, write_thumbnails
 from .diagrams import DiagramLayout, build as build_diagram
-from .loader import asset_dir
+from .loader import asset_path
 from .model import (
     Anatomy, Block, Book, Callout, Chapter, Code, CodeBlock, Compare, Diagram,
     Em, Example, Exercise, Figure, Heading, Http, Inline, Link, ListBlock,
@@ -569,20 +569,18 @@ def write_epub(book: Book, theme: Theme, out: Path,
         manifest.append(f'    <item id="{item_id}" href="{rel}" '
                         f'media-type="image/png"/>')
 
-    assets = asset_dir(book)
     # figura e ilustração: as duas precisam viajar dentro do EPUB
     used = {Path(b.src).name for _, b in book.walk()
             if isinstance(b, (Figure, Art)) and getattr(b, "src", "")}
     asset_files: list[Path] = []
-    if assets.exists():
-        for p in sorted(assets.glob("*")):
-            # só o que o livro realmente usa: a arte da capa já vira cover.png
-            if p.name in used and p.suffix.lower() in (".png", ".jpg", ".jpeg", ".svg"):
-                asset_files.append(p)
-                mime = {"png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg",
-                        "svg": "image/svg+xml"}[p.suffix.lower().lstrip(".")]
-                manifest.append(f'    <item id="a_{p.stem}" href="assets/{p.name}" '
-                                f'media-type="{mime}"/>')
+    # só o que o livro realmente usa: a arte da capa já vira cover.png
+    for p in sorted(asset_path(book, name) for name in used):
+        if p.exists() and p.suffix.lower() in (".png", ".jpg", ".jpeg", ".svg"):
+            asset_files.append(p)
+            mime = {"png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg",
+                    "svg": "image/svg+xml"}[p.suffix.lower().lstrip(".")]
+            manifest.append(f'    <item id="a_{p.stem}" href="assets/{p.name}" '
+                            f'media-type="{mime}"/>')
 
     for p in others:
         manifest.append(f'    <item id="o_{p.stem.replace("-", "_")}" '

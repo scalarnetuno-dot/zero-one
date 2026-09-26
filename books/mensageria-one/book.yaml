@@ -1,0 +1,101 @@
+# ─── Mensageria One — RabbitMQ na prática, com PHP e a Mirabel ───
+# O roteiro completo (6 partes, 25 capítulos) está em ROTEIRO.md.
+# Livro completo: 6 partes, 25 capítulos numerados, abertura e encerramento.
+
+title: Mensageria One
+subtitle: RabbitMQ do primeiro publish à Black Friday sem perder pedido
+author: Thiago Nogueira
+volume: 6
+accent: teal
+language: pt-BR
+year: 2026
+edition: 1ª edição
+isbn: ''
+description: >-
+  O que você precisa entender para usar RabbitMQ de verdade — conexão, canal,
+  exchange, binding, fila, ack, prefetch, durabilidade, retry com dead-letter,
+  fila de erro, idempotência, publisher confirms e outbox — escrito primeiro à
+  mão com php-amqplib e depois com a biblioteca Mirabel RabbitMQ, num checkout
+  de uma fábrica de geleias que tem onze semanas até a Black Friday.
+keywords:
+- RabbitMQ
+- AMQP
+- mensageria
+- filas
+- PHP
+- Laravel
+- Mirabel RabbitMQ
+- php-amqplib
+- dead-letter
+- outbox
+cover_bullets:
+- O protocolo à mão antes da biblioteca, para nada parecer mágica
+- Retry, fila de erro, idempotência, confirms e outbox com o custo de cada um
+- Workers sob supervisor, métricas e um teste de carga com data marcada
+- O mesmo broker falando PHP e Java
+course_slug: mensageria-one
+
+# ─── PARTES ─────────────────────────────────────────────────────────────
+parts:
+- id: p1
+  title: O problema antes da ferramenta
+  blurb: Por que um checkout que funciona o ano inteiro cai no único dia que
+    importa — e o que as pessoas querem dizer quando falam "só coloca uma
+    fila".
+  number: 1
+- id: p2
+  title: O modelo AMQP à mão
+  blurb: Conexão, canal, exchange, binding, fila e ack, com php-amqplib e sem
+    nada por cima. Cada conceito entra quando um defeito exige.
+  number: 2
+- id: p3
+  title: 'Mirabel: a mesma coisa em doze linhas'
+  blurb: O boilerplate da Parte 2 vira duas classes. Nada some — tudo muda de
+    lugar, e o que é contrato continua à mostra.
+  number: 3
+- id: p4
+  title: Quando dá errado (e vai dar)
+  blurb: Retry com espera, fila de erro, mensagens repetidas, o broker que
+    não confirma e o banco que confirma sozinho. Cada falha com o seu custo.
+  number: 4
+- id: p5
+  title: Produção
+  blurb: Workers que não morrem, filas medidas, uma Black Friday ensaiada,
+    ordem, réplicas, o dia em que a fila é a resposta errada e um consumidor
+    em outra linguagem.
+  number: 5
+- id: p6
+  title: O dia
+  blurb: Sexta-feira, 27 de novembro de 2026. O runbook na parede, a SEFAZ
+    caindo às 10h14, e uma tela de números zerados às dez da noite.
+  number: 6
+
+# ─── CAPÍTULOS ──────────────────────────────────────────────────────────
+chapters:
+- 00-antes-de-comecar.md
+- 01-a-black-friday-que-durou-quatro-horas.md
+- 02-do-espeto-de-papel-ao-broker.md
+- 03-o-que-vamos-construir.md
+- 04-conexao-canal-e-a-primeira-mensagem.md
+- 05-ack-quando-a-mensagem-pode-morrer.md
+- 06-exchanges-e-bindings.md
+- 07-o-que-sobrevive-a-um-restart.md
+- 08-a-zebrinha-e-o-prefetch.md
+- 09-por-que-uma-biblioteca.md
+- 10-eventos-com-mirabel.md
+- 11-workers-com-mirabel.md
+- 12-mirabel-dentro-do-laravel.md
+- 13-retry-com-ttl-e-dead-letter.md
+- 14-a-fila-de-erro-e-a-mensagem-envenenada.md
+- 15-idempotencia-o-pedido-40117.md
+- 16-o-broker-disse-que-recebeu.md
+- 17-outbox.md
+- 18-workers-que-nao-morrem.md
+- 19-medir-a-fila.md
+- 20-a-black-friday-de-mentira.md
+- 21-ordem-e-prioridade.md
+- 22-quorum-queues.md
+- 23-quando-nao-usar-fila.md
+- 24-o-broker-nao-sabe-que-lingua-voce-fala.md
+- 25-27-de-novembro.md
+- 26-encerramento.md

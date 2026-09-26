@@ -6,7 +6,9 @@
 #
 # Capítulos liberados nesta prévia: 0, 1, 2, 5, 13, 17 — a abertura, a
 # pegadinha mais famosa do PHP, a entrada no banco e a primeira classe.
-# Para regenerar: make preview BOOK=php-one-v1-previa
+# O texto não é copiado: o loader lê books/php-one-v1 e fecha o resto.
+# Traduções da prévia: i18n/<idioma>/book.yaml (php-one-v1-previa-en).
+# Imagens leves: make preview BOOK=php-one-v1
 
 title: "PHP One — Prévia"
 edition: "Prévia · 1ª edição"

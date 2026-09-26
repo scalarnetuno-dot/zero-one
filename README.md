@@ -83,6 +83,21 @@ edges:
 :::
 ```
 
+## Traduções e prévias
+
+O português é a língua oficial. Traduções moram em
+`books/<slug>/i18n/<idioma>/` e herdam do original tudo que não é texto;
+o slug é `<slug>-<idioma>` (`php-one-v1-en`, `php-one-v2-es`,
+`php-one-v1-previa-en`). Prévias são só um `book.yaml` — o texto vem do
+volume fonte, no idioma certo.
+
+```bash
+python -m pipeline i18n all               # o que falta e o que ficou velho
+python -m pipeline build php-one-v1-en
+```
+
+Detalhes em [`docs/TRADUCOES.md`](docs/TRADUCOES.md).
+
 ## Arquitetura
 
 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — diretórios, modelo de dados,

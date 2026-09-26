@@ -12,7 +12,7 @@ from pathlib import Path
 
 from .collection_page import COLLECTION_DIR, other_cover_name
 from .diagrams import DiagramLayout, build as build_diagram
-from .loader import asset_dir
+from .loader import asset_path
 from .parser import parse_inline
 from .model import (
     Anatomy, Block, Book, Callout, Chapter, Code, CodeBlock, Compare, Diagram,
@@ -62,9 +62,9 @@ class TypstRenderer:
             if isinstance(n, Text):
                 out.append(esc(n.value))
             elif isinstance(n, Strong):
-                out.append(f"*{self.inline(n.children)}*")
+                out.append(f"#strong[{self.inline(n.children)}]")
             elif isinstance(n, Em):
-                out.append(f"_{self.inline(n.children)}_")
+                out.append(f"#emph[{self.inline(n.children)}]")
             elif isinstance(n, Code):
                 out.append(f"#raw({tstr(n.value)})")
             elif isinstance(n, Link):
@@ -207,7 +207,7 @@ class TypstRenderer:
         try:
             from PIL import Image
 
-            caminho = asset_dir(self.book) / Path(src).name
+            caminho = asset_path(self.book, src)
             with Image.open(caminho) as im:
                 proporcao = im.height / im.width
         except Exception:
@@ -294,12 +294,13 @@ class TypstRenderer:
         return "\n".join(out) + "\n"
 
     def table(self, b: Table) -> str:
-        # a coluna de conteúdo mais largo estica; as outras se ajustam
-        widths = [max((len(plain(r[i])) for r in b.rows), default=0)
+        # Frações proporcionais evitam que colunas auto esmaguem as vizinhas.
+        widths = [max([len(plain(b.header[i]))]
+                      + [len(plain(r[i])) for r in b.rows])
                   for i in range(len(b.header))]
-        elastic = widths.index(max(widths)) if widths else 0
-        cols = ", ".join("1fr" if i == elastic else "auto"
-                         for i in range(len(b.header)))
+        smallest = min(widths, default=1) or 1
+        weights = [min(3, max(1, round(width / smallest))) for width in widths]
+        cols = ", ".join(f"{weight}fr" for weight in weights)
         cols += "," if len(b.header) == 1 else ""
         aligns = ", ".join(b.align[i] if i < len(b.align) else "left"
                            for i in range(len(b.header)))
@@ -384,7 +385,7 @@ class TypstRenderer:
             f"  author: {tstr(m.author)},\n"
             f"  keywords: ({', '.join(tstr(k) for k in m.keywords)}{',' if m.keywords else ''}),\n"
             f"  lang: {tstr(m.language.split('-')[0])},\n"
-            f"  region: {tstr(m.language.split('-')[-1])},\n"
+            f"  region: {tstr(m.language.split('-')[-1]) if '-' in m.language else 'none'},\n"
             f"  gutter-extra: {th.gutter_extra(self.pages)},\n"
             ")\n"
         )

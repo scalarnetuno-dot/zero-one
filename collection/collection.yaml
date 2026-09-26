@@ -12,7 +12,8 @@ collection:
   publisher_url: "https://pensarbem.com.br"
 
 # Rótulos de texto do sistema (por idioma).
-# Traduzir um volume = escolher o idioma aqui + traduzir o conteúdo.
+# O português é a língua oficial; os demais idiomas acompanham as traduções
+# em books/<slug>/i18n/<idioma>/ (ver docs/TRADUCOES.md).
 strings:
   pt-BR:
     chapter: "Capítulo"
@@ -52,6 +53,9 @@ strings:
     locked: "Capítulo disponível na versão completa"
     others: "Conheça as demais obras dessa coleção"
     visit_publisher: "Visite a editora Pensar Bem"
+    goal: "Ao fim deste capítulo"
+    barcode: "código de barras"
+    chapter_in_volume: "{number} do {label}"
   en:
     chapter: "Chapter"
     part: "Part"
@@ -90,6 +94,50 @@ strings:
     locked: "Chapter available in the full edition"
     others: "Discover the other books in this collection"
     visit_publisher: "Visit Pensar Bem, the publisher"
+    goal: "By the end of this chapter"
+    barcode: "barcode"
+    chapter_in_volume: "{number} of {label}"
+  es:
+    chapter: "Capítulo"
+    part: "Parte"
+    figure: "Figura"
+    table: "Tabla"
+    listing: "Listado"
+    exercise: "Ejercicio"
+    example: "Ejemplo"
+    summary: "Resumen"
+    answers: "Respuestas"
+    glossary: "Glosario"
+    toc: "Índice"
+    colophon: "Colofón"
+    tip: "Consejo"
+    warning: "Atención"
+    note: "Nota"
+    key: "Lo esencial"
+    practice: "En la práctica"
+    trivia: "¿Sabías que…?"
+    pitfall: "Error común"
+    history: "Entre bastidores"
+    checkpoint: "Punto de control"
+    milestone: "El proyecto ahora"
+    story: "Mientras tanto, en la empresa"
+    art: "Ilustración"
+    art_todo: "arte por producir"
+    request: "Solicitud"
+    response: "Respuesta"
+    before: "Antes"
+    after: "Después"
+    anatomy: "Anatomía"
+    structure: "Estructura"
+    in_this_part: "En esta parte"
+    continues: "continúa"
+    of: "de"
+    locked: "Capítulo disponible en la edición completa"
+    others: "Descubre las demás obras de esta colección"
+    visit_publisher: "Visita la editorial Pensar Bem"
+    goal: "Al terminar este capítulo"
+    barcode: "código de barras"
+    chapter_in_volume: "{number} del {label}"
 
 # Cores de identificação disponíveis. Um volume escolhe UMA pelo nome.
 # Sempre accent: nunca dominam a página.

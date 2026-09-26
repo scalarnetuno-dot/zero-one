@@ -295,12 +295,18 @@ class Book:
     outline_labels: dict[str, str] = field(default_factory=dict)
     # Os demais volumes da coleção, com capa: a última página do livro.
     others: list[OtherBook] = field(default_factory=list)
+    # Tradução: capítulos que caíram no original, e os traduzidos a partir
+    # de uma versão do português que já mudou.
+    untranslated: list[str] = field(default_factory=list)
+    outdated: list[str] = field(default_factory=list)
+    # "11 do volume 1", no idioma do livro (strings.chapter_in_volume).
+    ref_format: str = "{number} do {label}"
 
     def outline_ref(self, slug: str) -> str:
         """Como citar um capítulo que não está neste livro."""
         label = self.outline_labels.get(slug)
         number = self.outline[slug]
-        return f"{number} do {label}" if label else str(number)
+        return self.ref_format.format(number=number, label=label) if label else str(number)
 
     @property
     def body(self) -> list[Chapter]:

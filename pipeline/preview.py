@@ -1,13 +1,12 @@
-"""Gera o conteúdo de uma prévia a partir do volume completo.
+"""Assets leves de uma prévia.
 
 A prévia tem a mesma estrutura do volume: todos os capítulos, com as
-seções no sumário. Os liberados são copiados inteiros; os demais viram só
-o front matter com `previa: true` e os títulos de seção — na página, o
-capítulo abre e mostra o aviso da edição completa.
+seções no sumário. Os liberados saem inteiros; os demais abrem e mostram
+o aviso da edição completa. Isso é resolvido pelo loader, na leitura —
+aqui só se gera a versão reduzida, em JPEG, das imagens que a prévia usa.
 """
 from __future__ import annotations
 
-import re
 import shutil
 from pathlib import Path
 from typing import Any
@@ -17,9 +16,10 @@ from PIL import Image
 from .loader import (
     BOOKS,
     book_dir,
+    content_path,
     load_config,
     preview_allowed,
-    preview_chapter_list,
+    split_translation,
 )
 from .model import Art, Figure
 from .parser import parse_chapter
@@ -32,54 +32,43 @@ PREVIEW_JPEG_QUALITY = 82
 
 
 def generate_preview(slug: str) -> list[Path]:
-    """Materializa os capítulos da prévia ``slug``: inteiros ou fechados."""
-    target = book_dir(slug)
-    config = load_config(slug)
+    """Gera os assets leves da prévia ``slug`` e devolve as imagens criadas.
+
+    O texto da prévia não é copiado: o loader lê os capítulos do volume
+    fonte e fecha, na hora, os que não estão em `preview_chapters`. Uma
+    prévia é só um book.yaml — em qualquer idioma — mais estes JPEG.
+    Traduções da prévia (`i18n/<idioma>/`) usam os mesmos JPEG.
+    """
+    base, _ = split_translation(slug)
+    target = BOOKS / base
+    config = load_config(base)
     source_slug = str(config.get("preview_source", "") or "")
     if not source_slug:
-        paired = BOOKS / f"{slug}-previa"
+        paired = BOOKS / f"{base}-previa"
         if (paired / "book.yaml").exists():
             return generate_preview(paired.name)
         raise ValueError(f"{slug}: book.yaml precisa de preview_source")
 
-    source = book_dir(source_slug) / "content"
     allowed = preview_allowed(config)
     if not allowed:
         raise ValueError(f"{slug}: preview_chapters não libera nenhum capítulo")
 
-    content = target / "content"
-    content.mkdir(parents=True, exist_ok=True)
-    generated: list[Path] = []
-    opened: list[Path] = []
-    for name in preview_chapter_list(config):
-        source_file = source / name
-        if not source_file.exists():
-            raise FileNotFoundError(f"capítulo ausente no volume fonte: {source_file}")
-        destination = content / name
-        if name in allowed:
-            shutil.copy2(source_file, destination)
-            opened.append(destination)
-        else:
-            destination.write_text(_locked(source_file), encoding="utf-8")
-        generated.append(destination)
+    opened = [content_path(source_slug, name)[0] for name in allowed]
+    missing = [p for p in opened if not p.exists()]
+    if missing:
+        raise FileNotFoundError(f"capítulo ausente no volume fonte: {missing[0]}")
 
-    _light_assets(config, book_dir(source_slug), target, opened)
-
-    # Arquivos de gerações anteriores (o antigo sumário avulso) saem.
-    keep = set(preview_chapter_list(config))
-    for stale in content.glob("*.md"):
-        if stale.name not in keep:
-            stale.unlink()
-
-    return generated
+    # Conteúdo materializado por versões antigas da pipeline sai.
+    shutil.rmtree(target / "content", ignore_errors=True)
+    return _light_assets(config, book_dir(source_slug), target, opened)
 
 
 def _light_assets(config: dict[str, Any], source_book: Path, target: Path,
-                  chapters: list[Path]) -> None:
+                  chapters: list[Path]) -> list[Path]:
     """Copia, em JPEG reduzido, só as imagens que os capítulos liberados usam.
 
-    As referências dos capítulos copiados passam a apontar para o `.jpg`.
-    A capa entra também, com a mesma regra.
+    Os capítulos continuam citando o `.png`: o loader troca pelo `.jpg`
+    quando só ele existe. A capa entra também, com a mesma regra.
     """
     source_assets = source_book / "assets"
     dest = target / "assets"
@@ -92,21 +81,17 @@ def _light_assets(config: dict[str, Any], source_book: Path, target: Path,
             if isinstance(b, (Figure, Art)) and getattr(b, "src", ""):
                 used.add(Path(b.src).name)
 
-    renamed: dict[str, str] = {}
+    made: list[Path] = []
     for name in sorted(used):
         src = source_assets / name
         if src.exists():
-            renamed[name] = _to_jpeg(src, dest, width=PREVIEW_IMAGE_WIDTH)
+            made.append(dest / _to_jpeg(src, dest, width=PREVIEW_IMAGE_WIDTH))
 
     cover = str(config.get("cover_image", "") or "capa.png")
     if (source_assets / cover).exists():
-        _to_jpeg(source_assets / cover, dest, height=PREVIEW_COVER_HEIGHT)
-
-    for path in chapters:
-        text = path.read_text(encoding="utf-8")
-        for old, new in renamed.items():
-            text = text.replace(old, new)
-        path.write_text(text, encoding="utf-8")
+        made.append(dest / _to_jpeg(source_assets / cover, dest,
+                                    height=PREVIEW_COVER_HEIGHT))
+    return made
 
 
 def _to_jpeg(src: Path, dest: Path, width: int = 0, height: int = 0) -> str:
@@ -123,19 +108,3 @@ def _to_jpeg(src: Path, dest: Path, width: int = 0, height: int = 0) -> str:
     name = src.with_suffix(".jpg").name
     img.save(dest / name, "JPEG", quality=PREVIEW_JPEG_QUALITY, optimize=True)
     return name
-
-
-def _locked(source_file: Path) -> str:
-    """Capítulo fechado: o front matter com `previa: true` e as seções."""
-    text = source_file.read_text(encoding="utf-8")
-    if not text.startswith("---"):
-        raise ValueError(f"capítulo sem front matter: {source_file}")
-    _, front, body = text.split("---", 2)
-    lines = ["---", front.strip(), "previa: true", "---", ""]
-    fenced = False
-    for line in body.splitlines():
-        if line.startswith("```"):
-            fenced = not fenced
-        elif not fenced and re.match(r"^#{2,3}\s+\S", line):
-            lines += [line, ""]
-    return "\n".join(lines)

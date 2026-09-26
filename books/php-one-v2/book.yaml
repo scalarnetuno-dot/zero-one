@@ -30,6 +30,19 @@ keywords:
 - deploy
 cover_image: capa.png
 cover_full: true
+cover_text_areas:            # frases em português desenhadas na arte (cover_i18n)
+  subtitle:
+    polygon: [[766, 190], [996, 138], [1008, 246], [792, 302]]
+    center: [884, 222]
+    size: [236, 116]
+    angle: 11.5
+    align: center
+  tagline:
+    polygon: [[40, 360], [204, 312], [240, 452], [48, 508]]
+    center: [138, 412]
+    size: [182, 172]
+    angle: 13
+    align: left
 cover_bullets:
 - Um framework de quarenta linhas, escrito à mão, antes do Laravel
 - Eloquent sobre o SQL que você já sabe escrever
